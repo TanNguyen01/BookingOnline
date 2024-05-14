@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,35 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('register',[AuthController::class, 'register'])->name('register');
+Route::post('login',[AuthController::class, 'login'])->name('login');
+Route::get('/auth', function (Request $request) {
+    return response()->json(['message'=> 'Vui lòng đăng nhập']);
+})->name('auth');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
