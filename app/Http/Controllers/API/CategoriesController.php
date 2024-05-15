@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Categories;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Categories as CategoriesResource;
-use IIluminate\Support\Facades\Validator;
+
 
 class CategoriesController extends Controller
 {
@@ -21,7 +22,7 @@ class CategoriesController extends Controller
          $arr = [
             'status'=>true,
             'message'=>"Danh sách danh mục",
-            'data'=>\App\Http\Resources\Categories::collection($categories)
+            'data'=>CategoriesResource::collection($categories)
          ];
 
          return response()->json($arr, 200);
@@ -33,7 +34,7 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
       $input = $request->all();
-      $validator = IIluminate\Support\Facades\Validator::make($input, [
+      $validator = Validator::make($input, [
         'name'=> 'required',
       ]);
 
@@ -47,7 +48,7 @@ class CategoriesController extends Controller
         return response()->json($arr, 200);
       }
 
-      $categories = \App\Models\Categories::create($input);
+      $categories = Categories::create($input);
       $arr = [
         'status' => true,
         'message'=>'Lưu thành công danh mục',
@@ -69,7 +70,7 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, \App\Models\Categories $categories)
+    public function update(Request $request, Categories $categories)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -90,8 +91,8 @@ class CategoriesController extends Controller
         $categories->save();
         $arr = [
           'status' => true,
-          'message'=>'Lưu thành công danh mục',
-          'data'=> new \App\Http\Resources\Categories($categories)
+          'message'=>'Thay đổi thành công danh mục',
+          'data'=> new CategoriesResource($categories)
 
         ];
 
@@ -101,11 +102,11 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(\App\Models\Categories $categories)
+    public function destroy(Categories $categories)
     {
         $categories->delete();
         $arr = [
-            'status'=>true,
+            'status'=> true,
             'message'=>'Danh mục xóa thành công',
             'data'=> [],
         ];

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Store;
 use App\Http\Resources\Store as StoreResource;
-use IIluminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+
 
 
 class StoreController extends Controller
@@ -20,9 +20,9 @@ class StoreController extends Controller
     {
                $store = Store::all();
                $arr = [
-                 'status': true,
-                 'message': 'Cửa hàng',
-                 'data': \App\Http\Resources\Store::collection($store),
+                 'status'=> true,
+                 'message'=> 'Cửa hàng',
+                 'data'=> StoreResource::collection($store),
                ];
 
                return response()->json($arr, 200);
@@ -42,40 +42,40 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator = IIluminate\Support\Facades\Validator::make($input, [
-          'name'=> 'required',
-          'address'=>'required',
-          'phone'=>'required',
-          'image' => 'nullable|image|mimes:jpg,png,jpeg|',
+        $validator = Validator::make($input, [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|',
         ]);
 
-        if($validator->fails()){
-          $arr = [
-              'success'=>false,
-              'message'=>'Lỗi kiểm tra',
-              'data'=>$validator->errors()
-          ];
+        if ($validator->fails()) {
+            $arr = [
+                'success' => false,
+                'message' => 'Lỗi kiểm tra',
+                'data' => $validator->errors()
+            ];
 
-          return response()->json($arr, 200);
-        }
-
-        else if($request->hasFile('image')) {
+            return response()->json($arr, 200);
+        } else if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = Str::random(12) . "." . $file->getClientOriginalExtension();
+            $imageName = Str::random(12) .
+                "." . $file->getClientOriginalExtension();
             $imageDirectory = 'images/userImage';
             $file->move($imageDirectory, $imageName);
-            $path = 'http://127.0.0.1:8000/'.($imageDirectory . $imageName);
+            $path = 'http://127.0.0.1:8000/' . ($imageDirectory . $imageName);
 
-        $store = \App\Models\Store::create($input);
+            $store = \App\Models\Store::create($input);
 
-        $arr = [
-          'status' => true,
-          'message'=>'Lưu thành công cửa hàng',
-          'data'=> new StoreResource($store)
+            $arr = [
+                'status' => true,
+                'message' => 'Lưu thành công cửa hàng',
+                'data' => new StoreResource($store)
 
-        ];
+            ];
 
-        return response()->json($arr, 201);
+            return response()->json($arr, 201);
+        }
     }
 
     /**
@@ -110,4 +110,4 @@ class StoreController extends Controller
         //
     }
 }
-}
+
