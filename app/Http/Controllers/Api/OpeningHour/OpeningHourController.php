@@ -30,7 +30,6 @@ class OpeningHourController extends Controller
             'status' => 200,
             'message' => 'Lấy danh sách giờ mở cửa thành công'
         ]);
-
     }
 
 
@@ -64,7 +63,6 @@ class OpeningHourController extends Controller
                 'status' => 201,
                 'message' => 'Thêm giờ mở cửa thành công'
             ]);
-
         }
     }
 
@@ -84,22 +82,23 @@ class OpeningHourController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
         }
-
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request ,$storeName)
+    public function update(Request $request, $storeName)
     {
         //
-        $validator = Validator::make($request->all(),
-        [
-            'store_name' => 'required|exists:store_information,name',
-            'day' => 'required|date',
-            'opening_time' => 'required|date_format:H:i:s',
-            'closing_time' => 'required|date_format:H:i:s|after:opening_time',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'store_name' => 'required|exists:store_information,name',
+                'day' => 'required|date',
+                'opening_time' => 'required|date_format:H:i:s',
+                'closing_time' => 'required|date_format:H:i:s|after:opening_time',
+            ]
+        );
         if ($validator->fails()) {
             return response()->json([
                 'status' =>  401,
@@ -113,23 +112,20 @@ class OpeningHourController extends Controller
         // Trả về kết quả từ service
 
         // Trả về thông báo thành công
-        return response()->json([$result,'message' => 'Thông tin mở cửa đã được cập nhật'], 200);
-        }
+        return response()->json([$result, 'message' => 'Thông tin mở cửa đã được cập nhật'], 200);
+    }
 
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,$storeName)
+    public function destroy(Request $request, $storeName)
     {
 
         $result = $this->openingService->deleteOpeningHour($storeName);
 
         // Trả về kết quả từ service
         return response()->json($result);
-
     }
 }
-
-
