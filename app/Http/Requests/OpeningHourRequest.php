@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreInformationRequest extends FormRequest
+class OpeningHourRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,10 +28,10 @@ class StoreInformationRequest extends FormRequest
     {
 
         return [
-            'name' => 'required|string',
-            'image' => 'required|image|mimes:jpg,png,jpeg',
-            'address' => 'required|string',
-            'phone' => 'required|string',
+            'store_name' => 'required|exists:store_information,name',
+            'day' => 'required|date',
+            'opening_time' => 'required|date_format:H:i:s',
+            'closing_time' => 'required|date_format:H:i:s|after:opening_time',
         ];
 
     }
@@ -40,14 +40,18 @@ class StoreInformationRequest extends FormRequest
 {
 
     return [
-        'address.string' => 'phone là kiểu chuỗi',
-        'address.required' => 'Vui lòng nhâp address',
-        'phone.string' => 'phone là kiểu chuỗi',
-        'phone.required' => 'Vui lòng nhâp phone',
-        'name.required' => 'Vui lòng nhâp name',
+
+        'store_name.required' => 'Vui lòng nhâp store_name',
+        'store_name.exists' => 'Tên cửa hàng k đc trùng nhau',
+        'day.required' => 'Vui lòng chọn ngày mở cửa',
         'name.string' => ' name là kiểu chuỗi',
         'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-        'image.required' => 'chon Hình ảnh',
+        'opening_time.required' => 'giờ mở cửa',
+        'opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
+        'closing_time.required' => 'giờ đóng cửa',
+        'closing_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
+        'closing_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
+
 
 
     ];
@@ -63,5 +67,4 @@ class StoreInformationRequest extends FormRequest
                 'status_code' => 402,
             ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
-
 }

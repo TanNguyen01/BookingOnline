@@ -3,6 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AuthRequest extends FormRequest
 {
@@ -21,36 +26,33 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
-        if(request()->isMethod('POST')){
+
         return [
             'email' => 'required|string|email',
             'password' => 'required|string',
         ];
-        }else{
-            return [
-                'email' => 'required|string|email',
-                'password' => 'required|string',
-            ];
-        }
+
     }
     public function messages(): array
-    {
-        if(request()->isMethod('POST')){
 
+{
 
-        return [
-            'email.required' => 'Nhập e mail',
-            'email.email' => ' nhập đúng định dạng e mail',
-            'email.string' => ' e mail không được chứa ký tự đặc biệt',
-            'password.required' => 'nhập password',
-        ];
-        }else{
-            return [
-                'email.required' => 'Nhập e mail',
-                'email.email' => ' nhập đúng định dạng e mail',
-                'email.string' => ' e mail không được chứa ký tự đặc biệt',
-                'password.required' => 'nhập password',
-            ];
-        }
+    return [
+        'email.required' => 'Vui lòng nhâp email',
+        'email.email' => 'Nhập đúng định dạng email!',
+        'password.required' => 'Nhập password!',
+    ];
+
     }
+    protected function failedValidation(Validator $validator)
+    {
+
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $errors,
+                'status_code' => 402,
+            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+    }
+
 }

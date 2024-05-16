@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\OpeningHour;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OpeningHourRequest;
 use App\Models\OpeningHour;
 use App\Models\StoreInformation;
 use App\Services\OpeningService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\DB;
 
@@ -36,23 +35,10 @@ class OpeningHourController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(OpeningHourRequest $request)
     {
         //
-        $validator = Validator::make($request->all(), [
-            'store_name' => 'required|exists:store_information,name',
-            'day' => 'required|date',
-            'opening_time' => 'required|date_format:H:i:s',
-            'closing_time' => 'required|date_format:H:i:s|after:opening_time',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' =>  401,
-                'message' => ['Thêm giờ mở cửa thất bại', $validator->errors()->first()],
-                'errors' => $validator->errors()->toArray(),
 
-            ]);
-        } else {
             $storeName = $request->store_name;
             $data = $request->only(['day', 'opening_time', 'closing_time']);
 
@@ -63,7 +49,7 @@ class OpeningHourController extends Controller
                 'status' => 201,
                 'message' => 'Thêm giờ mở cửa thành công'
             ]);
-        }
+
     }
 
 
@@ -87,26 +73,10 @@ class OpeningHourController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $storeName)
+    public function update(OpeningHourRequest $request, $storeName)
     {
         //
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'store_name' => 'required|exists:store_information,name',
-                'day' => 'required|date',
-                'opening_time' => 'required|date_format:H:i:s',
-                'closing_time' => 'required|date_format:H:i:s|after:opening_time',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json([
-                'status' =>  401,
-                'message' => ['cập nhật mở cửa thất bại', $validator->errors()->first()],
-                'errors' => $validator->errors()->toArray(),
 
-            ]);
-        }
         $result = $this->openingService->updateOpeningHours($storeName, $request->only(['day', 'opening_time', 'closing_time']));
 
         // Trả về kết quả từ service

@@ -20,22 +20,7 @@ class AuthController extends Controller
      */
     public function login(AuthRequest $request)
     {
-        //
 
-        // $validator = Validator::make($request->all(), [
-        //     'email' => 'required|string|email',
-        //     'password' => 'required|string',
-        // ]);
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'status' => 'fails',
-        //         'message' => $validator->errors()->first(),
-        //         'errors' => $validator->errors()->toArray(),
-        //     ]);
-        // }
-
-        // nhờ anh kiểm tra lỗi giúp em tại sao khi em validate tại một resquest khi không nhập trường dữ
-        // bắt buộc nó lại đẩy sang trang chu cua laravel
         if (!$token = auth()->attempt($request->validated())) {
             return response()->json(['error' => 'Sai mật khẩu hoặc tài khoản vui lòng kiểm tra lại'], 401);
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\userRequest;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -27,30 +28,12 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(userRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|unique:users',
-            'name' => 'required|string',
-            'password' => 'required|string|confirmed',
-            'role' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Đăng ký thất bại',
-                'errors' => $validator->errors()->toArray(),
-            ]);
-        }
 
         $data = $request->all();
-
         $user = $this->userService->createUser($data);
-
         return response()->json([
             'status' => 200,
             'message' => 'Thêm người dùng thành công',
@@ -68,25 +51,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(userRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'string|email|unique:users,email,' . $id,
-            'name' => 'string',
-            'password' => 'string|confirmed',
-            'role' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Cập nhật thất bại',
-                'errors' => $validator->errors()->toArray(),
-            ]);
-        }
 
         $data = $request->all();
 

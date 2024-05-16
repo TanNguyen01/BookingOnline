@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\StoreInformation;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreInformationRequest;
 use App\Services\StoreService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -27,23 +28,8 @@ class StoreInformationController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(StoreInformationRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'image' => 'required|image|mimes:jpg,png,jpeg',
-            'address' => 'required|string',
-            'phone' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Thêm thông cửa hàng thất bại',
-                'errors' => $validator->errors()->toArray(),
-            ]);
-        }
-
         $data = $request->all();
 
         $store = $this->storeService->createStore($data);
@@ -67,26 +53,8 @@ class StoreInformationController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'string|email|unique:users,email,' . $id,
-            'name' => 'string',
-            'password' => 'string|confirmed',
-            'role' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Cập nhật thất bại',
-                'errors' => $validator->errors()->toArray(),
-            ]);
-        }
 
         $data = $request->all();
-
         $store = $this->storeService->updateStore($id, $data);
 
         return response()->json([
