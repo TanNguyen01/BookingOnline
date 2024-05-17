@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
+use App\Http\Controllers\Api\staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // user admin
-Route::get('user', [UserController::class, 'index'])->name('list.users');
+Route::get('listuser', [UserController::class, 'index'])->name('list.users');
 Route::get('list_user/{id}', [UserController::class, 'show'])->name('show.users');
 Route::post('post', [UserController::class, 'store'])->name('store.user');
 Route::post('user/{id}', [UserController::class, 'update'])->name('update.user');
@@ -37,11 +38,20 @@ Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('st
 Route::post('store-hours/{storeName}',[OpeningHourController::class, 'update'])->name('opening_hours.update');
 Route::delete('store-hours/delete/{storeName}',[OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
 
+
+//staff
+Route::middleware('auth:sanctum')->post('profile/update', [StaffController::class, 'updateProfile']);
+
+// Route::post('profile/update',[StaffController::class , 'updateProfile']);
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
-Route::get('/auth', function (Request $request) {
-    return response()->json(['message' => 'Vui lòng đăng nhập']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 })->name('auth');
+// Route::get('/auth', function (Request $request) {
+
+//     return response()->json(['message' => 'Vui lòng đăng nhập']);
+// })->name('auth');
 
 
 

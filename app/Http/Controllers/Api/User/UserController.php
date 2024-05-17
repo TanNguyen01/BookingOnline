@@ -21,6 +21,7 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userService->getAllUsers();
+
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách người dùng thành công',

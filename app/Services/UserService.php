@@ -10,7 +10,8 @@ class UserService
 {
     public function getAllUsers()
     {
-        return User::all();
+        return  User::query()->get();
+
     }
 
     public function getUserById($id)

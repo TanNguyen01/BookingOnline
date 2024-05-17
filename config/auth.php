@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
     ],
+    'api' => [
+        'driver' => 'token', // Hoặc 'passport' nếu bạn sử dụng Laravel Passport
+        'provider' => 'users',
+        'hash' => false,
+    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -28,10 +28,11 @@ class OpeningHourRequest extends FormRequest
     {
 
         return [
-            'store_name' => 'required|exists:store_information,name',
-            'day' => 'required|date',
-            'opening_time' => 'required|date_format:H:i:s',
-            'closing_time' => 'required|date_format:H:i:s|after:opening_time',
+        'store_name' => 'required|exists:store_information,name',
+        'opening_hours' => 'required|array',
+        'opening_hours.*.day' => 'required|date',
+        'opening_hours.*.opening_time' => 'required', 'regex:/^(0[01]?[0-9]|2[0-3]):[0-5][0-9]$/',
+        'opening_hours.*.closing_time' => 'required', 'regex:/^(0[01]?[0-9]|2[0-3]):[0-5][0-9]$/'|'after:opening_hours.*.opening_time',
         ];
 
     }
@@ -43,14 +44,12 @@ class OpeningHourRequest extends FormRequest
 
         'store_name.required' => 'Vui lòng nhâp store_name',
         'store_name.exists' => 'Tên cửa hàng k đc trùng nhau',
-        'day.required' => 'Vui lòng chọn ngày mở cửa',
-        'name.string' => ' name là kiểu chuỗi',
-        'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-        'opening_time.required' => 'giờ mở cửa',
-        'opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
+        'opening_hours.required' => 'Vui lòng chọn ngày mở cửa',
+        'opening_hours.*.opening_time.required' => 'giờ mở cửa',
+        'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
         'closing_time.required' => 'giờ đóng cửa',
-        'closing_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-        'closing_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
+        'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
+        'opening_hours.*.opening_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
 
 
 

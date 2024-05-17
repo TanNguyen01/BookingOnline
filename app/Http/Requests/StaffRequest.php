@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class userRequest extends FormRequest
+class StaffRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,14 +28,12 @@ class userRequest extends FormRequest
     {
 
         return [
-            'email' => 'required|string|email|unique:users',
             'name' => 'required|string',
-            'password' => 'required|string|confirmed',
-            'role' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'image' => 'nullable|string',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
-            
+            'current_password' => 'required|string',
+            'new_password' => 'nullable|string',
         ];
 
     }
@@ -44,12 +42,8 @@ class userRequest extends FormRequest
 {
 
     return [
-        'email.unique' => 'email da ton tai',
-        'email.required' => 'Vui lòng nhâp email',
-        'email.email' => 'Nhập đúng định dạng email!',
-        'password.required' => 'Nhập password!',
-        'password.confirmed' => 'Nhập lại password passwrod_confirmation!',
-
+        'new_password.required' => 'new_password nhập new password!',
+        'current_password.required' =>' nhập current_password cũ',
         'name.required' => 'Vui lòng nhâp name',
         'name.string' => ' name là kiểu chuỗi',
         'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',

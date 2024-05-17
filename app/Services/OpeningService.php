@@ -27,33 +27,47 @@ class OpeningService
         return $openingHours;
     }
 
-    public function createOpeningHour($data, $storeName)
+    public function createOpeningHours($storeName, $openingHoursData)
     {
         $storeInformation = StoreInformation::where('name', $storeName)->firstOrFail();
-        $openingHour = new OpeningHour;
-        $openingHour->store_information_id = $storeInformation->id;
-        $openingHour->day = $data['day'];
-        $openingHour->opening_time = $data['opening_time'];
-        $openingHour->closing_time = $data['closing_time'];
-        $openingHour->save();
 
-        return $openingHour;
+        foreach ($openingHoursData as $data) {
+            OpeningHour::create([
+                'store_information_id' => $storeInformation->id,
+                'day' => $data['day'],
+                'opening_time' => $data['opening_time'],
+                'closing_time' => $data['closing_time'],
+            ]);
+        }
     }
 
-    public function updateOpeningHours($storeName, $data)
+    public function updateOpeningHours($storeName,$openingHoursData)
     {
         // Tìm cửa hàng theo tên
         $store = StoreInformation::where('name', $storeName)->first();
-
-        // Kiểm tra xem cửa hàng có tồn tại không
-        if (!$store) {
-        }
-
         // Tìm hoặc tạo mới bản ghi mở cửa theo cửa hàng và ngày
-        $openingHour = OpeningHour::updateOrCreate(
-            ['store_information_id' => $store->id, 'day' => $data['day']],
-            ['opening_time' => $data['opening_time'], 'closing_time' => $data['closing_time']]
-        );
+        foreach ($openingHoursData as $data) {
+            // Tìm bản ghi mở cửa theo ngày
+            $openingHour = OpeningHour::where('store_information_id', $store->id)
+                                       ->where('day', $data['day'])
+                                       ->first();
+
+            if ($openingHour) {
+                // Cập nhật thông tin giờ làm nếu bản ghi đã tồn tại
+                $openingHour->update([
+                    'opening_time' => $data['opening_time'],
+                    'closing_time' => $data['closing_time'],
+                ]);
+            } else {
+                // Nếu không có bản ghi mở cửa cho ngày này, tạo mới
+                OpeningHour::create([
+                    'store_information_id' => $store->id,
+                    'day' => $data['day'],
+                    'opening_time' => $data['opening_time'],
+                    'closing_time' => $data['closing_time'],
+                ]);
+            }
+        }
 
         // Trả về thông báo thành công
     }

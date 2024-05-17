@@ -39,16 +39,11 @@ class OpeningHourController extends Controller
     {
         //
 
-            $storeName = $request->store_name;
-            $data = $request->only(['day', 'opening_time', 'closing_time']);
+        $storeName = $request->input('store_name');
+        $openingHoursData = $request->input('opening_hours');
+        $this->openingService->createOpeningHours($storeName, $openingHoursData);
 
-            $openingHour = $this->openingService->createOpeningHour($data, $storeName);
-
-            return response()->json([
-                'opening_hour' => $openingHour,
-                'status' => 201,
-                'message' => 'Thêm giờ mở cửa thành công'
-            ]);
+        return response()->json(['message' => 'Giờ làm của cửa hàng đã được thêm.'], 200);
 
     }
 
@@ -76,13 +71,13 @@ class OpeningHourController extends Controller
     public function update(OpeningHourRequest $request, $storeName)
     {
         //
+        $storeName = $request->input('store_name');
+    $openingHoursData = $request->input('opening_hours');
 
-        $result = $this->openingService->updateOpeningHours($storeName, $request->only(['day', 'opening_time', 'closing_time']));
+    $this->openingService->updateOpeningHours($storeName, $openingHoursData);
 
-        // Trả về kết quả từ service
+    return response()->json(['message' => 'Thông tin giờ làm của cửa hàng đã được cập nhật.'], 200);
 
-        // Trả về thông báo thành công
-        return response()->json([$result, 'message' => 'Thông tin mở cửa đã được cập nhật'], 200);
     }
 
 
