@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\CategoriesController;
-use App\Http\Controllers\API\StoreController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Adminastor
 Route::resource('categories', CategoriesController::class);
 
-Route::resource('store', StoreController::class);
+Route::resource('service', \App\Http\Controllers\API\ServiceController::class);
