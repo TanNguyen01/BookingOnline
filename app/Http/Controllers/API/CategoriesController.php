@@ -7,6 +7,7 @@ use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Categories as CategoriesResource;
+use Illuminate\Validation\Rule;
 
 
 class CategoriesController extends Controller
@@ -18,7 +19,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-         $categories = \App\Models\Categories::all();
+         $categories = Categories::all();
          $arr = [
             'status'=>true,
             'message'=>"Danh sách danh mục",
@@ -36,6 +37,12 @@ class CategoriesController extends Controller
       $input = $request->all();
       $validator = Validator::make($input, [
         'name'=> 'required',
+        'status'=>[
+            Rule::in([
+                Categories::Active,
+                Categories::Inactive,
+            ])
+        ],
       ]);
 
       if($validator->fails()){
@@ -75,19 +82,26 @@ class CategoriesController extends Controller
         $input = $request->all();
         $validator = Validator::make($input, [
           'name'=> 'required',
+            'status'=>[
+                Rule::in([
+                    Categories::Active,
+                    Categories::Inactive,
+                ])
+            ],
         ]);
 
         if($validator->fails()){
           $arr = [
               'success'=>false,
               'message'=>'Lỗi kiểm tra',
-              'data'=>$validator->errors()
+              'data'=>$validator->errors(),
           ];
 
           return response()->json($arr, 200);
         }
 
-        $categories->name= $input['name'];
+        $categories->name=$input['name'];
+        $categories->status=$input['status'];
         $categories->save();
         $arr = [
           'status' => true,
@@ -111,6 +125,6 @@ class CategoriesController extends Controller
             'data'=> [],
         ];
 
-        return response()->json($arr, 200);
+        return response()->json($arr);
     }
 }

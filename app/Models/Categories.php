@@ -9,7 +9,12 @@ class Categories extends Model
 {
     use HasFactory;
 
+    const Active= 0;
+    const Inactive=1;
+
     protected $fillable = [
-        'name'
+        'name',
+        'status'
+
     ];
 }
