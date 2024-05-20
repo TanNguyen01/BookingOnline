@@ -13,23 +13,22 @@ class OpeningService
         return OpeningHour::with('storeInformation')->get();
     }
 
-    public function getOpeningHour($storeName)
+    public function getOpeningHour($storeid)
     {
-        $store = StoreInformation::where('name', $storeName)->first();
+        $store = StoreInformation::where('id', $storeid)->first();
 
         if (!$store) {
-            throw new \Exception('Cửa hàng không tồn tại', 404);
+            throw new \Exception(' cửa hàng k tồn tai', 401);
         }
 
         // Lấy thông tin giờ mở cửa của cửa hàng
         $openingHours = $store->openingHours()->get(['day', 'opening_time', 'closing_time']);
-
         return $openingHours;
     }
 
-    public function createOpeningHours($storeName, $openingHoursData)
+    public function createOpeningHours($storeid, $openingHoursData)
     {
-        $storeInformation = StoreInformation::where('name', $storeName)->firstOrFail();
+        $storeInformation = StoreInformation::where('id', $storeid)->firstOrFail();
 
         foreach ($openingHoursData as $data) {
             OpeningHour::create([
@@ -41,10 +40,10 @@ class OpeningService
         }
     }
 
-    public function updateOpeningHours($storeName,$openingHoursData)
+    public function updateOpeningHours($storeid,$openingHoursData)
     {
         // Tìm cửa hàng theo tên
-        $store = StoreInformation::where('name', $storeName)->first();
+        $store = StoreInformation::where('id', $storeid)->first();
         // Tìm hoặc tạo mới bản ghi mở cửa theo cửa hàng và ngày
         foreach ($openingHoursData as $data) {
             // Tìm bản ghi mở cửa theo ngày
@@ -74,9 +73,9 @@ class OpeningService
 
 
 
-    public function deleteOpeningHour($storeName)
+    public function deleteOpeningHour($id)
     {
-        $store = StoreInformation::where('name', $storeName)->first();
+        $store = StoreInformation::where('id', $id)->first();
 
         // Kiểm tra xem cửa hàng có tồn tại không
         if (!$store) {

@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class OpeningHourRequest extends FormRequest
+class ScheduleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,40 +29,23 @@ class OpeningHourRequest extends FormRequest
 
         return [
             'store_information_id' => 'required|exists:store_information,id',
-            'opening_hours' => 'required|array',
-            'opening_hours.*.day' => 'required|date|after_or_equal:today',
-            'opening_hours.*.opening_time' => [
+            'schedules' => 'required|array',
+            'schedules.*.day' => 'required|date',
+
+            'schedules.*.start_time' => [
                 'required',
                 'regex:/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/',
                 'date_format:H:i:s',
             ],
-            'opening_hours.*.closing_time' => [
+            'schedules.*.end_time' => [
                 'required',
                 'regex:/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/',
                 'date_format:H:i:s',
-                'after:opening_hours.*.opening_time',
+                'after:schedules.*.start_time',
             ],
         ];
     }
-    public function messages(): array
 
-    {
-
-        return [
-            'store_name.string' => 'Tên của hàng là dạng chuổi ',
-            'store_information_id.required' => 'Vui lòng nhâp id store',
-            'store_information_id.exists' => 'Cửa hàng không tồn tại',
-            'opening_hours.required' => 'Vui lòng chọn ngày mở cửa',
-            'opening_hours.*.opening_time.required' => 'giờ mở cửa',
-            'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-            'closing_time.required' => 'giờ đóng cửa',
-            'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-            'opening_hours.*.opening_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
-
-
-
-        ];
-    }
     protected function failedValidation(Validator $validator)
     {
 

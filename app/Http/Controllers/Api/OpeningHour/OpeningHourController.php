@@ -39,9 +39,9 @@ class OpeningHourController extends Controller
     {
         //
 
-        $storeName = $request->input('store_name');
+        $storeId = $request->input('store_information_id');
         $openingHoursData = $request->input('opening_hours');
-        $this->openingService->createOpeningHours($storeName, $openingHoursData);
+        $this->openingService->createOpeningHours($storeId, $openingHoursData);
 
         return response()->json(['message' => 'Giờ làm của cửa hàng đã được thêm.'], 200);
 
@@ -52,12 +52,12 @@ class OpeningHourController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($storeName)
+    public function show($id)
     {
         try {
-            $openingHours = $this->openingService->getOpeningHour($storeName);
+            $openingHours = $this->openingService->getOpeningHour($id);
             return response()->json([
-                'store_name' => $storeName,
+                'id' => $id,
                 'opening_hours' => $openingHours
             ], 200);
         } catch (\Exception $e) {
@@ -68,13 +68,14 @@ class OpeningHourController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(OpeningHourRequest $request, $storeName)
+    public function update(OpeningHourRequest $request, )
     {
         //
-        $storeName = $request->input('store_name');
+        $storeId = $request->input('store_information_id');
+
     $openingHoursData = $request->input('opening_hours');
 
-    $this->openingService->updateOpeningHours($storeName, $openingHoursData);
+    $this->openingService->updateOpeningHours($storeId, $openingHoursData);
 
     return response()->json(['message' => 'Thông tin giờ làm của cửa hàng đã được cập nhật.'], 200);
 
@@ -85,10 +86,10 @@ class OpeningHourController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, $storeName)
+    public function destroy(Request $request, $id)
     {
 
-        $result = $this->openingService->deleteOpeningHour($storeName);
+        $result = $this->openingService->deleteOpeningHour($id);
 
         // Trả về kết quả từ service
         return response()->json($result);

@@ -20,5 +20,11 @@ class StoreInformation extends Model
     {
         return $this->hasMany(OpeningHour::class, 'store_information_id');
     }
+   
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 
 }

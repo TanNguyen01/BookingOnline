@@ -33,16 +33,19 @@ Route::post('store/{id}', [StoreInformationController::class, 'update'])->name('
 Route::delete('storedelete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
 //openginghour
 Route::get('/opening', [OpeningHourController::class ,'index'])->name('list.opening');
-Route::get('/opening/{storeName}', [OpeningHourController::class ,'show'])->name('show.opening');
+Route::get('/opening/{storeid}', [OpeningHourController::class ,'show'])->name('show.opening');
 Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
-Route::post('store-hours/{storeName}',[OpeningHourController::class, 'update'])->name('opening_hours.update');
-Route::delete('store-hours/delete/{storeName}',[OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+Route::post('update-hours',[OpeningHourController::class, 'update'])->name('opening_hours.update');
+Route::delete('store-hours/delete/{id}',[OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
 
 
 //staff
-Route::middleware('auth:sanctum')->post('profile/update', [StaffController::class, 'updateProfile']);
 
-// Route::post('profile/update',[StaffController::class , 'updateProfile']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('profile/update', [StaffController::class, 'updateProfile']);
+    Route::get('showprofile', [StaffController::class, 'showProfile']);
+    Route::post('schedules', [StaffController::class, 'CreateSchedule']);
+});
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
