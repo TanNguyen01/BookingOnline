@@ -30,6 +30,30 @@ class OpeningService
     {
         $storeInformation = StoreInformation::where('id', $storeid)->firstOrFail();
 
+        $existingDays = [];
+
+        foreach ($openingHoursData as $data) {
+            // Kiểm tra xem đã có mục nào cho cửa hàng và ngày này chưa
+            $existingEntry = OpeningHour::where('store_information_id', $storeInformation->id)
+                ->where('day', $data['day'])
+                ->first();
+
+            // Nếu đã tồn tại mục cho ngày này, thêm vào mảng tồn tại
+            if ($existingEntry) {
+                $existingDays[] = $data['day'];
+            }
+        }
+
+        // Nếu có ngày đã tồn tại, trả về lỗi
+        if (!empty($existingDays)) {
+            return [
+                'status' => 401,
+                'message' => '401 ,Ngày giờ mở cửa đã tồn tại.',
+                'existing_days' => $existingDays
+            ];
+        }
+
+        // Nếu không có ngày nào tồn tại, thêm các ngày mới
         foreach ($openingHoursData as $data) {
             OpeningHour::create([
                 'store_information_id' => $storeInformation->id,
@@ -38,38 +62,55 @@ class OpeningService
                 'closing_time' => $data['closing_time'],
             ]);
         }
+
+        return [
+            'status' => true,
+            'message' => 'Giờ làm của cửa hàng đã được thêm.'
+        ];
     }
 
-    public function updateOpeningHours($storeid,$openingHoursData)
-    {
-        // Tìm cửa hàng theo tên
-        $store = StoreInformation::where('id', $storeid)->first();
-        // Tìm hoặc tạo mới bản ghi mở cửa theo cửa hàng và ngày
-        foreach ($openingHoursData as $data) {
-            // Tìm bản ghi mở cửa theo ngày
-            $openingHour = OpeningHour::where('store_information_id', $store->id)
-                                       ->where('day', $data['day'])
-                                       ->first();
 
+
+
+    public function updateOpeningHours($storeid, $openingHoursData)
+    {
+        $existingDays = [];
+
+        foreach ($openingHoursData as $data) {
+            // Tìm mục mở cửa hiện tại cho cửa hàng và ngày này
+            $openingHour = OpeningHour::where('store_information_id', $storeid)
+                                      ->where('day', $data['day'])
+                                      ->first();
+
+            // Nếu tìm thấy mục, cập nhật giờ mở cửa và giờ đóng cửa
             if ($openingHour) {
-                // Cập nhật thông tin giờ làm nếu bản ghi đã tồn tại
                 $openingHour->update([
                     'opening_time' => $data['opening_time'],
                     'closing_time' => $data['closing_time'],
                 ]);
             } else {
-                // Nếu không có bản ghi mở cửa cho ngày này, tạo mới
-                OpeningHour::create([
-                    'store_information_id' => $store->id,
-                    'day' => $data['day'],
-                    'opening_time' => $data['opening_time'],
-                    'closing_time' => $data['closing_time'],
-                ]);
+                // Nếu không tìm thấy, thêm ngày vào mảng tồn tại
+                $existingDays[] = $data['day'];
             }
         }
 
-        // Trả về thông báo thành công
+        // Nếu có ngày không tìm thấy, trả về lỗi
+        if (!empty($existingDays)) {
+            return [
+                'status' => false,
+                'message' => 'Không thể cập nhật vì ngày không tồn tại.',
+                'missing_days' => $existingDays
+            ];
+        }
+
+        return [
+            'status' => true,
+            'message' => 'Giờ làm của cửa hàng đã được cập nhật.'
+        ];
     }
+
+        // Trả về thông báo thành công
+
 
 
 

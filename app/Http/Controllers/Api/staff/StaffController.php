@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleRequest;
 use App\Http\Requests\StaffRequest;
+use App\Models\booking;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
 use App\Services\StaffService;
@@ -57,4 +58,14 @@ class StaffController extends Controller
 
         return response()->json($result, 200);
     }
+
+    public function getBookings()
+    {
+
+      $list =  $this->staffService->getEmployeeBookings();
+        return response()->json([
+            'success' => 201,
+        ]);
+    }
+
 }

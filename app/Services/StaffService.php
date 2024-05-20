@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\booking;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
 use App\Models\User;
@@ -44,7 +45,7 @@ class StaffService
         if ($user->role == 1) {
             return [
                 'id' => $user->id,
-                'username' => $user->username,
+                'email' => $user->email,
                 'name' => $user->name,
                 'image' => $user->image,
                 'address' => $user->address,
@@ -101,7 +102,34 @@ class StaffService
         }
 
         return ['message' => 'Lịch làm việc đã được thêm thành công'];
-    
+
+    }
+
+
+
+    public function getEmployeeBookings()
+    {
+        $user = Auth::user();
+
+        // Kiểm tra nếu user có role là nhân viên (role = 1)
+        if ($user->role !== 1) {
+            return response()->json(['error' => 'User không phải là nhân viên'], 403);
+        }
+
+        // Lấy ID của nhân viên đang đăng nhập
+        $employeeId = $user->id;
+
+        // Lấy tất cả các booking thuộc về nhân viên đang đăng nhập
+        $bookings = booking::whereHas('schedule', function ($query) use ($employeeId) {
+            $query->where('user_id', $employeeId);
+        })->get();
+
+        // Kiểm tra nếu không có booking nào được tìm thấy
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => 'Hiện bạn không có booking nào'], 200);
+        }
+
+        return response()->json(['bookings' => $bookings], 200);
     }
 }
 

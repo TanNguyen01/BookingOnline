@@ -42,19 +42,23 @@ Route::delete('store-hours/delete/{id}',[OpeningHourController::class, 'destroy'
 //staff
 
 Route::middleware('auth:sanctum')->group(function () {
+    //  update profile user
     Route::post('profile/update', [StaffController::class, 'updateProfile']);
+    // em profile user
     Route::get('showprofile', [StaffController::class, 'showProfile']);
+    // thêm lịch làm user
     Route::post('schedules', [StaffController::class, 'CreateSchedule']);
+    // xem tất cả booking
+    Route::get('listbooking', [StaffController::class, 'getBookings']);
+
 });
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-})->name('auth');
-// Route::get('/auth', function (Request $request) {
 
-//     return response()->json(['message' => 'Vui lòng đăng nhập']);
-// })->name('auth');
+Route::get('/auth', function (Request $request) {
+
+    return response()->json(['message' => 'Vui lòng đăng nhập']);
+})->name('auth');
 
 
 

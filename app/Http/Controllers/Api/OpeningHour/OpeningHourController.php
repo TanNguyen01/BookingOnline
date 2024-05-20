@@ -37,15 +37,25 @@ class OpeningHourController extends Controller
      */
     public function store(OpeningHourRequest $request)
     {
-        //
 
         $storeId = $request->input('store_information_id');
         $openingHoursData = $request->input('opening_hours');
-        $this->openingService->createOpeningHours($storeId, $openingHoursData);
 
+        $result = $this->openingService->createOpeningHours($storeId, $openingHoursData);
+
+        if ($result['status']) {
+            return response()->json(['message' => $result['message']], 200);
+        } else {
+            return response()->json([
+                'message' => $result['message'],
+                'existing_days' => $result['existing_days']
+            ], 400); // 400 Bad Request
+        }
         return response()->json(['message' => 'Giờ làm của cửa hàng đã được thêm.'], 200);
-
     }
+
+
+
 
 
 
@@ -68,16 +78,20 @@ class OpeningHourController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(OpeningHourRequest $request, )
+    public function update(OpeningHourRequest $request,)
     {
-        //
         $storeId = $request->input('store_information_id');
+        $openingHoursData = $request->input('opening_hours');
+        $result = $this->openingService->updateOpeningHours($storeId, $openingHoursData);
 
-    $openingHoursData = $request->input('opening_hours');
-
-    $this->openingService->updateOpeningHours($storeId, $openingHoursData);
-
-    return response()->json(['message' => 'Thông tin giờ làm của cửa hàng đã được cập nhật.'], 200);
+        if ($result['status']) {
+            return response()->json(['message' => $result['message']], 200);
+        } else {
+            return response()->json([
+                'message' => $result['message'],
+                'missing_days' => $result['missing_days']
+            ], 400); // 400 Bad Request
+        }
 
     }
 

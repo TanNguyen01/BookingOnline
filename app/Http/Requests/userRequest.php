@@ -30,12 +30,12 @@ class userRequest extends FormRequest
         return [
             'email' => 'required|string|email|unique:users',
             'name' => 'required|string',
-            'password' => 'required|string|confirmed',
+            'password' => 'required|string|',
             'role' => 'nullable|integer',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
-            
+
         ];
 
     }
@@ -49,7 +49,6 @@ class userRequest extends FormRequest
         'email.email' => 'Nhập đúng định dạng email!',
         'password.required' => 'Nhập password!',
         'password.confirmed' => 'Nhập lại password passwrod_confirmation!',
-
         'name.required' => 'Vui lòng nhâp name',
         'name.string' => ' name là kiểu chuỗi',
         'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
