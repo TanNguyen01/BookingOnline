@@ -16,7 +16,19 @@ class UserService
 
     public function getUserById($id)
     {
-        return User::findOrFail($id);
+        $user =  User::find($id);
+        if (!$user) {
+            return response()->json(['status' => 401,
+                'error' => 'Không tìm thấy người dùng'
+        ]);
+        }else{
+            return response()->json([
+                'status' => 201,
+                'message' => 'Xem  người dùng thành công',
+                'data' => $user,
+            ]);
+        }
+
     }
 
     public function createUser($data)

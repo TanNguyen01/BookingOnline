@@ -53,7 +53,7 @@ class StaffController extends Controller
         $result = $this->staffService->createSchedule($user, $storeId, $schedules);
 
         if (isset($result['error'])) {
-            return response()->json($result, 400);
+            return response()->json($result, 401);
         }
 
         return response()->json($result, 200);

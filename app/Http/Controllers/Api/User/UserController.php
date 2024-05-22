@@ -44,12 +44,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = $this->userService->getUserById($id);
-        return response()->json([
-            'status' => 200,
-            'message' => 'Xem người dùng thành công',
-            'data' => $user,
-        ]);
+        return $this->userService->getUserById($id);
     }
 
     public function update(userRequest $request, $id)

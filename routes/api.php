@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Categorie\CategorieController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
+use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
@@ -19,24 +21,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// service
+Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
+Route::get('service/{id}', [ServiceController::class, 'show'])->name('show.service');
+Route::post('service_post', [ServiceController::class, 'store'])->name('store.service');
+Route::post('service_update/{id}', [ServiceController::class, 'update'])->name('update.service');
+Route::delete('delete_service/{id}', [ServiceController::class, 'destroy'])->name('destroy.service');
+
+// categories
+Route::get('list_categorie', [CategorieController::class, 'index'])->name('list.categorie');
+Route::get('categorie/{id}', [CategorieController::class, 'show'])->name('show.categorie');
+Route::post('categorie_post', [CategorieController::class, 'store'])->name('store.categorie');
+Route::post('categorie_update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
+Route::delete('delete_categorie/{id}', [CategorieController::class, 'destroy'])->name('destroy.categorie');
 // user admin
-Route::get('listuser', [UserController::class, 'index'])->name('list.users');
-Route::get('list_user/{id}', [UserController::class, 'show'])->name('show.users');
+Route::get('list_user', [UserController::class, 'index'])->name('list.users');
+Route::get('show_user/{id}', [UserController::class, 'show'])->name('show.users');
 Route::post('post', [UserController::class, 'store'])->name('store.user');
 Route::post('user/{id}', [UserController::class, 'update'])->name('update.user');
 Route::delete('deleteuser/{id}', [UserController::class, 'destroy'])->name('destroy.user');
 // storeInformations
-Route::get('liststore', [StoreInformationController::class, 'index'])->name('list.store');
-Route::get('showstore/{id}', [StoreInformationController::class, 'show'])->name('show.store');
-Route::post('storepost', [StoreInformationController::class, 'store'])->name('add.store');
+Route::get('list_store', [StoreInformationController::class, 'index'])->name('list.store');
+Route::get('shows_tore/{id}', [StoreInformationController::class, 'show'])->name('show.store');
+Route::post('store_post', [StoreInformationController::class, 'store'])->name('add.store');
 Route::post('store/{id}', [StoreInformationController::class, 'update'])->name('update.store');
-Route::delete('storedelete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
+Route::delete('store_delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
 //openginghour
 Route::get('/opening', [OpeningHourController::class ,'index'])->name('list.opening');
 Route::get('/opening/{storeid}', [OpeningHourController::class ,'show'])->name('show.opening');
 Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
-Route::post('update-hours',[OpeningHourController::class, 'update'])->name('opening_hours.update');
-Route::delete('store-hours/delete/{id}',[OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+Route::post('update_hours',[OpeningHourController::class, 'update'])->name('opening_hours.update');
+Route::delete('store_hours/delete/{id}',[OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
 
 
 //staff

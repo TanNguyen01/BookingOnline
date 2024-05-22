@@ -45,12 +45,8 @@ class StoreInformationController extends Controller
 
     public function show($id)
     {
-        $store = $this->storeService->getStoreById($id);
-        return response()->json([
-            'status' => 200,
-            'message' => 'Xem cửa hàng thành công',
-            'data' => $store,
-        ]);
+        return $this->storeService->getStoreById($id);
+
     }
 
     public function update(Request $request, $id)
