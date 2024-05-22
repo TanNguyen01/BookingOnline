@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\userRequest;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -34,6 +32,7 @@ class UserController extends Controller
 
 
         $data = $request->all();
+        $data['role'] = 1;
         $user = $this->userService->createUser($data);
         return response()->json([
             'status' => 200,
@@ -44,26 +43,14 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = $this->userService->getUserById($id);
-        return response()->json([
-            'status' => 200,
-            'message' => 'Xem người dùng thành công',
-            'data' => $user,
-        ]);
+        return $this->userService->getUserById($id);
     }
 
     public function update(userRequest $request, $id)
     {
 
         $data = $request->all();
-
-        $user = $this->userService->updateUser($id, $data);
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Cập nhật người dùng thành công',
-            'data' => $user,
-        ]);
+        return $this->userService->updateUser($id, $data);
     }
 
     public function destroy($id)

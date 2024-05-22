@@ -10,13 +10,24 @@ class UserService
 {
     public function getAllUsers()
     {
-        return  User::query()->get();
-
+        return  User::query()->where('role', 1)->get();
     }
 
     public function getUserById($id)
     {
-        return User::findOrFail($id);
+        $user =  User::where('role', 1)->find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'error' => 'Không tìm thấy người dùng'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 201,
+                'message' => 'Xem  người dùng thành công',
+                'data' => $user,
+            ]);
+        }
     }
 
     public function createUser($data)
@@ -28,23 +39,26 @@ class UserService
 
     public function updateUser($id, $data)
     {
-        $user = User::findOrFail($id);
-
-        $this->uploadImageIfExists($data, $user);
-
-        $user->update($data);
-
-        return $user;
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Không tồn tại taif khoản'], 401);
+        } else {
+            $this->uploadImageIfExists($data, $user);
+            $user->update($data);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Cập nhật người dùng thành công',
+                'data' => $user,
+            ]);
+        }
     }
 
     public function deleteUser($id)
     {
-        $user = User::findOrFail($id);
-
+        $user = User::where('role', 1)->find($id);
         if ($user->image) {
             Storage::disk('public')->delete($user->image);
         }
-
         $user->delete();
 
         return $user;
