@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\Models\Service;
+use App\Traits\APIResponse;
+use Illuminate\Http\Response;
 
 class ServiceService
 {
+    use APIResponse;
     public function getAllService()
     {
         return Service::with('category')->get();
@@ -17,16 +20,18 @@ class ServiceService
 
         $service =  Service::with('category')->find($id);
         if (!$service) {
-            return response()->json([
-                'status' => 401,
-                'error' => 'Không tìm thấy dịch vụ'
-            ]);
+            return $this ->responseBadRequest(
+            'Không tìm thấy dịch vụ',
+            Response::HTTP_BAD_REQUEST);
         }else{
-            return response()->json([
-                'status' => 201,
-                'message' => 'Xem dịch vụ thành công',
-                'data' => $service,
-            ]);
+            return $this->responseSuccess(
+                'Xem dịch vụ thành công',
+                [
+                    'data' => $service,
+
+                ],
+                Response::HTTP_OK
+            );
         }
     }
 

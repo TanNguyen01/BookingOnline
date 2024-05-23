@@ -104,15 +104,10 @@ class OpeningService
         }
 
         return [
-            'status' => true,
+            'status' => 200,
             'message' => 'Giờ làm của cửa hàng đã được cập nhật.'
         ];
     }
-
-        // Trả về thông báo thành công
-
-
-
 
     public function deleteOpeningHour($id)
     {
@@ -133,6 +128,7 @@ class OpeningService
 
         if ($deletedRows > 0) {
             return [
+                'status' =>200,
                 'message' => 'Đã xóa các giờ mở cửa hết hạn',
                 'deleted_rows' => $deletedRows
             ];

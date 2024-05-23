@@ -7,23 +7,31 @@ use App\Models\OpeningHour;
 use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Traits\APIResponse;
+
 
 class StaffService
 {
+    use APIResponse;
     public function updateProfile($user, $validatedData)
     {
         // Kiểm tra xem người dùng có quyền là nhân viên không
         if ($user->role !== 1) {
-            return response()->json(['error' => 'Bạn không có quyền cập nhật hồ sơ'], 401);
+            return $this->responseUnAuthorized('bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
+
         }
 
         // Kiểm tra xem mật khẩu hiện tại có chính xác không
         if (!Hash::check($validatedData['current_password'], $user->password)) {
-            return response()->json(['error' => 'Mật khẩu hiện tại không chính xác'], 401);
+            return $this->responseBadRequest(
+                'Mật khẩu hiện tại không chính xác',
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         // Loại bỏ trường mật khẩu hiện tại để tránh lưu vào cơ sở dữ liệu

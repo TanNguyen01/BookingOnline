@@ -5,12 +5,17 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Traits\APIResponse;
+use Illuminate\Http\Response;
+
+
 
 class UserService
 {
+    use APIResponse;
     public function getAllUsers()
     {
-        return  User::query()->get();
+        return User::query()->get();
 
     }
 
@@ -18,15 +23,19 @@ class UserService
     {
         $user =  User::find($id);
         if (!$user) {
-            return response()->json(['status' => 401,
-                'error' => 'Không tìm thấy người dùng'
-        ]);
+            return $this->responseBadRequest(
+                'Không tìm người dùng',
+                Response::HTTP_BAD_REQUEST
+            );
         }else{
-            return response()->json([
-                'status' => 201,
-                'message' => 'Xem  người dùng thành công',
-                'data' => $user,
-            ]);
+            return $this->responseSuccess(
+                'Xem thông tin người dùng thành công',
+                [
+                    'data' => $user,
+
+                ],
+                Response::HTTP_OK
+            );
         }
 
     }
@@ -54,7 +63,7 @@ class UserService
         $user = User::findOrFail($id);
 
         if ($user->image) {
-            Storage::disk('public')->delete($user->image);
+            Storage::disk('public/images/user')->delete($user->image);
         }
 
         $user->delete();

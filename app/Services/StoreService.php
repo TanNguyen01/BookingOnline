@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Models\StoreInformation;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\APIResponse;
 use Illuminate\Support\Str;
 
 class StoreService
 {
+    use APIResponse;
     public function getAllStore()
     {
         return StoreInformation::all();
@@ -17,17 +20,20 @@ class StoreService
     {
         $store =  StoreInformation::find($id);
         if (!$store) {
-            return response()->json(['status' => 401,
-                'error' => 'Không tìm thấy Cửa hàng'
-        ]);
-        }else{
-            return response()->json([
-                'status' => 201,
-                'message' => 'Xem Cửa hàng thành công',
-                'data' => $store,
-            ]);
-        }
+            return $this->responseBadRequest(
+                'Không tìm thấy cửa hàng',
+                Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return $this->responseSuccess(
+                'Xem thông tin cửa hàng thành công',
+                [
+                    'data' => $store,
 
+                ],
+                Response::HTTP_OK
+            );
+        }
     }
 
     public function createStore($data)

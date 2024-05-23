@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api\OpeningHour;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OpeningHourRequest;
-use App\Models\OpeningHour;
-use App\Models\StoreInformation;
+use App\Traits\APIResponse;
 use App\Services\OpeningService;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class OpeningHourController extends Controller
 {
+    use APIResponse;
     protected $openingService;
 
     public function __construct(OpeningService $openingService)
@@ -23,12 +22,13 @@ class OpeningHourController extends Controller
     public function index()
     {
         $openingHours = $this->openingService->getAllOpeningHours();
-
-        return response()->json([
-            'opening_hours' => $openingHours,
-            'status' => 201,
-            'message' => 'Lấy danh sách giờ mở cửa thành công'
-        ]);
+        return $this->responseSuccess(
+            'lấy danh sách thành công',
+            [
+                'data' => $openingHours,
+            ],
+            Response::HTTP_OK
+        );
     }
 
 
@@ -51,7 +51,10 @@ class OpeningHourController extends Controller
                 'existing_days' => $result['existing_days']
             ], 401); // 400 Bad Request
         }
-        return response()->json(['message' => 'Giờ làm của cửa hàng đã được thêm.'], 201);
+        return $this->responseSuccess(
+            'Thêm thành công ngày giở mở cửa',
+            Response::HTTP_OK
+        );
     }
 
 
@@ -66,10 +69,13 @@ class OpeningHourController extends Controller
     {
         try {
             $openingHours = $this->openingService->getOpeningHour($id);
-            return response()->json([
-                'id' => $id,
-                'opening_hours' => $openingHours
-            ], 200);
+            return $this->responseSuccess(
+                'lấy giờ mở cửa đóng cửa của cửa hàng theo id thành công',
+                [
+                    'data' => $openingHours,
+                ],
+                Response::HTTP_OK
+            );
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
         }
@@ -92,7 +98,6 @@ class OpeningHourController extends Controller
                 'missing_days' => $result['missing_days']
             ], 400); // 400 Bad Request
         }
-
     }
 
 
@@ -104,8 +109,6 @@ class OpeningHourController extends Controller
     {
 
         $result = $this->openingService->deleteOpeningHour($id);
-
-        // Trả về kết quả từ service
         return response()->json($result);
     }
 }

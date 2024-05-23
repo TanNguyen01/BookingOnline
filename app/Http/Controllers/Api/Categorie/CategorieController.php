@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategorieRequest;
 use App\Models\categories;
 use App\Services\CategorieService;
-use Illuminate\Http\Request;
+use App\Traits\APIResponse;
+use Illuminate\Http\Response;
 
 class CategorieController extends Controller
 {
-
+    use APIResponse;
     protected $categorieService;
-    public function __construct(CategorieService $categorieService){
+    public function __construct(CategorieService $categorieService)
+    {
         $this->categorieService = $categorieService;
     }
     /**
@@ -21,12 +23,14 @@ class CategorieController extends Controller
     public function index()
     {
         $users = $this->categorieService->getAllCategorie();
+        return $this->responseSuccess(
+            'Lấy danh sách thành công',
+            [
+                'data' => $users,
 
-        return response()->json([
-            'status' => 201,
-            'message' => 'Lấy danh sách Danh mục thành công',
-            'data' => $users,
-        ], 201);
+            ],
+            Response::HTTP_OK
+        );
     }
 
 
@@ -37,11 +41,14 @@ class CategorieController extends Controller
     {
         $data = $request->all();
         $categorie = $this->categorieService->createCategorie($data);
-        return response()->json([
-            'status' => 201,
-            'message' => 'Thêm Danh mục thành công',
-            'data' => $categorie,
-        ]);
+        return $this->responseSuccess(
+            'Thêm Danh mục thành công',
+            [
+                'data' => $categorie,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -50,7 +57,6 @@ class CategorieController extends Controller
     public function show(string $id)
     {
        return $this->categorieService->getCategorieById($id);
-
     }
 
     /**
@@ -60,11 +66,14 @@ class CategorieController extends Controller
     {
         $data = $request->all();
         $categorie = $this->categorieService->updateCategorie($id, $data);
-        return response()->json([
-            'status' => 201,
-            'message' => 'Cập nhật thành công',
-            'data' => $categorie,
-        ]);
+        return $this->responseSuccess(
+            'Cập nhật thành công',
+            [
+                'data' => $categorie,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -73,10 +82,9 @@ class CategorieController extends Controller
     public function destroy(string $id)
     {
         $this->categorieService->deleteCategorie($id);
-
-        return response()->json([
-            'status' => 201,
-            'message' => 'Xóa thành công',
-        ]);
+        return $this->responseSuccess(
+            'Xóa thành công',
+            Response::HTTP_OK
+        );
     }
 }

@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\userRequest;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
+use App\Traits\APIResponse;
+
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-
+    use APIResponse;
     protected $userService;
 
     public function __construct(UserService $userService)
@@ -21,12 +22,14 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userService->getAllUsers();
+        return $this->responseSuccess(
+            'Lấy danh sách người dùng thành công',
+            [
+                'data' => $users,
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Lấy danh sách người dùng thành công',
-            'data' => $users,
-        ], 200);
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function store(userRequest $request)
@@ -35,11 +38,14 @@ class UserController extends Controller
 
         $data = $request->all();
         $user = $this->userService->createUser($data);
-        return response()->json([
-            'status' => 200,
-            'message' => 'Thêm người dùng thành công',
-            'data' => $user,
-        ]);
+        return $this->responseSuccess(
+            'Lấy danh sách người dùng thành công',
+            [
+                'data' => $user,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function show($id)
@@ -54,21 +60,24 @@ class UserController extends Controller
 
         $user = $this->userService->updateUser($id, $data);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Cập nhật người dùng thành công',
-            'data' => $user,
-        ]);
+        return $this->responseSuccess(
+            'Cập nhật thành công',
+            [
+                'data' => $user,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function destroy($id)
     {
         $this->userService->deleteUser($id);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Xóa người dùng thành công',
-        ]);
+        return $this->responseSuccess(
+            'Lấy danh sách người dùng thành công',
+            Response::HTTP_OK
+        );
     }
     //
 }

@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api\StoreInformation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInformationRequest;
 use App\Services\StoreService;
-use Illuminate\Support\Facades\Validator;
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class StoreInformationController extends Controller
 {
-
+    use APIResponse;
     protected $storeService;
 
     public function __construct(StoreService $storeService)
@@ -22,11 +23,14 @@ class StoreInformationController extends Controller
     {
 
         $stores = $this->storeService->getAllStore();
-        return response()->json([
-            'status' => true,
-            'message' => 'Lấy danh sách Cửa hàng thành công',
-            'data' => $stores,
-        ], 200);
+        return $this->responseSuccess(
+            'Lấy danh sách thành công',
+            [
+                'data' => $stores,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function store(StoreInformationRequest $request)
@@ -35,11 +39,14 @@ class StoreInformationController extends Controller
 
         $store = $this->storeService->createStore($data);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Thêm Cửa hàng thành công',
-            'data' => $store,
-        ]);
+        return $this->responseSuccess(
+            'thêm cửa hàng thành công',
+            [
+                'data' => $store,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function show($id)

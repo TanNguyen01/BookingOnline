@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Models\categorie;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Traits\APIResponse;
+use Illuminate\Http\Response;
 
 class CategorieService
 {
+    use APIResponse;
+
     public function getAllCategorie()
     {
         return  categorie::query()->get();
@@ -18,16 +20,19 @@ class CategorieService
     {
         $categorie =  categorie::find($id);
         if (!$categorie) {
-            return response()->json(['status' => 401,
-                'error' => 'Không tìm thấy danh mục'
-        ]);
+            return $this ->responseBadRequest(
+                'Không tìm thấy dịch vụ',
+                Response::HTTP_BAD_REQUEST);
 
         }else{
-            return response()->json([
-                'status' => 201,
-                'message' => 'Xem danh muc thành công',
-                'data' => $categorie,
-            ]);
+            return $this->responseSuccess(
+                'Xem dịch vụ thành công',
+                [
+                    'data' => $categorie,
+
+                ],
+                Response::HTTP_OK
+            );
         }
     }
 

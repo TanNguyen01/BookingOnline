@@ -39,7 +39,7 @@ class CategorieRequest extends FormRequest
 {
 
     return [
-        'name.unique' => 'email da ton tai',
+        'name.unique' => 'tên da ton tai',
         'name.required' => 'Vui lòng nhâp name',
         'email.email' => 'Nhập đúng định dạng email!',
 

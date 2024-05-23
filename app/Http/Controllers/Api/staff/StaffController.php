@@ -5,17 +5,16 @@ namespace App\Http\Controllers\Api\staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleRequest;
 use App\Http\Requests\StaffRequest;
-use App\Models\booking;
-use App\Models\OpeningHour;
-use App\Models\Schedule;
+use App\Traits\APIResponse;
 use App\Services\StaffService;
-use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class StaffController extends Controller
 {
-    protected $staffService;
 
+    use APIResponse;
+    protected $staffService;
     public function __construct(StaffService $staffService)
     {
         $this->staffService = $staffService;
@@ -25,10 +24,15 @@ class StaffController extends Controller
     {
         $user = Auth::user();
         $validatedData = $request->validated();
-        $this->staffService->updateProfile($user, $validatedData);
-        return response()->json(['
-        status'=>201,
-        'message' => 'Hồ sơ đã được cập nhật thành công']);
+        $staff = $this->staffService->updateProfile($user, $validatedData);
+        return $this->responseSuccess(
+            'Cập nhật thành công',
+            [
+                'data' => $staff,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function showProfile()
@@ -36,9 +40,19 @@ class StaffController extends Controller
         $userInfo = $this->staffService->showProfileService();
 
         if ($userInfo) {
-            return response()->json($userInfo, 201);
+            return $this->responseSuccess(
+                'Xem thành công thành công',
+                [
+                    'data' => $userInfo,
+
+                ],
+                Response::HTTP_OK
+            );
         } else {
-            return response()->json(['message' => 'Lỗi k tìm thấy'], 401);
+            return $this->responseUnAuthorized(
+                'bạn không có quyền truy cập',
+                Response::HTTP_FORBIDDEN
+            );
         }
     }
 
@@ -46,7 +60,7 @@ class StaffController extends Controller
     {
         $user = Auth::user();
         if ($user->role !== 1) {
-            return response()->json(['error' => 'Bạn không có quyền cập nhật hồ sơ'], 401);
+            return $this->responseUnAuthorized('bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
         }
 
         $storeId = $request->input('store_information_id');
@@ -58,20 +72,27 @@ class StaffController extends Controller
             return response()->json($result, 401);
         }
 
-        return response()->json([$result,
-        'status'=> 201,
-        'message'=>'Them thanh cong']);
+        return $this->responseSuccess(
+            'thêm thành công',
+            [
+                'data' => $result,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function getBookings()
     {
 
-      $list =  $this->staffService->getEmployeeBookings();
-        return response()->json([
-            'status' => 201,
-            'message'=> 'xem thanh cong',
-            'list' => $list,
-        ]);
-    }
+        $list =  $this->staffService->getEmployeeBookings();
+        return $this->responseSuccess(
+            'xem thành công',
+            [
+                'data' => $list,
 
+            ],
+            Response::HTTP_OK
+        );
+    }
 }

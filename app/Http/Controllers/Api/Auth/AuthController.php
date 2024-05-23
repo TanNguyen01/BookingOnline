@@ -9,9 +9,13 @@ use App\Http\Requests\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Traits\APIResponse;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
+    use APIResponse;
+
     /**
      * Display a listing of the resource.
      */
@@ -19,20 +23,20 @@ class AuthController extends Controller
     {
 
         if (!$token = auth()->attempt($request->validated())) {
-            return response()->json(['error' => 'Sai mật khẩu hoặc tài khoản vui lòng kiểm tra lại'], 401);
+            return $this ->responseBadRequest('đăng nhập thất bại vui long kiểm tra lại',
+             Response::HTTP_BAD_REQUEST);
         }
         $user = User::where('email', $request->email)->first();
         $token = $user->createToken('auth-token')->plainTextToken;
-
         return response()->json(['token' => $token]);
     }
 
     public function logout(Request $request)
     {
         Session::flush();
-        return response()->json([
-            'status' => 'success',
-        ]);
-
+        return $this->responseSuccess(
+            'Đăng xuất thành công',
+            Response::HTTP_OK
+        );
     }
 }
