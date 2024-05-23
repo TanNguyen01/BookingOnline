@@ -16,7 +16,6 @@ class StoreInformationController extends Controller
     public function __construct(StoreService $storeService)
     {
         $this->storeService = $storeService;
-        $this->middleware('auth');
     }
 
     public function index()

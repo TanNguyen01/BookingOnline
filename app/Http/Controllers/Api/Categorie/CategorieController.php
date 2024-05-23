@@ -23,7 +23,7 @@ class CategorieController extends Controller
         $users = $this->categorieService->getAllCategorie();
 
         return response()->json([
-            'status' => true,
+            'status' => 201,
             'message' => 'Lấy danh sách Danh mục thành công',
             'data' => $users,
         ], 201);

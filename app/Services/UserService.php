@@ -66,10 +66,10 @@ class UserService
     {
         if (isset($data['image']) && $data['image']->isValid()) {
             $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('public', $imageName);
+            $data['image']->storeAs('public/images/user', $imageName);
 
             if ($user && $user->image) {
-                Storage::disk('public')->delete($user->image);
+                Storage::disk('public/images/user')->delete($user->image);
             }
 
             $data['image'] = $imageName;

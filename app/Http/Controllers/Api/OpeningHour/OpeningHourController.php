@@ -26,7 +26,7 @@ class OpeningHourController extends Controller
 
         return response()->json([
             'opening_hours' => $openingHours,
-            'status' => 200,
+            'status' => 201,
             'message' => 'Lấy danh sách giờ mở cửa thành công'
         ]);
     }
@@ -44,14 +44,14 @@ class OpeningHourController extends Controller
         $result = $this->openingService->createOpeningHours($storeId, $openingHoursData);
 
         if ($result['status']) {
-            return response()->json(['message' => $result['message']], 200);
+            return response()->json(['message' => $result['message']], 201);
         } else {
             return response()->json([
                 'message' => $result['message'],
                 'existing_days' => $result['existing_days']
-            ], 400); // 400 Bad Request
+            ], 401); // 400 Bad Request
         }
-        return response()->json(['message' => 'Giờ làm của cửa hàng đã được thêm.'], 200);
+        return response()->json(['message' => 'Giờ làm của cửa hàng đã được thêm.'], 201);
     }
 
 

@@ -64,7 +64,7 @@ class OpeningService
         }
 
         return [
-            'status' => true,
+            'status' => 201,
             'message' => 'Giờ làm của cửa hàng đã được thêm.'
         ];
     }

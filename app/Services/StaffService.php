@@ -9,6 +9,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class StaffService
 {
@@ -34,6 +36,7 @@ class StaffService
         }
 
         // Cập nhật thông tin hồ sơ của người dùng
+        $this->uploadImageIfExists($validatedData);
         $user->update($validatedData);
     }
 
@@ -130,6 +133,19 @@ class StaffService
         }
 
         return response()->json(['bookings' => $bookings], 200);
+    }
+    protected function uploadImageIfExists(&$data, $user = null)
+    {
+        if (isset($data['image']) && $data['image']->isValid()) {
+            $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
+            $data['image']->storeAs('public/images/user', $imageName);
+
+            if ($user && $user->image) {
+                Storage::disk('public/images/user')->delete($user->image);
+            }
+
+            $data['image'] = $imageName;
+        }
     }
 }
 

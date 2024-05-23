@@ -25,8 +25,10 @@ class StaffController extends Controller
     {
         $user = Auth::user();
         $validatedData = $request->validated();
-        return $this->staffService->updateProfile($user, $validatedData);
-        return response()->json(['message' => 'Hồ sơ đã được cập nhật thành công']);
+        $this->staffService->updateProfile($user, $validatedData);
+        return response()->json(['
+        status'=>201,
+        'message' => 'Hồ sơ đã được cập nhật thành công']);
     }
 
     public function showProfile()
@@ -56,7 +58,9 @@ class StaffController extends Controller
             return response()->json($result, 401);
         }
 
-        return response()->json($result, 200);
+        return response()->json([$result,
+        'status'=> 201,
+        'message'=>'Them thanh cong']);
     }
 
     public function getBookings()
@@ -64,7 +68,9 @@ class StaffController extends Controller
 
       $list =  $this->staffService->getEmployeeBookings();
         return response()->json([
-            'success' => 201,
+            'status' => 201,
+            'message'=> 'xem thanh cong',
+            'list' => $list,
         ]);
     }
 

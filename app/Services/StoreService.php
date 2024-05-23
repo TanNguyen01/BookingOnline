@@ -53,7 +53,7 @@ class StoreService
         $store = StoreInformation::findOrFail($id);
 
         if ($store->image) {
-            Storage::disk('public')->delete($store->image);
+            Storage::disk('public/images/store')->delete($store->image);
         }
 
         $store->delete();
@@ -65,10 +65,10 @@ class StoreService
     {
         if (isset($data['image']) && $data['image']->isValid()) {
             $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('public', $imageName);
+            $data['image']->storeAs('public/images/store', $imageName);
 
             if ($store && $store->image) {
-                Storage::disk('public')->delete($store->image);
+                Storage::disk('public/images/store')->delete($store->image);
             }
 
             $data['image'] = $imageName;
