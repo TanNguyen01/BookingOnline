@@ -37,9 +37,10 @@ class UserController extends Controller
 
 
         $data = $request->all();
+        $data['role'] = 1;
         $user = $this->userService->createUser($data);
         return $this->responseSuccess(
-            'Lấy danh sách người dùng thành công',
+            'Thêm thành công dùng thành công',
             [
                 'data' => $user,
 
@@ -75,7 +76,7 @@ class UserController extends Controller
         $this->userService->deleteUser($id);
 
         return $this->responseSuccess(
-            'Lấy danh sách người dùng thành công',
+            'xóa thành  thành công',
             Response::HTTP_OK
         );
     }
