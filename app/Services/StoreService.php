@@ -20,7 +20,6 @@ class StoreService
                 'data' => $store,
 
             ],
-            Response::HTTP_OK
         );
     }
 

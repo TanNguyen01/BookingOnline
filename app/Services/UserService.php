@@ -41,7 +41,6 @@ class UserService
                     'data' => $user,
 
                 ],
-                Response::HTTP_OK
             );
         }
 

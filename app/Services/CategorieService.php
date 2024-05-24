@@ -75,7 +75,7 @@ class CategorieService
 
     public function deleteCategorie($id)
     {
-        $categorie = categorie::findOrFail($id);
+        $categorie = categorie::find($id);
         if (!$categorie) {
             return $this->responseNotFound(
                 'Không tìm danh mục',
