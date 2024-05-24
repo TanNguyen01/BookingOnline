@@ -36,7 +36,6 @@ class AuthController extends Controller
         Session::flush();
         return $this->responseSuccess(
             'Đăng xuất thành công',
-            Response::HTTP_OK
         );
     }
 }

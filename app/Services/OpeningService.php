@@ -5,12 +5,22 @@ namespace App\Services;
 use App\Models\OpeningHour;
 use App\Models\StoreInformation;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
+use App\Traits\APIResponse;
+
 
 class OpeningService
 {
+    use APIResponse;
     public function getAllOpeningHours()
     {
-        return OpeningHour::with('storeInformation')->get();
+        $openingHours = OpeningHour::with('storeInformation')->get();
+        return $this->responseSuccess(
+            'lấy danh sách thành công',
+            [
+                'data' => $openingHours,
+            ],
+        );
     }
 
     public function getOpeningHour($storeid)
@@ -23,7 +33,12 @@ class OpeningService
 
         // Lấy thông tin giờ mở cửa của cửa hàng
         $openingHours = $store->openingHours()->get(['day', 'opening_time', 'closing_time']);
-        return $openingHours;
+        return $this->responseSuccess(
+            'lấy giờ mở cửa đóng cửa của cửa hàng theo id thành công',
+            [
+                'data' => $openingHours,
+            ],
+                    );
     }
 
     public function createOpeningHours($storeid, $openingHoursData)
@@ -46,16 +61,15 @@ class OpeningService
 
         // Nếu có ngày đã tồn tại, trả về lỗi
         if (!empty($existingDays)) {
-            return [
-                'status' => 401,
-                'message' => '401 ,Ngày giờ mở cửa đã tồn tại.',
-                'existing_days' => $existingDays
-            ];
+            return $this->responseBadRequest(
+                ['Ngày giờ mở cửa đã tồn tại' => $existingDays],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         // Nếu không có ngày nào tồn tại, thêm các ngày mới
         foreach ($openingHoursData as $data) {
-            OpeningHour::create([
+            $opentime = OpeningHour::create([
                 'store_information_id' => $storeInformation->id,
                 'day' => $data['day'],
                 'opening_time' => $data['opening_time'],
@@ -63,10 +77,13 @@ class OpeningService
             ]);
         }
 
-        return [
-            'status' => 201,
-            'message' => 'Giờ làm của cửa hàng đã được thêm.'
-        ];
+        return $this->responseCreated(
+            'Thêm ngày giờ mở cửa cho cửa hàng  thành công',
+            [
+                'data' => $opentime,
+
+            ],
+        );
     }
 
 
@@ -79,8 +96,8 @@ class OpeningService
         foreach ($openingHoursData as $data) {
             // Tìm mục mở cửa hiện tại cho cửa hàng và ngày này
             $openingHour = OpeningHour::where('store_information_id', $storeid)
-                                      ->where('day', $data['day'])
-                                      ->first();
+                ->where('day', $data['day'])
+                ->first();
 
             // Nếu tìm thấy mục, cập nhật giờ mở cửa và giờ đóng cửa
             if ($openingHour) {
@@ -96,17 +113,19 @@ class OpeningService
 
         // Nếu có ngày không tìm thấy, trả về lỗi
         if (!empty($existingDays)) {
-            return [
-                'status' => false,
-                'message' => 'Không thể cập nhật vì ngày không tồn tại.',
-                'missing_days' => $existingDays
-            ];
+            return $this->responseNotFound(
+                ['Không thể cập nhật vì ngày không tồn tại' => $existingDays],
+                Response::HTTP_NOT_FOUND
+            );
         }
 
-        return [
-            'status' => 200,
-            'message' => 'Giờ làm của cửa hàng đã được cập nhật.'
-        ];
+        return $this->responseSuccess(
+            'cập nhật thành công',
+            [
+                'data' => $openingHour,
+
+            ],
+        );
     }
 
     public function deleteOpeningHour($id)
@@ -115,7 +134,10 @@ class OpeningService
 
         // Kiểm tra xem cửa hàng có tồn tại không
         if (!$store) {
-            return ['error' => 'Cửa hàng không tồn tại'];
+            return $this->responseNotFound(
+                'Không tìm thấy cửa hàng',
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         // Lấy ngày hiện tại
@@ -127,13 +149,13 @@ class OpeningService
             ->delete();
 
         if ($deletedRows > 0) {
-            return [
-                'status' =>200,
-                'message' => 'Đã xóa các giờ mở cửa hết hạn',
-                'deleted_rows' => $deletedRows
-            ];
+            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
+
         } else {
-            return ['message' => 'Không có giờ mở cửa nào để xóa'];
+            return $this->responseBadRequest(
+                'Không có ngày nào để xóa',
+                Response::HTTP_BAD_REQUEST,
+            );
         }
     }
 }

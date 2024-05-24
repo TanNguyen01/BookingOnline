@@ -21,15 +21,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $service = $this->serviceService->getAllService();
-        return $this->responseSuccess(
-            'Lấy danh sách thành công',
-            [
-                'data' => $service,
+        return $this->serviceService->getAllService();
 
-            ],
-            Response::HTTP_OK
-        );
     }
 
     /**
@@ -39,14 +32,7 @@ class ServiceController extends Controller
 
     {
         $service = $this->serviceService->createService($request->all());
-        return $this->responseSuccess(
-            'Thêm thành công',
-            [
-                'data' => $service,
-
-            ],
-            Response::HTTP_OK
-        );
+       
     }
 
     /**
@@ -55,7 +41,6 @@ class ServiceController extends Controller
     public function show(string $id)
     {
         return  $this->serviceService->getServiceById($id);
-
     }
 
     /**
@@ -65,16 +50,7 @@ class ServiceController extends Controller
     {
         $data = $request->all();
 
-        $service = $this->serviceService->updateService($id, $data);
-
-        return $this->responseSuccess(
-            'Cập nhật thành công',
-            [
-                'data' => $service,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->serviceService->updateService($id, $data);
     }
 
     /**
@@ -82,14 +58,6 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        $service = $this->serviceService->deleteService($id);
-        return $this->responseSuccess(
-            'Xóa thành công',
-            [
-                'data' => $service,
-
-            ],
-            Response::HTTP_OK
-        );
+        return  $this->serviceService->deleteService($id);
     }
 }

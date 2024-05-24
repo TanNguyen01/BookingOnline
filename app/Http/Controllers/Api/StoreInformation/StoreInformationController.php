@@ -22,31 +22,17 @@ class StoreInformationController extends Controller
     public function index()
     {
 
-        $stores = $this->storeService->getAllStore();
-        return $this->responseSuccess(
-            'Lấy danh sách thành công',
-            [
-                'data' => $stores,
+        return $this->storeService->getAllStore();
 
-            ],
-            Response::HTTP_OK
-        );
     }
 
     public function store(StoreInformationRequest $request)
     {
         $data = $request->all();
 
-        $store = $this->storeService->createStore($data);
+        return $this->storeService->createStore($data);
 
-        return $this->responseSuccess(
-            'thêm cửa hàng thành công',
-            [
-                'data' => $store,
 
-            ],
-            Response::HTTP_OK
-        );
     }
 
     public function show($id)
@@ -59,23 +45,16 @@ class StoreInformationController extends Controller
     {
 
         $data = $request->all();
-        $store = $this->storeService->updateStore($id, $data);
+        return $this->storeService->updateStore($id, $data);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Cập nhật thành công',
-            'data' => $store,
-        ]);
+
     }
 
     public function destroy($id)
     {
-        $this->storeService->deleteStore($id);
+       return $this->storeService->deleteStore($id);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Xóa thành công',
-        ]);
+
     }
     //
 }

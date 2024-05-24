@@ -22,15 +22,8 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $users = $this->categorieService->getAllCategorie();
-        return $this->responseSuccess(
-            'Lấy danh sách thành công',
-            [
-                'data' => $users,
+        return $this->categorieService->getAllCategorie();
 
-            ],
-            Response::HTTP_OK
-        );
     }
 
 
@@ -40,15 +33,8 @@ class CategorieController extends Controller
     public function store(CategorieRequest $request)
     {
         $data = $request->all();
-        $categorie = $this->categorieService->createCategorie($data);
-        return $this->responseSuccess(
-            'Thêm Danh mục thành công',
-            [
-                'data' => $categorie,
+        return $this->categorieService->createCategorie($data);
 
-            ],
-            Response::HTTP_OK
-        );
     }
 
     /**
@@ -65,15 +51,8 @@ class CategorieController extends Controller
     public function update(CategorieRequest $request, string $id)
     {
         $data = $request->all();
-        $categorie = $this->categorieService->updateCategorie($id, $data);
-        return $this->responseSuccess(
-            'Cập nhật thành công',
-            [
-                'data' => $categorie,
+        return $this->categorieService->updateCategorie($id, $data);
 
-            ],
-            Response::HTTP_OK
-        );
     }
 
     /**
@@ -81,10 +60,6 @@ class CategorieController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->categorieService->deleteCategorie($id);
-        return $this->responseSuccess(
-            'Xóa thành công',
-            Response::HTTP_OK
-        );
+       return $this->categorieService->deleteCategorie($id);
     }
 }

@@ -24,75 +24,30 @@ class StaffController extends Controller
     {
         $user = Auth::user();
         $validatedData = $request->validated();
-        $staff = $this->staffService->updateProfile($user, $validatedData);
-        return $this->responseSuccess(
-            'Cập nhật thành công',
-            [
-                'data' => $staff,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->staffService->updateProfile($user, $validatedData);
     }
 
     public function showProfile()
     {
-        $userInfo = $this->staffService->showProfileService();
-
-        if ($userInfo) {
-            return $this->responseSuccess(
-                'Xem thành công thành công',
-                [
-                    'data' => $userInfo,
-
-                ],
-                Response::HTTP_OK
-            );
-        } else {
-            return $this->responseUnAuthorized(
-                'bạn không có quyền truy cập',
-                Response::HTTP_FORBIDDEN
-            );
-        }
+        return $this->staffService->showProfileService();
     }
 
     public function CreateSchedule(ScheduleRequest $request)
     {
+
         $user = Auth::user();
         if ($user->role !== 1) {
             return $this->responseUnAuthorized('bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
         }
-
         $storeId = $request->input('store_information_id');
         $schedules = $request->input('schedules');
 
-        $result = $this->staffService->createSchedule($user, $storeId, $schedules);
-
-        if (isset($result['error'])) {
-            return response()->json($result, 401);
-        }
-
-        return $this->responseSuccess(
-            'thêm thành công',
-            [
-                'data' => $result,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->staffService->createSchedule($user, $storeId, $schedules);
     }
 
     public function getBookings()
     {
 
-        $list =  $this->staffService->getEmployeeBookings();
-        return $this->responseSuccess(
-            'xem thành công',
-            [
-                'data' => $list,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->staffService->getEmployeeBookings();
     }
 }

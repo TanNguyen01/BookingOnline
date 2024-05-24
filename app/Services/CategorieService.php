@@ -12,26 +12,30 @@ class CategorieService
 
     public function getAllCategorie()
     {
-        return  categorie::query()->get();
-
+        $categorie = categorie::query()->get();
+        return $this->responseSuccess(
+            'Xem dịch vụ thành công',
+            [
+                'data' => $categorie,
+            ]
+        );
     }
 
     public function getCategorieById($id)
     {
         $categorie =  categorie::find($id);
         if (!$categorie) {
-            return $this ->responseBadRequest(
+            return $this->responseNotFound(
                 'Không tìm thấy dịch vụ',
-                Response::HTTP_BAD_REQUEST);
-
-        }else{
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
             return $this->responseSuccess(
                 'Xem dịch vụ thành công',
                 [
                     'data' => $categorie,
 
                 ],
-                Response::HTTP_OK
             );
         }
     }
@@ -39,23 +43,48 @@ class CategorieService
     public function createCategorie($data)
     {
 
+        $categorie = categorie::create($data);
+        return $this->responseCreated(
+            'Thêm Danh mục thành công',
+            [
+                'data' => $categorie,
 
-        return categorie::create($data);
+            ],
+        );
     }
 
     public function updateCategorie($id, $data)
     {
-        $categorie = categorie::findOrFail($id);
+        $categorie = categorie::find($id);
+        if (!$categorie) {
+            return $this->responseNotFound(
+                'Không tìm thấy dịch vụ',
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+            $categorie->update($data);
+            return $this->responseSuccess(
+                'cập nhật thành công',
+                [
+                    'data' => $categorie,
 
-        $categorie->update($data);
-
-        return $categorie;
+                ],
+            );
+        }
     }
 
     public function deleteCategorie($id)
     {
         $categorie = categorie::findOrFail($id);
-        $categorie->delete();
-        return $categorie;
+        if (!$categorie) {
+            return $this->responseNotFound(
+                'Không tìm danh mục',
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+
+            $categorie->delete();
+            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
+        }
     }
 }

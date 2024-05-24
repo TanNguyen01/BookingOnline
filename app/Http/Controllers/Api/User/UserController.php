@@ -21,15 +21,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = $this->userService->getAllUsers();
-        return $this->responseSuccess(
-            'Lấy danh sách người dùng thành công',
-            [
-                'data' => $users,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->userService->getAllUsers();
     }
 
     public function store(userRequest $request)
@@ -38,15 +30,7 @@ class UserController extends Controller
 
         $data = $request->all();
         $data['role'] = 1;
-        $user = $this->userService->createUser($data);
-        return $this->responseSuccess(
-            'Thêm thành công dùng thành công',
-            [
-                'data' => $user,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->userService->createUser($data);
     }
 
     public function show($id)
@@ -59,26 +43,11 @@ class UserController extends Controller
 
         $data = $request->all();
 
-        $user = $this->userService->updateUser($id, $data);
-
-        return $this->responseSuccess(
-            'Cập nhật thành công',
-            [
-                'data' => $user,
-
-            ],
-            Response::HTTP_OK
-        );
+        return $this->userService->updateUser($id, $data);
     }
 
     public function destroy($id)
     {
-        $this->userService->deleteUser($id);
-
-        return $this->responseSuccess(
-            'xóa thành  thành công',
-            Response::HTTP_OK
-        );
+        return  $this->userService->deleteUser($id);
     }
-    //
 }

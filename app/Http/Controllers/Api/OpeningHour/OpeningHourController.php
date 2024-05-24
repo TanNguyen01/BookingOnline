@@ -21,14 +21,7 @@ class OpeningHourController extends Controller
 
     public function index()
     {
-        $openingHours = $this->openingService->getAllOpeningHours();
-        return $this->responseSuccess(
-            'lấy danh sách thành công',
-            [
-                'data' => $openingHours,
-            ],
-            Response::HTTP_OK
-        );
+        return $this->openingService->getAllOpeningHours();
     }
 
 
@@ -41,20 +34,7 @@ class OpeningHourController extends Controller
         $storeId = $request->input('store_information_id');
         $openingHoursData = $request->input('opening_hours');
 
-        $result = $this->openingService->createOpeningHours($storeId, $openingHoursData);
-
-        if ($result['status']) {
-            return response()->json(['message' => $result['message']], 201);
-        } else {
-            return response()->json([
-                'message' => $result['message'],
-                'existing_days' => $result['existing_days']
-            ], 401); // 400 Bad Request
-        }
-        return $this->responseSuccess(
-            'Thêm thành công ngày giở mở cửa',
-            Response::HTTP_OK
-        );
+        return $this->openingService->createOpeningHours($storeId, $openingHoursData);
     }
 
 
@@ -68,14 +48,7 @@ class OpeningHourController extends Controller
     public function show($id)
     {
         try {
-            $openingHours = $this->openingService->getOpeningHour($id);
-            return $this->responseSuccess(
-                'lấy giờ mở cửa đóng cửa của cửa hàng theo id thành công',
-                [
-                    'data' => $openingHours,
-                ],
-                Response::HTTP_OK
-            );
+            return $this->openingService->getOpeningHour($id);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
         }
@@ -88,16 +61,7 @@ class OpeningHourController extends Controller
     {
         $storeId = $request->input('store_information_id');
         $openingHoursData = $request->input('opening_hours');
-        $result = $this->openingService->updateOpeningHours($storeId, $openingHoursData);
-
-        if ($result['status']) {
-            return response()->json(['message' => $result['message']], 200);
-        } else {
-            return response()->json([
-                'message' => $result['message'],
-                'missing_days' => $result['missing_days']
-            ], 400); // 400 Bad Request
-        }
+        return $this->openingService->updateOpeningHours($storeId, $openingHoursData);
     }
 
 
@@ -108,7 +72,6 @@ class OpeningHourController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        $result = $this->openingService->deleteOpeningHour($id);
-        return response()->json($result);
+        return $this->openingService->deleteOpeningHour($id);
     }
 }

@@ -13,16 +13,24 @@ class StoreService
     use APIResponse;
     public function getAllStore()
     {
-        return StoreInformation::all();
+        $store =  StoreInformation::all();
+        return $this->responseSuccess(
+            'Xem danh sách hàng thành công',
+            [
+                'data' => $store,
+
+            ],
+            Response::HTTP_OK
+        );
     }
 
     public function getStoreById($id)
     {
         $store =  StoreInformation::find($id);
         if (!$store) {
-            return $this->responseBadRequest(
+            return $this->responseNotFound(
                 'Không tìm thấy cửa hàng',
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_NOT_FOUND
             );
         } else {
             return $this->responseSuccess(
@@ -39,32 +47,52 @@ class StoreService
     public function createStore($data)
     {
         $this->uploadImageIfExists($data);
+        $store = StoreInformation::create($data);
+        return $this->responseCreated(
+            'thêm cửa hàng thành công',
+            [
+                'data' => $store,
 
-        return StoreInformation::create($data);
+            ],
+        );
     }
 
     public function updateStore($id, $data)
     {
-        $store = StoreInformation::findOrFail($id);
+        $store = StoreInformation::find($id);
+        if (!$store) {
+            return $this->responseNotFound(
+                'Không tìm thấy cửa hàng',
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+            $this->uploadImageIfExists($data, $store);
+            $store->update($data);
+            return $this->responseSuccess(
+                'cập nhật thành công',
+                [
+                    'data' => $store,
 
-        $this->uploadImageIfExists($data, $store);
-
-        $store->update($data);
-
-        return $store;
+                ],
+            );
+        }
     }
 
     public function deleteStore($id)
     {
-        $store = StoreInformation::findOrFail($id);
-
-        if ($store->image) {
-            Storage::disk('public/images/store')->delete($store->image);
+        $store = StoreInformation::find($id);
+        if (!$store) {
+            return $this->responseNotFound(
+                'Không tìm thấy cửa hàng',
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+            if ($store->image) {
+                Storage::disk('images_store')->delete($store->image);
+            }
+            $store->delete();
+            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         }
-
-        $store->delete();
-
-        return $store;
     }
 
     protected function uploadImageIfExists(&$data, $store = null)

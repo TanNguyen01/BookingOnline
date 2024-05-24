@@ -44,8 +44,16 @@ class StaffService
         }
 
         // Cập nhật thông tin hồ sơ của người dùng
+
         $this->uploadImageIfExists($validatedData);
         $user->update($validatedData);
+        return $this->responseSuccess(
+            'Cập nhật thành công',
+            [
+                'data' => $user,
+
+            ],
+        );
     }
 
 
@@ -63,14 +71,28 @@ class StaffService
                 'phone' => $user->phone,
                 'created_at' => $user->created_at
             ];
+            return $this->responseSuccess(
+                'Xem thành công thành công',
+                [
+                    'data' => $user,
+
+                ],
+            );
         } else {
-            return null;
+            return $this->responseUnAuthorized(
+                'bạn không có quyền truy cập',
+                Response::HTTP_FORBIDDEN
+            );
         }
     }
 
     public function createSchedule($user, $storeId, $schedules)
     {
 
+        $user = Auth::user();
+        if ($user->role !== 1) {
+            return $this->responseUnAuthorized('bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
+        }
         foreach ($schedules as $scheduleData) {
             $day = $scheduleData['day'];
             $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $scheduleData['start_time']);
@@ -82,7 +104,11 @@ class StaffService
                 ->first();
 
             if ($existingSchedule) {
-                return ['error' => 'Chỉ được đăng ký một bắt đầu và một kết thúc cho mỗi ngày'];
+                return $this->responseBadRequest(
+                    ['Chỉ được đăng ký một bắt đầu và một kết thúc cho mỗi ngày' => $existingSchedule],
+                    Response::HTTP_BAD_REQUEST
+                );
+                // return ['error' => 'Chỉ được đăng ký một bắt đầu và một kết thúc cho mỗi ngày'];
             }
 
             $openingHours = OpeningHour::where('store_information_id', $storeId)
@@ -90,14 +116,22 @@ class StaffService
                 ->first();
 
             if (!$openingHours) {
-                return ['error' => 'Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa'];
+                return $this->responseNotFound(
+                    ['Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa' => $openingHours],
+                    Response::HTTP_NOT_FOUND
+                );
+                // return ['error' => 'Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa'];
             }
 
             $storeOpeningTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $openingHours->opening_time);
             $storeClosingTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $openingHours->closing_time);
 
             if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
-                return ['error' => 'Giờ làm phải nằm trong giờ mở cửa của cửa hàng'];
+                return $this->responseBadRequest(
+                    ['Giờ làm phải nằm trong giờ mở cửa của cửa hàng'],
+                    Response::HTTP_BAD_REQUEST
+                );
+                // return ['error' => 'Giờ làm phải nằm trong giờ mở cửa của cửa hàng'];
             }
 
             // Tiếp tục với các bước xử lý khác như trước...
@@ -112,8 +146,13 @@ class StaffService
             $schedule->save();
         }
 
-        return ['message' => 'Lịch làm việc đã được thêm thành công'];
+        return $this->responseCreated(
+            'đăng ký giờ làm thành công thành công',
+            [
+                'data' => $schedules,
 
+            ],
+        );
     }
 
 
@@ -137,10 +176,18 @@ class StaffService
 
         // Kiểm tra nếu không có booking nào được tìm thấy
         if ($bookings->isEmpty()) {
-            return response()->json(['message' => 'Hiện bạn không có booking nào'], 200);
+            return $this->responseNotFound(
+                'Hiện bạn không có booking nào',
+                Response::HTTP_NOT_FOUND
+            );
         }
+        return $this->responseSuccess(
+            'Xem booking thành công',
+            [
+                'data' => $bookings,
+            ]
+        );
 
-        return response()->json(['bookings' => $bookings], 200);
     }
     protected function uploadImageIfExists(&$data, $user = null)
     {
