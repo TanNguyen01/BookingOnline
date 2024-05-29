@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('day');
-            $table->timestamp('start_time');
-            $table->timestamp('end_time');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
         });
     }

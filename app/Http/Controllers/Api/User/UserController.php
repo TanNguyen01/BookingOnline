@@ -21,7 +21,8 @@ class UserController extends Controller
 
     public function index()
     {
-        return $this->userService->getAllUsers();
+        $users = $this->userService->getAllUsers();
+        return $this->responseSuccess('Lấy danh sách người dùng thành công', ['data' => $users]);
     }
 
     public function store(userRequest $request)
@@ -30,24 +31,42 @@ class UserController extends Controller
 
         $data = $request->all();
         $data['role'] = 1;
-        return $this->userService->createUser($data);
+        $user =  $this->userService->createUser($data);
+        return $this->responseCreated(
+           'them thanh cong',
+
+            [
+                'data' => $user,
+
+            ],
+        );
     }
 
     public function show($id)
     {
-        return $this->userService->getUserById($id);
+        $user = $this->userService->getUserById($id);
+        if (!$user) {
+            return $this->responseNotFound('Không tìm thấy người dùng', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseSuccess('Xem thông tin người dùng thành công', ['data' => $user]);
     }
 
     public function update(userRequest $request, $id)
     {
 
-        $data = $request->all();
-
-        return $this->userService->updateUser($id, $data);
+        $user = $this->userService->updateUser($id, $request->all());
+        if (!$user) {
+            return $this->responseNotFound('Không tìm thấy người dùng', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseSuccess('Cập nhật thành công', ['data' => $user]);
     }
 
     public function destroy($id)
     {
-        return  $this->userService->deleteUser($id);
+        $user = $this->userService->deleteUser($id);
+        if (!$user) {
+            return $this->responseNotFound('Không tìm thấy người dùng', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }
 }

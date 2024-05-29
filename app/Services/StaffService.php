@@ -1,66 +1,41 @@
 <?php
-
 namespace App\Services;
 
-use App\Models\booking;
+use App\Models\Booking;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Traits\APIResponse;
-
 
 class StaffService
 {
-    use APIResponse;
     public function updateProfile($user, $validatedData)
     {
-        // Kiểm tra xem người dùng có quyền là nhân viên không
         if ($user->role !== 1) {
-            return $this->responseUnAuthorized('bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
-
+            return null;
         }
 
-        // Kiểm tra xem mật khẩu hiện tại có chính xác không
         if (!Hash::check($validatedData['current_password'], $user->password)) {
-            return $this->responseBadRequest(
-                'Mật khẩu hiện tại không chính xác',
-                Response::HTTP_BAD_REQUEST
-            );
+            return false;
         }
 
-        // Loại bỏ trường mật khẩu hiện tại để tránh lưu vào cơ sở dữ liệu
         unset($validatedData['current_password']);
 
-        // Nếu có mật khẩu mới, mã hóa và cập nhật vào cơ sở dữ liệu
         if (isset($validatedData['new_password'])) {
             $validatedData['password'] = bcrypt($validatedData['new_password']);
             unset($validatedData['new_password']);
         }
 
-        // Cập nhật thông tin hồ sơ của người dùng
-
         $this->uploadImageIfExists($validatedData);
         $user->update($validatedData);
-        return $this->responseSuccess(
-            'Cập nhật thành công',
-            [
-                'data' => $user,
-
-            ],
-        );
+        return $user;
     }
 
-
-    public function showProfileService()
+    public function showProfileService($user)
     {
-        $user = Auth::user();
-
         if ($user->role == 1) {
             return [
                 'id' => $user->id,
@@ -71,32 +46,20 @@ class StaffService
                 'phone' => $user->phone,
                 'created_at' => $user->created_at
             ];
-            return $this->responseSuccess(
-                'Xem thành công thành công',
-                [
-                    'data' => $user,
-
-                ],
-            );
-        } else {
-            return $this->responseUnAuthorized(
-                'bạn không có quyền truy cập',
-                Response::HTTP_FORBIDDEN
-            );
         }
+        return null;
     }
 
     public function createSchedule($user, $storeId, $schedules)
     {
-
         $user = Auth::user();
         if ($user->role !== 1) {
-            return $this->responseUnAuthorized('bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
+            return null;
         }
         foreach ($schedules as $scheduleData) {
             $day = $scheduleData['day'];
-            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $scheduleData['start_time']);
-            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $scheduleData['end_time']);
+            $startTime = Carbon::createFromFormat('H:i:s',  $scheduleData['start_time']);
+            $endTime = Carbon::createFromFormat('H:i:s', $scheduleData['end_time']);
 
             // Kiểm tra xem đã tồn tại lịch làm việc cho ngày này chưa
             $existingSchedule = Schedule::where('store_information_id', $storeId)
@@ -104,11 +67,8 @@ class StaffService
                 ->first();
 
             if ($existingSchedule) {
-                return $this->responseBadRequest(
-                    ['Chỉ được đăng ký một bắt đầu và một kết thúc cho mỗi ngày' => $existingSchedule],
-                    Response::HTTP_BAD_REQUEST
-                );
-                // return ['error' => 'Chỉ được đăng ký một bắt đầu và một kết thúc cho mỗi ngày'];
+
+                return ['error' => 'Chỉ được đăng ký một bắt đầu và một kết thúc cho mỗi ngày'];
             }
 
             $openingHours = OpeningHour::where('store_information_id', $storeId)
@@ -116,22 +76,16 @@ class StaffService
                 ->first();
 
             if (!$openingHours) {
-                return $this->responseNotFound(
-                    ['Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa' => $openingHours],
-                    Response::HTTP_NOT_FOUND
-                );
-                // return ['error' => 'Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa'];
+
+
+                return ['error' => 'Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa'];
             }
 
-            $storeOpeningTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $openingHours->opening_time);
-            $storeClosingTime = Carbon::createFromFormat('Y-m-d H:i:s', $day . ' ' . $openingHours->closing_time);
+            $storeOpeningTime = Carbon::createFromFormat('H:i:s', $openingHours->opening_time);
+            $storeClosingTime = Carbon::createFromFormat('H:i:s', $openingHours->closing_time);
 
             if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
-                return $this->responseBadRequest(
-                    ['Giờ làm phải nằm trong giờ mở cửa của cửa hàng'],
-                    Response::HTTP_BAD_REQUEST
-                );
-                // return ['error' => 'Giờ làm phải nằm trong giờ mở cửa của cửa hàng'];
+                return ['error' => 'Giờ làm phải nằm trong giờ mở cửa của cửa hàng'];
             }
 
             // Tiếp tục với các bước xử lý khác như trước...
@@ -145,50 +99,27 @@ class StaffService
             $schedule->created_at = now();
             $schedule->save();
         }
-
-        return $this->responseCreated(
-            'đăng ký giờ làm thành công thành công',
-            [
-                'data' => $schedules,
-
-            ],
-        );
+        return $schedules;
     }
 
+    public function getSchedule(){
+        return Schedule::all();
+    }
 
-
-    public function getEmployeeBookings()
+    public function getEmployeeBookings($user)
     {
-        $user = Auth::user();
-
-        // Kiểm tra nếu user có role là nhân viên (role = 1)
         if ($user->role !== 1) {
-            return response()->json(['error' => 'User không phải là nhân viên'], 403);
+            return null;
         }
 
-        // Lấy ID của nhân viên đang đăng nhập
-        $employeeId = $user->id;
-
-        // Lấy tất cả các booking thuộc về nhân viên đang đăng nhập
-        $bookings = booking::whereHas('schedule', function ($query) use ($employeeId) {
-            $query->where('user_id', $employeeId);
+        $bookings = Booking::whereHas('schedule', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
         })->get();
 
-        // Kiểm tra nếu không có booking nào được tìm thấy
-        if ($bookings->isEmpty()) {
-            return $this->responseNotFound(
-                'Hiện bạn không có booking nào',
-                Response::HTTP_NOT_FOUND
-            );
-        }
-        return $this->responseSuccess(
-            'Xem booking thành công',
-            [
-                'data' => $bookings,
-            ]
-        );
-
+        return $bookings;
     }
+
+
     protected function uploadImageIfExists(&$data, $user = null)
     {
         if (isset($data['image']) && $data['image']->isValid()) {
@@ -196,11 +127,10 @@ class StaffService
             $data['image']->storeAs('public/images/user', $imageName);
 
             if ($user && $user->image) {
-                Storage::disk('public/images/user')->delete($user->image);
+                Storage::disk('images_user')->delete($user->image);
             }
 
             $data['image'] = $imageName;
         }
     }
 }
-

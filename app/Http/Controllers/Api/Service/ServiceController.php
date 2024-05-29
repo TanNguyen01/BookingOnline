@@ -1,63 +1,59 @@
 <?php
-
 namespace App\Http\Controllers\Api\Service;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRequest;
 use App\Services\ServiceService;
-use App\Traits\APIResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Traits\APIResponse;
 
 class ServiceController extends Controller
 {
     use APIResponse;
+
     protected $serviceService;
+
     public function __construct(ServiceService $serviceService)
     {
         $this->serviceService = $serviceService;
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        return $this->serviceService->getAllService();
-
+        $services = $this->serviceService->getAllService();
+        return $this->responseSuccess('Lấy danh sách thành công', ['data' => $services]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(ServiceRequest $request)
+    public function show($id)
+    {
+        $service = $this->serviceService->getServiceById($id);
+        if (!$service) {
+            return $this->responseNotFound('Không tìm thấy dịch vụ', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseSuccess('Xem dịch vụ thành công', ['data' => $service]);
+    }
 
+    public function store(ServiceRequest $request)
     {
         $service = $this->serviceService->createService($request->all());
-       
+        return $this->responseCreated('Thêm thành công', ['data' => $service]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(ServiceRequest $request, $id)
     {
-        return  $this->serviceService->getServiceById($id);
+        $service = $this->serviceService->updateService($id, $request->all());
+        if (!$service) {
+            return $this->responseNotFound('Không tìm thấy dịch vụ', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseSuccess('Cập nhật thành công', ['data' => $service]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ServiceRequest $request, string $id)
+    public function destroy($id)
     {
-        $data = $request->all();
-
-        return $this->serviceService->updateService($id, $data);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        return  $this->serviceService->deleteService($id);
+        $service = $this->serviceService->deleteService($id);
+        if (!$service) {
+            return $this->responseNotFound('Không tìm thấy dịch vụ', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }
 }

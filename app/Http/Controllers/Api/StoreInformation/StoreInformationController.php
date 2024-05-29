@@ -21,40 +21,43 @@ class StoreInformationController extends Controller
 
     public function index()
     {
+        $stores = $this->storeService->getAllStore();
+        return $this->responseSuccess('Xem danh sách hàng thành công', ['data' => $stores]);
+    }
 
-        return $this->storeService->getAllStore();
+    public function show(string $id)
+    {
+        $store = $this->storeService->getStoreById($id);
+        if (!$store) {
+            return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
+        }else{
+            return $this->responseSuccess('Xem thông tin cửa hàng thành công', ['data' => $store], Response::HTTP_OK);
 
+        }
     }
 
     public function store(StoreInformationRequest $request)
     {
-        $data = $request->all();
-
-        return $this->storeService->createStore($data);
-
-
+        $store = $this->storeService->createStore($request->all());
+        return $this->responseCreated('Thêm cửa hàng thành công', ['data' => $store]);
     }
 
-    public function show($id)
+    public function update(StoreInformationRequest $request, $id)
     {
-        return $this->storeService->getStoreById($id);
-
-    }
-
-    public function update(Request $request, $id)
-    {
-
-        $data = $request->all();
-        return $this->storeService->updateStore($id, $data);
-
-
+        $store = $this->storeService->updateStore($id, $request->all());
+        if (!$store) {
+            return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseSuccess('Cập nhật thành công', ['data' => $store]);
     }
 
     public function destroy($id)
     {
-       return $this->storeService->deleteStore($id);
-
-
+        $store = $this->storeService->deleteStore($id);
+        if (!$store) {
+            return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
+        }
+        return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }
     //
 }

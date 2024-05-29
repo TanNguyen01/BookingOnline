@@ -49,7 +49,7 @@ class OpeningHourRequest extends FormRequest
     {
 
         return [
-            'store_name.string' => 'Tên của hàng là dạng chuổi ',
+           
             'store_information_id.required' => 'Vui lòng nhâp id store',
             'store_information_id.exists' => 'Cửa hàng không tồn tại',
             'opening_hours.required' => 'Vui lòng chọn ngày mở cửa',

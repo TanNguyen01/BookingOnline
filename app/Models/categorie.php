@@ -12,6 +12,11 @@ class categorie extends Model
     protected $fillable =[
         'name'
     ];
+    public $timestamps = false;
+
+    public function getNameAttribute($value)
+    {
+        return trans($value);    }
     public function services()
     {
         return $this->hasMany(Service::class);

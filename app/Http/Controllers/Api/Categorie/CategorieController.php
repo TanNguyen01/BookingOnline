@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Categorie;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategorieRequest;
-use App\Models\categories;
 use App\Services\CategorieService;
 use App\Traits\APIResponse;
 use Illuminate\Http\Response;
@@ -22,7 +21,14 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        return $this->categorieService->getAllCategorie();
+        $categorie = $this->categorieService->getAllCategorie();
+
+        return $this->responseSuccess(
+           __('message.category_list'),
+            [
+                'data' => $categorie,
+            ]
+        );
 
     }
 
@@ -33,8 +39,16 @@ class CategorieController extends Controller
     public function store(CategorieRequest $request)
     {
         $data = $request->all();
-        return $this->categorieService->createCategorie($data);
+        $categorie = $this->categorieService->createCategorie($data);
 
+        return $this->responseCreated(
+            __('message.category_created'),
+
+            [
+                'data' => $categorie,
+
+            ],
+        );
     }
 
     /**
@@ -42,7 +56,23 @@ class CategorieController extends Controller
      */
     public function show(string $id)
     {
-       return $this->categorieService->getCategorieById($id);
+        $categorie = $this->categorieService->getCategorieById($id);
+        if (!$categorie) {
+            return $this->responseNotFound(
+                __('message.category_not_found'),
+
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+            return $this->responseSuccess(
+                __('message.category_list'),
+
+                [
+                    'data' => $categorie,
+
+                ],
+            );
+        }
     }
 
     /**
@@ -51,8 +81,22 @@ class CategorieController extends Controller
     public function update(CategorieRequest $request, string $id)
     {
         $data = $request->all();
-        return $this->categorieService->updateCategorie($id, $data);
+        $categorie = $this->categorieService->updateCategorie($id, $data);
+        if (!$categorie) {
+            return $this->responseNotFound(
+                __('message.category_not_found'),
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+            $categorie->update($data);
+            return $this->responseSuccess(
+                __('message.category_updated'),
+                [
+                    'data' => $categorie,
 
+                ],
+            );
+        }
     }
 
     /**
@@ -60,6 +104,17 @@ class CategorieController extends Controller
      */
     public function destroy(string $id)
     {
-       return $this->categorieService->deleteCategorie($id);
+        $categorie =  $this->categorieService->deleteCategorie($id);
+        if (!$categorie) {
+            return $this->responseNotFound(
+                __('message.category_not_found'),
+
+                Response::HTTP_NOT_FOUND
+            );
+        } else {
+
+            $categorie->delete();
+            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
+        }
     }
 }

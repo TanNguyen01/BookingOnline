@@ -16,6 +16,8 @@ class Service extends Model
         'categorie_id'
 
     ];
+    public $timestamps = false;
+
 
     public function category()
     {

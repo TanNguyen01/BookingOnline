@@ -14,10 +14,13 @@ class OpeningHour extends Model
         'opening_time',
         'closing_time',
     ];
+    public $timestamps = false;
+
 
 
     public function storeInformation()
     {
         return $this->belongsTo(StoreInformation::class, 'store_information_id');
     }
+
 }

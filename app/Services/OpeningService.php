@@ -3,42 +3,24 @@
 namespace App\Services;
 
 use App\Models\OpeningHour;
+use App\Models\Schedule;
 use App\Models\StoreInformation;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use App\Traits\APIResponse;
-
+use Illuminate\Support\Facades\DB;
 
 class OpeningService
 {
     use APIResponse;
     public function getAllOpeningHours()
     {
-        $openingHours = OpeningHour::with('storeInformation')->get();
-        return $this->responseSuccess(
-            'lấy danh sách thành công',
-            [
-                'data' => $openingHours,
-            ],
-        );
+        return OpeningHour::with('storeInformation')->get();
     }
 
     public function getOpeningHour($storeid)
     {
-        $store = StoreInformation::where('id', $storeid)->first();
-
-        if (!$store) {
-            throw new \Exception(' cửa hàng k tồn tai', 401);
-        }
-
-        // Lấy thông tin giờ mở cửa của cửa hàng
-        $openingHours = $store->openingHours()->get(['day', 'opening_time', 'closing_time']);
-        return $this->responseSuccess(
-            'lấy giờ mở cửa đóng cửa của cửa hàng theo id thành công',
-            [
-                'data' => $openingHours,
-            ],
-                    );
+        return StoreInformation::findOrFail($storeid)->openingHours()->get(['day', 'opening_time', 'closing_time']);
     }
 
     public function createOpeningHours($storeid, $openingHoursData)
@@ -61,10 +43,8 @@ class OpeningService
 
         // Nếu có ngày đã tồn tại, trả về lỗi
         if (!empty($existingDays)) {
-            return $this->responseBadRequest(
-                ['Ngày giờ mở cửa đã tồn tại' => $existingDays],
-                Response::HTTP_BAD_REQUEST
-            );
+
+            return ['error' => ['Ngày giờ mở cửa đã tồn tại' => $existingDays]];
         }
 
         // Nếu không có ngày nào tồn tại, thêm các ngày mới
@@ -76,86 +56,71 @@ class OpeningService
                 'closing_time' => $data['closing_time'],
             ]);
         }
-
-        return $this->responseCreated(
-            'Thêm ngày giờ mở cửa cho cửa hàng  thành công',
-            [
-                'data' => $opentime,
-
-            ],
-        );
+        return $openingHoursData;
     }
-
-
-
 
     public function updateOpeningHours($storeid, $openingHoursData)
     {
         $existingDays = [];
+        DB::beginTransaction();
 
-        foreach ($openingHoursData as $data) {
-            // Tìm mục mở cửa hiện tại cho cửa hàng và ngày này
-            $openingHour = OpeningHour::where('store_information_id', $storeid)
-                ->where('day', $data['day'])
-                ->first();
+        try {
+            foreach ($openingHoursData as $data) {
+                $openingHour = OpeningHour::where('store_information_id', $storeid)
+                    ->where('day', $data['day'])
+                    ->first();
 
-            // Nếu tìm thấy mục, cập nhật giờ mở cửa và giờ đóng cửa
-            if ($openingHour) {
-                $openingHour->update([
-                    'opening_time' => $data['opening_time'],
-                    'closing_time' => $data['closing_time'],
-                ]);
-            } else {
-                // Nếu không tìm thấy, thêm ngày vào mảng tồn tại
-                $existingDays[] = $data['day'];
+                if ($openingHour) {
+                    $openingHour->update([
+                        'opening_time' => $data['opening_time'],
+                        'closing_time' => $data['closing_time'],
+                    ]);
+                } else {
+                    $existingDays[] = $data['day'];
+                }
+
+                $schedules = Schedule::where('store_information_id', $storeid)
+                    ->whereDate('day', $data['day'])
+                    ->get();
+
+                foreach ($schedules as $schedule) {
+                    $storeOpeningTime = Carbon::parse($data['day'] . ' ' . $data['opening_time']);
+                    $scheduleStartTime = Carbon::parse($data['day'] . ' ' . $schedule->start_time);
+
+                    if ($scheduleStartTime->lt($storeOpeningTime)) {
+                        $schedule->is_valid = false;
+                        $schedule->save();
+                    }
+                }
             }
+
+            if (!empty($existingDays)) {
+                return ['error' => ['ngày đó chưa có cửa hàng chưa đăng ký vui longf đợi' => $existingDays]];
+
+            }
+
+            DB::commit();
+
+            return $openingHoursData;
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return ['error' => $e->getMessage()];
         }
-
-        // Nếu có ngày không tìm thấy, trả về lỗi
-        if (!empty($existingDays)) {
-            return $this->responseNotFound(
-                ['Không thể cập nhật vì ngày không tồn tại' => $existingDays],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        return $this->responseSuccess(
-            'cập nhật thành công',
-            [
-                'data' => $openingHour,
-
-            ],
-        );
     }
 
     public function deleteOpeningHour($id)
     {
-        $store = StoreInformation::where('id', $id)->first();
-
-        // Kiểm tra xem cửa hàng có tồn tại không
-        if (!$store) {
-            return $this->responseNotFound(
-                'Không tìm thấy cửa hàng',
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        // Lấy ngày hiện tại
+        $store = StoreInformation::findOrFail($id);
         $today = Carbon::today();
-
-        // Xóa giờ mở cửa đã hết hạn
         $deletedRows = OpeningHour::where('store_information_id', $store->id)
             ->where('day', '<', $today)
             ->delete();
 
         if ($deletedRows > 0) {
-            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
-
+            return true;
         } else {
-            return $this->responseBadRequest(
-                'Không có ngày nào để xóa',
-                Response::HTTP_BAD_REQUEST,
-            );
+            return false;
         }
     }
 }

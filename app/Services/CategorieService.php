@@ -12,79 +12,32 @@ class CategorieService
 
     public function getAllCategorie()
     {
-        $categorie = categorie::query()->get();
-        return $this->responseSuccess(
-            'Xem dịch vụ thành công',
-            [
-                'data' => $categorie,
-            ]
-        );
+        return categorie::query()->get();
+
     }
 
     public function getCategorieById($id)
     {
-        $categorie =  categorie::find($id);
-        if (!$categorie) {
-            return $this->responseNotFound(
-                'Không tìm thấy dịch vụ',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
-            return $this->responseSuccess(
-                'Xem dịch vụ thành công',
-                [
-                    'data' => $categorie,
+      return categorie::find($id);
 
-                ],
-            );
-        }
     }
 
     public function createCategorie($data)
     {
 
-        $categorie = categorie::create($data);
-        return $this->responseCreated(
-            'Thêm Danh mục thành công',
-            [
-                'data' => $categorie,
+        return categorie::create($data);
 
-            ],
-        );
     }
 
     public function updateCategorie($id, $data)
     {
-        $categorie = categorie::find($id);
-        if (!$categorie) {
-            return $this->responseNotFound(
-                'Không tìm thấy dịch vụ',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
-            $categorie->update($data);
-            return $this->responseSuccess(
-                'cập nhật thành công',
-                [
-                    'data' => $categorie,
+        return categorie::find($id);
 
-                ],
-            );
-        }
     }
 
     public function deleteCategorie($id)
     {
-        $categorie = categorie::find($id);
-        if (!$categorie) {
-            return $this->responseNotFound(
-                'Không tìm danh mục',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
+       return categorie::find($id);
 
-            $categorie->delete();
-            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
-        }
     }
 }

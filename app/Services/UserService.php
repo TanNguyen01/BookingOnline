@@ -1,101 +1,48 @@
-<?php
-
+<?php 
 namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Traits\APIResponse;
-use Illuminate\Http\Response;
-
-
 
 class UserService
 {
-    use APIResponse;
     public function getAllUsers()
     {
-        $users = User::query()->get();
-        return $this->responseSuccess(
-            'Lấy danh sách người dùng thành công',
-            [
-                'data' => $users,
-
-            ],
-        );
-
+        return User::all();
     }
 
     public function getUserById($id)
     {
-        $user =  User::find($id);
-        if (!$user) {
-            return $this->responseNotFound(
-                'Không tìm người dùng',
-                Response::HTTP_NOT_FOUND
-            );
-        }else{
-            return $this->responseSuccess(
-                'Xem thông tin người dùng thành công',
-                [
-                    'data' => $user,
-
-                ],
-            );
-        }
-
+        return User::find($id);
     }
 
     public function createUser($data)
     {
         $this->uploadImageIfExists($data);
-
-        $user =  User::create($data);
-        return $this->responseCreated(
-            'thêm người dùng công',
-            [
-                'data' => $user,
-
-            ],
-        );
+        return User::create($data);
     }
 
     public function updateUser($id, $data)
     {
         $user = User::find($id);
-        if (!$user) {
-            return $this->responseNotFound(
-                'Không tìm người dùng',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
+        if ($user) {
             $this->uploadImageIfExists($data, $user);
             $user->update($data);
-            return $this->responseSuccess(
-                'cập nhật thành công',
-                [
-                    'data' => $user,
-
-                ],
-            );
         }
+        return $user;
     }
 
     public function deleteUser($id)
     {
         $user = User::find($id);
-        if (!$user) {
-            return $this->responseNotFound(
-                'Không tìm người dùng',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
+        if ($user) {
             if ($user->image) {
                 Storage::disk('images_user')->delete($user->image);
             }
             $user->delete();
-            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         }
+        return $user;
     }
 
     protected function uploadImageIfExists(&$data, $user = null)
@@ -105,7 +52,7 @@ class UserService
             $data['image']->storeAs('public/images/user', $imageName);
 
             if ($user && $user->image) {
-                Storage::disk('public/images/user')->delete($user->image);
+                Storage::disk('images_user')->delete($user->image);
             }
 
             $data['image'] = $imageName;

@@ -42,6 +42,8 @@ class Kernel extends HttpKernel
              \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SetLocale::class,
+
 
         ],
     ];
@@ -69,6 +71,9 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Các Middleware khác...
         'force.json.validation' => \App\Http\Middleware\ForceJsonValidation::class,
-        'auth.api' => \App\Http\Middleware\AuthenticateAPI::class,
+        'checkadmin' => \App\Http\Middleware\CheckAdmim::class,
+        'checkuser' => \App\Http\Middleware\CheckUser::class,
+
+
     ];
 }

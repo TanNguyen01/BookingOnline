@@ -1,97 +1,47 @@
 <?php
-
 namespace App\Services;
-
 use App\Models\StoreInformation;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\APIResponse;
 use Illuminate\Support\Str;
 
 class StoreService
 {
-    use APIResponse;
     public function getAllStore()
     {
-        $store =  StoreInformation::all();
-        return $this->responseSuccess(
-            'Xem danh sách hàng thành công',
-            [
-                'data' => $store,
-
-            ],
-        );
+        return StoreInformation::all();
     }
 
     public function getStoreById($id)
     {
-        $store =  StoreInformation::find($id);
-        if (!$store) {
-            return $this->responseNotFound(
-                'Không tìm thấy cửa hàng',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
-            return $this->responseSuccess(
-                'Xem thông tin cửa hàng thành công',
-                [
-                    'data' => $store,
-
-                ],
-                Response::HTTP_OK
-            );
-        }
+        return StoreInformation::find($id);
     }
 
     public function createStore($data)
     {
         $this->uploadImageIfExists($data);
-        $store = StoreInformation::create($data);
-        return $this->responseCreated(
-            'thêm cửa hàng thành công',
-            [
-                'data' => $store,
-
-            ],
-        );
+        return StoreInformation::create($data);
     }
 
     public function updateStore($id, $data)
     {
         $store = StoreInformation::find($id);
-        if (!$store) {
-            return $this->responseNotFound(
-                'Không tìm thấy cửa hàng',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
+        if ($store) {
             $this->uploadImageIfExists($data, $store);
             $store->update($data);
-            return $this->responseSuccess(
-                'cập nhật thành công',
-                [
-                    'data' => $store,
-
-                ],
-            );
         }
+        return $store;
     }
 
     public function deleteStore($id)
     {
         $store = StoreInformation::find($id);
-        if (!$store) {
-            return $this->responseNotFound(
-                'Không tìm thấy cửa hàng',
-                Response::HTTP_NOT_FOUND
-            );
-        } else {
+        if ($store) {
             if ($store->image) {
                 Storage::disk('images_store')->delete($store->image);
             }
             $store->delete();
-            return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         }
+        return $store;
     }
 
     protected function uploadImageIfExists(&$data, $store = null)
@@ -101,7 +51,7 @@ class StoreService
             $data['image']->storeAs('public/images/store', $imageName);
 
             if ($store && $store->image) {
-                Storage::disk('public/images/store')->delete($store->image);
+                Storage::disk('images_store')->delete($store->image);
             }
 
             $data['image'] = $imageName;

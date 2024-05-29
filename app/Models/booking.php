@@ -14,7 +14,9 @@ class booking extends Model
         'user_id',
         'status',
         'booking_time',
-    ]; //
+    ];
+    public $timestamps = false;
+
 
     public function schedule()
     {

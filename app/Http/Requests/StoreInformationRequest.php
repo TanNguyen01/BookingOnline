@@ -28,7 +28,7 @@ class StoreInformationRequest extends FormRequest
     {
 
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:store_information',
             'image' => 'required|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
@@ -40,6 +40,7 @@ class StoreInformationRequest extends FormRequest
 {
 
     return [
+        'name.unique' =>'ten cua hang da ton tai',
         'address.string' => 'phone là kiểu chuỗi',
         'address.required' => 'Vui lòng nhâp address',
         'phone.string' => 'phone là kiểu chuỗi',

@@ -26,10 +26,10 @@ class userRequest extends FormRequest
      */
     public function rules(): array
     {
-
+        if(request()->isMethod('post')){
         return [
             'email' => 'required|string|email|unique:users',
-            'name' => 'required|string',
+            'name' => 'nullable|string',
             'password' => 'required|string|',
             'role' => 'nullable|integer',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
@@ -37,6 +37,18 @@ class userRequest extends FormRequest
             'phone' => 'nullable|string',
 
         ];
+    }else{
+        return [
+            'email' => 'nullable|string|email|unique:users',
+            'name' => 'nullable|string',
+            'password' => 'nullable|string',
+            'role' => 'nullable|integer|in:0,1',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string',
+
+        ];
+    }
 
     }
     public function messages(): array

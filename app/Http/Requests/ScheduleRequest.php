@@ -44,6 +44,25 @@ class ScheduleRequest extends FormRequest
                 'after:schedules.*.start_time',
             ],
         ];
+
+    }
+    public function messages(): array
+
+    {
+
+        return [
+            'store_information_id.required' => 'Vui lòng nhâp id store',
+            'store_information_id.exists' => 'Cửa hàng không tồn tại',
+            'schedules.*.day' => 'Vui lòng chọn ngày đăng ký làm',
+            'schedules.*.day.*.start_time.required' => 'giờ bắt đầu mở cửa',
+            'schedules.*.day.*.start_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
+            'schedules.*.end_time' => 'giờ đóng cửa',
+            'schedules.*.end_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
+            'schedules.*.end_time.after' => 'Giờ bắt đầu phải < giờ kết thúc',
+
+
+
+        ];
     }
 
     protected function failedValidation(Validator $validator)

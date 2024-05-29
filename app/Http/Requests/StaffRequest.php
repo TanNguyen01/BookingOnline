@@ -29,7 +29,7 @@ class StaffRequest extends FormRequest
 
         return [
             'name' => 'required|string',
-            'image' => 'nullable|string',
+            'image' => 'required|image|mimes:jpg,png,jpeg',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
             'current_password' => 'required|string',

@@ -31,7 +31,7 @@ class ServiceRequest extends FormRequest
             'name' => 'required|string|unique:services',
             'categorie_id' => 'required|integer|exists:categories,id',
             'describe' => 'required|string|max:360',
-            'price' => ['required', 'regex:/^\d{1,3}(,\d{3})*(\.\d{1,2})?$/'],
+            'price' => ['required', 'regex:/^\d{1,9}(,\d{3})*(\.\d{1,2})?$/'],
         ];
 
     }
