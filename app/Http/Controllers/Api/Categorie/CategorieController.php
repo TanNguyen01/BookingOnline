@@ -59,9 +59,10 @@ class CategorieController extends Controller
         $categorie = $this->categorieService->getCategorieById($id);
         if (!$categorie) {
             return $this->responseNotFound(
+                Response::HTTP_NOT_FOUND,
                 __('message.category_not_found'),
 
-                Response::HTTP_NOT_FOUND
+
             );
         } else {
             return $this->responseSuccess(
@@ -83,9 +84,9 @@ class CategorieController extends Controller
         $data = $request->all();
         $categorie = $this->categorieService->updateCategorie($id, $data);
         if (!$categorie) {
-            return $this->responseNotFound(
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,
                 __('message.category_not_found'),
-                Response::HTTP_NOT_FOUND
+
             );
         } else {
             $categorie->update($data);
@@ -107,9 +108,10 @@ class CategorieController extends Controller
         $categorie =  $this->categorieService->deleteCategorie($id);
         if (!$categorie) {
             return $this->responseNotFound(
+                Response::HTTP_NOT_FOUND,
                 __('message.category_not_found'),
 
-                Response::HTTP_NOT_FOUND
+
             );
         } else {
 

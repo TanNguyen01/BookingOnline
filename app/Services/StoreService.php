@@ -48,7 +48,7 @@ class StoreService
     {
         if (isset($data['image']) && $data['image']->isValid()) {
             $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('public/images/store', $imageName);
+            $data['image']->storeAs('', $imageName, 'images_store');
 
             if ($store && $store->image) {
                 Storage::disk('images_store')->delete($store->image);

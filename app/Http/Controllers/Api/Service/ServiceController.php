@@ -28,7 +28,7 @@ class ServiceController extends Controller
     {
         $service = $this->serviceService->getServiceById($id);
         if (!$service) {
-            return $this->responseNotFound('Không tìm thấy dịch vụ', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy dịch vụ', );
         }
         return $this->responseSuccess('Xem dịch vụ thành công', ['data' => $service]);
     }
@@ -43,7 +43,7 @@ class ServiceController extends Controller
     {
         $service = $this->serviceService->updateService($id, $request->all());
         if (!$service) {
-            return $this->responseNotFound('Không tìm thấy dịch vụ', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy dịch vụ');
         }
         return $this->responseSuccess('Cập nhật thành công', ['data' => $service]);
     }
@@ -52,7 +52,7 @@ class ServiceController extends Controller
     {
         $service = $this->serviceService->deleteService($id);
         if (!$service) {
-            return $this->responseNotFound('Không tìm thấy dịch vụ', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy dịch vụ', );
         }
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }

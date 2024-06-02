@@ -1,15 +1,17 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Categorie\CategorieController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
+use App\Models\booking;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/set-locale/{locale}', function ($locale) {
+    Session::put('locale', $locale);
+    return response()->json(['message' => 'Locale set to ' . $locale]);
+});
 
 Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     // Services
@@ -53,31 +59,55 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     Route::delete('store_delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
 
     // Opening Hours
-    Route::get('/opening', [OpeningHourController::class ,'index'])->name('list.opening');
-    Route::get('/opening/{storeid}', [OpeningHourController::class ,'show'])->name('show.opening');
+    Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
+    Route::get('/opening/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
     Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
     Route::post('update_hours', [OpeningHourController::class, 'update'])->name('opening_hours.update');
     Route::delete('store_hours/delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+
+
+    //quản lý booking
+    Route::get('/listbooking', [BookingController::class, 'index']);
+    Route::get('/booking/{id}', [BookingController::class, 'show']);
+    Route::post('/update_booking/{id}', [BookingController::class, 'update']);
+    Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
 });
+
+//
+//tạo booking khách hàng
+// chọn user
+Route::post('/choose-employee', [BookingController::class, 'chooseEmployee']);
+// chọn dịch vụ
+Route::post('/choose-service', [BookingController::class, 'chooseService']);
+// chọn ngày giờ
+Route::post('/choose-date', [BookingController::class, 'chooseDate']);
+// submit form
+Route::post('/bookings', [BookingController::class, 'store']);
+
 
 
 //nhân viên
 
-Route::middleware('auth:sanctum','checkuser')->group(function () {
+Route::middleware('auth:sanctum', 'checkuser')->group(function () {
     // xem lịch làm
     Route::get('seeSchedule', [StaffController::class, 'seeSchedule']);
+    // thêm lịch làm user
+    Route::post('schedules', [StaffController::class, 'CreateSchedule']);
     //  update profile user
     Route::post('profile/update', [StaffController::class, 'updateProfile']);
     // xem profile user
     Route::get('showprofile', [StaffController::class, 'showProfile']);
-    // thêm lịch làm user
-    Route::post('schedules', [StaffController::class, 'CreateSchedule']);
+
     // xem tất cả booking
     Route::get('listbooking', [StaffController::class, 'getEmployeeBookings']);
-
 });
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
+
+
+
+
+
 
 
 
@@ -90,14 +120,3 @@ Route::get('/auth', function (Request $request) {
 
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
-
-
-
-
-
-
-
-
-
-
-

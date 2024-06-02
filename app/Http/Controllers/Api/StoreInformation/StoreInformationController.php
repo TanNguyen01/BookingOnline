@@ -29,7 +29,7 @@ class StoreInformationController extends Controller
     {
         $store = $this->storeService->getStoreById($id);
         if (!$store) {
-            return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy cửa hàng');
         }else{
             return $this->responseSuccess('Xem thông tin cửa hàng thành công', ['data' => $store], Response::HTTP_OK);
 
@@ -46,7 +46,7 @@ class StoreInformationController extends Controller
     {
         $store = $this->storeService->updateStore($id, $request->all());
         if (!$store) {
-            return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy cửa hàng', );
         }
         return $this->responseSuccess('Cập nhật thành công', ['data' => $store]);
     }
@@ -55,7 +55,7 @@ class StoreInformationController extends Controller
     {
         $store = $this->storeService->deleteStore($id);
         if (!$store) {
-            return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy cửa hàng');
         }
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }

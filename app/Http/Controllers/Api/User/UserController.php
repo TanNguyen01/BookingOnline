@@ -46,7 +46,7 @@ class UserController extends Controller
     {
         $user = $this->userService->getUserById($id);
         if (!$user) {
-            return $this->responseNotFound('Không tìm thấy người dùng', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy người dùng', );
         }
         return $this->responseSuccess('Xem thông tin người dùng thành công', ['data' => $user]);
     }
@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $user = $this->userService->updateUser($id, $request->all());
         if (!$user) {
-            return $this->responseNotFound('Không tìm thấy người dùng', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound( Response::HTTP_NOT_FOUND,'Không tìm thấy người dùng',);
         }
         return $this->responseSuccess('Cập nhật thành công', ['data' => $user]);
     }
@@ -65,7 +65,7 @@ class UserController extends Controller
     {
         $user = $this->userService->deleteUser($id);
         if (!$user) {
-            return $this->responseNotFound('Không tìm thấy người dùng', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound( Response::HTTP_NOT_FOUND,'Không tìm thấy người dùng');
         }
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }

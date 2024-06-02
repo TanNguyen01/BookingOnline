@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Services;
 
 use App\Models\User;
@@ -49,7 +49,7 @@ class UserService
     {
         if (isset($data['image']) && $data['image']->isValid()) {
             $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('public/images/user', $imageName);
+            $data['image']->storeAs('', $imageName, 'images_user');
 
             if ($user && $user->image) {
                 Storage::disk('images_user')->delete($user->image);
