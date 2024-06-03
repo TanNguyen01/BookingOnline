@@ -25,15 +25,15 @@ class BookingController extends Controller
     }
 
     use APIResponse;
-    public function chooseEmployee(BookingRequest $request)
+    public function chooseEmployee(Request $request)
     {
         $user_id = $request->user_id;
         // Kiểm tra xem user có tồn tại và có vai trò là nhân viên không
         $employee = User::where('id', $user_id)->where('role', 1)->first();
         if (!$employee) {
-            return response()->json(['error' => 'Người dùng không hợp lệ hoặc không phải là nhân viên.'], 400);
+            return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
         } else {
-            return response()->json(['success' => 'nhân viên hợp lệ'], 201);
+            return $this->responseCreated('nhân viên hợp lệ');
         }
     }
     public function chooseService(Request $request)
@@ -41,11 +41,11 @@ class BookingController extends Controller
         $service_id = $request->service_id;
         $service = Service::find($service_id);
         if (!$service) {
-            return response()->json(['error' => 'Dịch vụ không tồn tại.'], 400);
+            return $this->responseBadRequest('Dịch vụ không tồn tại.');
         }
-        return response()->json(['success' => 'dịch vụ hợp lệ'], 201);
+        return $this->responseCreated('dịch vụ hợp lệ');
     }
-    public function chooseDate(BookingRequest $request)
+    public function chooseDate(Request $request)
     {
         $user_id = $request->user_id;
         $day = $request->day;
@@ -61,9 +61,9 @@ class BookingController extends Controller
 
         // Kiểm tra nếu không có lịch làm việc phù hợp
         if (!$schedule) {
-            return response()->json(['error' => 'Nhân viên không làm việc vào ngày hoặc giờ này.'], 400);
+            return $this->responseBadRequest('Nhân viên không làm việc vào ngày hoặc giờ này.');
         } else {
-            return response()->json(['success' => 'ngày giờ hợp lệ.'], 201);
+            return $this->responseCreated('ngày giờ hợp lệ.');
         }
     }
     public function store(BookingRequest $request)

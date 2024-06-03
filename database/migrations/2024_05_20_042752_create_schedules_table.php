@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('day');
             $table->time('start_time');
             $table->time('end_time');
+            $table->tinyInteger('is_valid')->default(1);
             $table->timestamps();
         });
     }

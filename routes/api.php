@@ -114,9 +114,9 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 
 
 
-Route::get('/auth', function (Request $request) {
-    return response()->json(['message' => 'Vui lòng đăng nhập']);
-})->name('auth');
+// Route::get('/auth', function (Request $request) {
+//     return response()->json(['message' => 'Vui lòng đăng nhập']);
+// })->name('auth');
 
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
