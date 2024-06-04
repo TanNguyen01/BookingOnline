@@ -11,11 +11,14 @@ use Illuminate\Http\Response;
 class CategorieController extends Controller
 {
     use APIResponse;
+
     protected $categorieService;
+
     public function __construct(CategorieService $categorieService)
     {
         $this->categorieService = $categorieService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,14 +27,13 @@ class CategorieController extends Controller
         $categorie = $this->categorieService->getAllCategorie();
 
         return $this->responseSuccess(
-           __('message.category_list'),
+            __('message.category_list'),
             [
                 'data' => $categorie,
             ]
         );
 
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -57,11 +59,10 @@ class CategorieController extends Controller
     public function show(string $id)
     {
         $categorie = $this->categorieService->getCategorieById($id);
-        if (!$categorie) {
+        if (! $categorie) {
             return $this->responseNotFound(
                 Response::HTTP_NOT_FOUND,
                 __('message.category_not_found'),
-
 
             );
         } else {
@@ -83,13 +84,14 @@ class CategorieController extends Controller
     {
         $data = $request->all();
         $categorie = $this->categorieService->updateCategorie($id, $data);
-        if (!$categorie) {
+        if (! $categorie) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND,
                 __('message.category_not_found'),
 
             );
         } else {
             $categorie->update($data);
+
             return $this->responseSuccess(
                 __('message.category_updated'),
                 [
@@ -105,17 +107,17 @@ class CategorieController extends Controller
      */
     public function destroy(string $id)
     {
-        $categorie =  $this->categorieService->deleteCategorie($id);
-        if (!$categorie) {
+        $categorie = $this->categorieService->deleteCategorie($id);
+        if (! $categorie) {
             return $this->responseNotFound(
                 Response::HTTP_NOT_FOUND,
                 __('message.category_not_found'),
-
 
             );
         } else {
 
             $categorie->delete();
+
             return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         }
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class BookingRequest extends FormRequest
 {
@@ -32,8 +32,8 @@ class BookingRequest extends FormRequest
             'service_id' => 'required|exists:services,id',
         ];
     }
-    public function messages(): array
 
+    public function messages(): array
     {
 
         return [
@@ -44,10 +44,6 @@ class BookingRequest extends FormRequest
             'time.required' => 'Chọn giờ!',
             'service_id.required' => 'Chọn dịch vụ id ',
             'service_id.exists' => 'Dịch vụ không tồn tại',
-
-
-
-
 
         ];
     }

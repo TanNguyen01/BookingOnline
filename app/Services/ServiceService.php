@@ -27,6 +27,7 @@ class ServiceService
         if ($service) {
             $service->update($data);
         }
+
         return $service;
     }
 
@@ -36,6 +37,7 @@ class ServiceService
         if ($service) {
             $service->delete();
         }
+
         return $service;
     }
 }

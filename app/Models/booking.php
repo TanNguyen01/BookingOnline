@@ -10,15 +10,16 @@ class booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'day', 'time', 'status'
+        'user_id', 'day', 'time', 'status',
     ];
-    public $timestamps = false;
 
+    public $timestamps = false;
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function services()
     {
         return $this->belongsToMany(Service::class, 'booking_service');

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceBooking extends Model
@@ -12,12 +11,14 @@ class ServiceBooking extends Model
         'service_id',
         'booking_id',
     ];
+
     public $timestamps = false;
 
     public function service()
     {
         return $this->belongsTo(Service::class);
     }
+
     public function booking()
     {
         return $this->belongsTo(Booking::class);

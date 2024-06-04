@@ -11,9 +11,8 @@ trait APIResponse
     /**
      * Return a server error response.
      *
-     * @param  mixed|null   $details  Optional error details.
+     * @param  mixed|null  $details  Optional error details.
      * @param  string|null  $message  Optional error message.
-     *
      * @return JsonResponse Server error JSON response.
      */
     public function responseServerError(mixed $details = null, ?string $message = null): JsonResponse
@@ -24,10 +23,9 @@ trait APIResponse
     /**
      * Return a custom error response.
      *
-     * @param  mixed  $title       Error title.
-     * @param  mixed  $details     Error details.
-     * @param  int    $statusCode  HTTP status code.
-     *
+     * @param  mixed  $title  Error title.
+     * @param  mixed  $details  Error details.
+     * @param  int  $statusCode  HTTP status code.
      * @return JsonResponse Custom error JSON response.
      */
     public function responseWithCustomError(mixed $title, mixed $details, int $statusCode): JsonResponse
@@ -38,9 +36,8 @@ trait APIResponse
     /**
      * Return an unprocessable entity error response.
      *
-     * @param  mixed|null   $details  Optional error details.
+     * @param  mixed|null  $details  Optional error details.
      * @param  string|null  $message  Optional error message.
-     *
      * @return JsonResponse Unprocessable entity JSON response.
      */
     public function responseUnprocessable(mixed $details = null, ?string $message = null): JsonResponse
@@ -51,9 +48,8 @@ trait APIResponse
     /**
      * Return a bad request error response.
      *
-     * @param  mixed|null   $details  Optional error details.
+     * @param  mixed|null  $details  Optional error details.
      * @param  string|null  $message  Optional error message.
-     *
      * @return JsonResponse Bad request JSON response.
      */
     public function responseBadRequest(mixed $details = null, ?string $message = null): JsonResponse
@@ -64,9 +60,8 @@ trait APIResponse
     /**
      * Return a not found error response.
      *
-     * @param  mixed|null   $details  Optional error details.
+     * @param  mixed|null  $details  Optional error details.
      * @param  string|null  $message  Optional error message.
-     *
      * @return JsonResponse Not found JSON response.
      */
     public function responseNotFound(mixed $details = null, ?string $message = null): JsonResponse
@@ -79,7 +74,6 @@ trait APIResponse
      *
      * @param  string  $details  Optional error details.
      * @param  string  $message  Optional error message.
-     *
      * @return JsonResponse Unauthorized JSON response.
      */
     public function responseUnAuthorized(
@@ -94,7 +88,6 @@ trait APIResponse
      *
      * @param  string  $details  Optional error details.
      * @param  string  $message  Optional error message.
-     *
      * @return JsonResponse Unauthenticated JSON response.
      */
     public function responseUnAuthenticated(
@@ -109,7 +102,6 @@ trait APIResponse
      *
      * @param  string  $details  Optional error details.
      * @param  string  $message  Optional error message.
-     *
      * @return JsonResponse Conflict error JSON response.
      */
     public function responseConflictError(
@@ -123,8 +115,7 @@ trait APIResponse
      * Return a success response.
      *
      * @param  string|null  $message  Optional success message.
-     * @param  mixed|null   $data     Optional data to include in the response.
-     *
+     * @param  mixed|null  $data  Optional data to include in the response.
      * @return JsonResponse Success JSON response.
      */
     public function responseSuccess(?string $message = null, mixed $data = null): JsonResponse
@@ -140,8 +131,7 @@ trait APIResponse
      * Return a created response.
      *
      * @param  string|null  $message  Optional created message.
-     * @param  mixed|null   $data     Optional data to include in the response.
-     *
+     * @param  mixed|null  $data  Optional data to include in the response.
      * @return JsonResponse Created JSON response.
      */
     public function responseCreated(?string $message = 'Record created successfully', mixed $data = null): JsonResponse
@@ -167,7 +157,6 @@ trait APIResponse
      * Create a JSON response for validation errors.
      *
      * @param  ValidationException  $exception  The validation exception.
-     *
      * @return JsonResponse A JSON response containing validation error information.
      */
     public function ResponseValidationError(ValidationException $exception): JsonResponse
@@ -179,7 +168,7 @@ trait APIResponse
                 'title' => 'Validation Error',
                 'detail' => $error[0],
                 'source' => [
-                    'pointer' => '/' . str_replace('.', '/', $key),
+                    'pointer' => '/'.str_replace('.', '/', $key),
                 ],
             ];
         })->values();
@@ -203,10 +192,9 @@ trait APIResponse
     /**
      * Create a JSON response for API errors.
      *
-     * @param  int          $code     The HTTP status code for the error.
-     * @param  string|null  $title    A brief error description (default: generic message).
-     * @param  mixed|null   $details  Additional details about the error (default: null).
-     *
+     * @param  int  $code  The HTTP status code for the error.
+     * @param  string|null  $title  A brief error description (default: generic message).
+     * @param  mixed|null  $details  Additional details about the error (default: null).
      * @return JsonResponse A JSON response containing the error information.
      */
     private function APIError(int $code, ?string $title, mixed $details = null): JsonResponse
@@ -227,7 +215,6 @@ trait APIResponse
             'message' => $details ?? $formattedTitle,
             // ],
         ];
-
 
         // Set the Content-Type header to specify JSON problem format.
         $headers = [

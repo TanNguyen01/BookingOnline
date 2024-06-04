@@ -19,32 +19,37 @@ use Illuminate\Support\Facades\Log;
 class BookingController extends Controller
 {
     protected $bookingService;
+
     public function __construct(BookingService $bookingService)
     {
         $this->bookingService = $bookingService;
     }
 
     use APIResponse;
+
     public function chooseEmployee(Request $request)
     {
         $user_id = $request->user_id;
         // Kiểm tra xem user có tồn tại và có vai trò là nhân viên không
         $employee = User::where('id', $user_id)->where('role', 1)->first();
-        if (!$employee) {
+        if (! $employee) {
             return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
         } else {
             return $this->responseCreated('nhân viên hợp lệ');
         }
     }
+
     public function chooseService(Request $request)
     {
         $service_id = $request->service_id;
         $service = Service::find($service_id);
-        if (!$service) {
+        if (! $service) {
             return $this->responseBadRequest('Dịch vụ không tồn tại.');
         }
+
         return $this->responseCreated('dịch vụ hợp lệ');
     }
+
     public function chooseDate(Request $request)
     {
         $user_id = $request->user_id;
@@ -60,12 +65,13 @@ class BookingController extends Controller
             ->first();
 
         // Kiểm tra nếu không có lịch làm việc phù hợp
-        if (!$schedule) {
+        if (! $schedule) {
             return $this->responseBadRequest('Nhân viên không làm việc vào ngày hoặc giờ này.');
         } else {
             return $this->responseCreated('ngày giờ hợp lệ.');
         }
     }
+
     public function store(BookingRequest $request)
     {
         $user_id = $request->user_id;
@@ -114,7 +120,7 @@ class BookingController extends Controller
             DB::rollBack();
 
             // Log lỗi để kiểm tra
-            Log::error('Error while creating booking: ' . $e->getMessage());
+            Log::error('Error while creating booking: '.$e->getMessage());
 
             // Trả về thông báo lỗi
             return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, 'Đã xảy ra lỗi. Vui lòng thử lại sau');
@@ -129,36 +135,43 @@ class BookingController extends Controller
             // Cập nhật trạng thái của booking
             $booking->status = $status;
             $booking->save();
+
             return $this->responseSuccess('Trạng thái của đặt chỗ đã được cập nhật thành công', ['data' => $booking]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // Xử lý khi không tìm thấy booking
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm booking ');
         } catch (\Exception $e) {
             // Xử lý ngoại lệ khác
-            Log::error('Error while updating booking status: ' . $e->getMessage());
+            Log::error('Error while updating booking status: '.$e->getMessage());
+
             return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, 'Đã xảy ra lỗi khi cập nhật trạng thái của đặt chỗ');
         }
     }
+
     public function index()
     {
         $bookings = $this->bookingService->getAllBooking();
 
         return $this->responseSuccess('Lấy danh sách thành công', ['data' => $bookings]);
     }
+
     public function show($id)
     {
         $booking = $this->bookingService->getBookingById($id);
-        if (!$booking) {
+        if (! $booking) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm booking');
         }
+
         return $this->responseSuccess('Xem dịch vụ thành công', ['data' => $booking]);
     }
+
     public function destroy($id)
     {
         $booking = $this->bookingService->getBookingById($id);
-        if (!$booking) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy booking',);
+        if (! $booking) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy booking');
         }
+
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
     }
 }

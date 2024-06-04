@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class ScheduleRequest extends FormRequest
 {
@@ -46,8 +45,8 @@ class ScheduleRequest extends FormRequest
         ];
 
     }
-    public function messages(): array
 
+    public function messages(): array
     {
 
         return [
@@ -59,8 +58,6 @@ class ScheduleRequest extends FormRequest
             'schedules.*.end_time' => 'giờ đóng cửa',
             'schedules.*.end_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
             'schedules.*.end_time.after' => 'Giờ bắt đầu phải < giờ kết thúc',
-
-
 
         ];
     }

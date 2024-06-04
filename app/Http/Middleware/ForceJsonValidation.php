@@ -17,7 +17,7 @@ class ForceJsonValidation
     {
         if ($request->isMethod('POST') && empty($request->all())) {
             // Trả về lỗi 422 nếu không có dữ liệu
-            return response()->json(['errors' => ['message' =>'aaaaaaaaa' ]], 401);
+            return response()->json(['errors' => ['message' => 'aaaaaaaaa']], 401);
         }
 
         // Tiếp tục xử lý request

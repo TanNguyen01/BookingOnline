@@ -6,16 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OpeningHourRequest;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
-use App\Traits\APIResponse;
 use App\Services\OpeningService;
+use App\Traits\APIResponse;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class OpeningHourController extends Controller
 {
     use APIResponse;
+
     protected $openingService;
 
     public function __construct(OpeningService $openingService)
@@ -26,13 +26,14 @@ class OpeningHourController extends Controller
     public function index()
     {
         $openingHours = $this->openingService->getAllOpeningHours();
+
         return response()->responseSuccess('Xem danh sách thành công', ['data' => $openingHours], Response::HTTP_OK);
     }
 
     public function show($storeid)
     {
         $openingHours = $this->openingService->getOpeningHour($storeid);
-        if (!$storeid) {
+        if (! $storeid) {
             return $this->responseNotFound('Không tìm thấy cửa hàng', Response::HTTP_NOT_FOUND);
         } else {
             return response()->responseSuccess('Xem thông tin mở cửa thành công', ['data' => $openingHours], Response::HTTP_OK);
@@ -44,8 +45,8 @@ class OpeningHourController extends Controller
         $storeId = $request->input('store_information_id');
         $openingHoursData = $request->input('opening_hours');
         $opening = $this->openingService->createOpeningHours($storeId);
-        if (!$storeId) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy cửa hàng', );
+        if (! $storeId) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
         } else {
             $existingDays = [];
 
@@ -62,8 +63,8 @@ class OpeningHourController extends Controller
             }
 
             // Nếu có ngày đã tồn tại, trả về lỗi
-            if (!empty($existingDays)) {
-                return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, 'Ngày giờ mở cửa đã tồn tại', $existingDays,);
+            if (! empty($existingDays)) {
+                return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, 'Ngày giờ mở cửa đã tồn tại', $existingDays);
             }
 
             // Nếu không có ngày nào tồn tại, thêm các ngày mới
@@ -75,6 +76,7 @@ class OpeningHourController extends Controller
                     'closing_time' => $data['closing_time'],
                 ]);
             }
+
             return $this->responseCreated('Them thanh cong', ['data' => $openingHoursData]);
         }
     }
@@ -82,83 +84,83 @@ class OpeningHourController extends Controller
     public function update(OpeningHourRequest $request)
     {
 
-    $storeId = $request->input('store_information_id');
-    $openingHoursData = $request->input('opening_hours');
+        $storeId = $request->input('store_information_id');
+        $openingHoursData = $request->input('opening_hours');
 
-    // Kiểm tra xem storeId có tồn tại không
-    if (!$storeId) {
-        return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
-    }
+        // Kiểm tra xem storeId có tồn tại không
+        if (! $storeId) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
+        }
 
-    $existingDays = [];
-    DB::beginTransaction();
+        $existingDays = [];
+        DB::beginTransaction();
 
-    try {
-        foreach ($openingHoursData as $data) {
-            // Tìm thông tin giờ mở cửa cho cửa hàng và ngày cụ thể
-            $openingHour = OpeningHour::where('store_information_id', $storeId)
-                ->where('day', $data['day'])
-                ->first();
+        try {
+            foreach ($openingHoursData as $data) {
+                // Tìm thông tin giờ mở cửa cho cửa hàng và ngày cụ thể
+                $openingHour = OpeningHour::where('store_information_id', $storeId)
+                    ->where('day', $data['day'])
+                    ->first();
 
-            // Nếu giờ mở cửa tồn tại, cập nhật; nếu không, thêm ngày vào danh sách chưa đăng ký
-            if ($openingHour) {
-                $openingHour->update([
-                    'opening_time' => $data['opening_time'],
-                    'closing_time' => $data['closing_time'],
-                ]);
-            } else {
-                $existingDays[] = $data['day'];
-            }
-
-            // Tìm tất cả các lịch trình cho cửa hàng và ngày cụ thể
-            $schedules = Schedule::where('store_information_id', $storeId)
-                ->whereDate('day', $data['day'])
-                ->get();
-
-            // Xác thực các lịch trình dựa trên giờ mở cửa mới
-            foreach ($schedules as $schedule) {
-                $storeOpeningTime = Carbon::parse($data['day'] . ' ' . $data['opening_time']);
-                $scheduleStartTime = Carbon::parse($data['day'] . ' ' . $schedule->start_time);
-
-                // Đánh dấu lịch trình là không hợp lệ nếu bắt đầu trước giờ mở cửa
-                if ($scheduleStartTime->lt($storeOpeningTime)) {
-                    $schedule->is_valid = false;
-                }else{
-                    $schedule->is_valid = true;
+                // Nếu giờ mở cửa tồn tại, cập nhật; nếu không, thêm ngày vào danh sách chưa đăng ký
+                if ($openingHour) {
+                    $openingHour->update([
+                        'opening_time' => $data['opening_time'],
+                        'closing_time' => $data['closing_time'],
+                    ]);
+                } else {
+                    $existingDays[] = $data['day'];
                 }
-                $schedule->save();
+
+                // Tìm tất cả các lịch trình cho cửa hàng và ngày cụ thể
+                $schedules = Schedule::where('store_information_id', $storeId)
+                    ->whereDate('day', $data['day'])
+                    ->get();
+
+                // Xác thực các lịch trình dựa trên giờ mở cửa mới
+                foreach ($schedules as $schedule) {
+                    $storeOpeningTime = Carbon::parse($data['day'].' '.$data['opening_time']);
+                    $scheduleStartTime = Carbon::parse($data['day'].' '.$schedule->start_time);
+
+                    // Đánh dấu lịch trình là không hợp lệ nếu bắt đầu trước giờ mở cửa
+                    if ($scheduleStartTime->lt($storeOpeningTime)) {
+                        $schedule->is_valid = false;
+                    } else {
+                        $schedule->is_valid = true;
+                    }
+                    $schedule->save();
+
+                }
+            }
+
+            // Nếu có các ngày chưa đăng ký, hủy bỏ giao dịch và trả về phản hồi lỗi
+            if (! empty($existingDays)) {
+                return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'ngày đó chưa có cửa hàng chưa đăng ký vui longf đợi' => $existingDays]);
 
             }
+
+            // Cam kết giao dịch nếu mọi thứ thành công
+            DB::commit();
+
+            return $this->responseSuccess(
+                'Cập nhật thành công',
+                [
+                    'data' => $openingHoursData,
+                ]
+            );
+        } catch (\Exception $e) {
+            // Hủy bỏ giao dịch và trả về phản hồi lỗi trong trường hợp xảy ra ngoại lệ
+            DB::rollback();
+
+            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
-
-        // Nếu có các ngày chưa đăng ký, hủy bỏ giao dịch và trả về phản hồi lỗi
-        if (!empty($existingDays)) {
-            return $this->responseBadRequest([Response::HTTP_BAD_REQUEST,'ngày đó chưa có cửa hàng chưa đăng ký vui longf đợi' => $existingDays]);
-
-        }
-
-        // Cam kết giao dịch nếu mọi thứ thành công
-        DB::commit();
-        return $this->responseSuccess(
-            'Cập nhật thành công',
-            [
-                'data' => $openingHoursData,
-            ]
-        );
-    } catch (\Exception $e) {
-        // Hủy bỏ giao dịch và trả về phản hồi lỗi trong trường hợp xảy ra ngoại lệ
-        DB::rollback();
-        return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
     }
-}
-
-
 
     public function destroy($id)
     {
         $storeId = $this->openingService->deleteOpeningHour($id);
-        if (!$storeId) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND,'Không tìm thấy cửa hàng', );
+        if (! $storeId) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
         } else {
             $today = Carbon::today();
             $deletedRows = OpeningHour::where('store_information_id', $storeId->id)
@@ -168,7 +170,7 @@ class OpeningHourController extends Controller
             if ($deletedRows > 0) {
                 return response()->json(null, Response::HTTP_NO_CONTENT);
             } else {
-                return response()->json([Response::HTTP_BAD_REQUEST,'message' => 'Không có ngày nào để xóa'] );
+                return response()->json([Response::HTTP_BAD_REQUEST, 'message' => 'Không có ngày nào để xóa']);
             }
         }
     }

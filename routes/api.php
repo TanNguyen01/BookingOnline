@@ -26,7 +26,8 @@ use Illuminate\Support\Facades\Session;
 
 Route::get('/set-locale/{locale}', function ($locale) {
     Session::put('locale', $locale);
-    return response()->json(['message' => 'Locale set to ' . $locale]);
+
+    return response()->json(['message' => 'Locale set to '.$locale]);
 });
 
 Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
@@ -65,7 +66,6 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     Route::post('update_hours', [OpeningHourController::class, 'update'])->name('opening_hours.update');
     Route::delete('store_hours/delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
 
-
     //quản lý booking
     Route::get('/listbooking', [BookingController::class, 'index']);
     Route::get('/booking/{id}', [BookingController::class, 'show']);
@@ -83,8 +83,6 @@ Route::post('/choose-service', [BookingController::class, 'chooseService']);
 Route::post('/choose-date', [BookingController::class, 'chooseDate']);
 // submit form
 Route::post('/bookings', [BookingController::class, 'store']);
-
-
 
 //nhân viên
 
@@ -104,19 +102,8 @@ Route::middleware('auth:sanctum', 'checkuser')->group(function () {
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
-
-
-
-
-
-
-
-
-
-
 // Route::get('/auth', function (Request $request) {
 //     return response()->json(['message' => 'Vui lòng đăng nhập']);
 // })->name('auth');
-
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);

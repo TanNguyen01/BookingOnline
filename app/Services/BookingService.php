@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\booking;
 use App\Traits\APIResponse;
-use Illuminate\Http\Response;
 
 class BookingService
 {
@@ -18,10 +17,7 @@ class BookingService
 
     public function getBookingById($id)
     {
-      return booking::find($id);
+        return booking::find($id);
 
     }
-
-
-
 }

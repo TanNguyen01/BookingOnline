@@ -13,16 +13,17 @@ class Service extends Model
         'price',
         'describe',
         'name',
-        'categorie_id'
+        'categorie_id',
 
     ];
-    public $timestamps = false;
 
+    public $timestamps = false;
 
     public function category()
     {
         return $this->belongsTo(categorie::class);
     }
+
     public function bookings()
     {
         return $this->belongsToMany(Booking::class, 'booking_service');

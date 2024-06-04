@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class CategorieRequest extends FormRequest
 {
@@ -30,23 +29,22 @@ class CategorieRequest extends FormRequest
         return [
             'name' => 'required|string|unique:categories',
 
+        ];
+
+    }
+
+    public function messages(): array
+    {
+
+        return [
+            'name.unique' => 'tên da ton tai',
+            'name.required' => 'Vui lòng nhâp name',
+            'email.email' => 'Nhập đúng định dạng email!',
 
         ];
 
     }
-    public function messages(): array
 
-{
-
-    return [
-        'name.unique' => 'tên da ton tai',
-        'name.required' => 'Vui lòng nhâp name',
-        'email.email' => 'Nhập đúng định dạng email!',
-
-
-    ];
-
-    }
     protected function failedValidation(Validator $validator)
     {
 

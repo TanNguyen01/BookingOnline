@@ -1,4 +1,5 @@
 <?php
+
 return [
     'category_created' => '类别已成功创建。',
     'category_list' => '类别已成功创建。',

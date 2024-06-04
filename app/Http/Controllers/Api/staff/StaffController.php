@@ -9,10 +9,9 @@ use App\Models\booking;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
 use App\Services\StaffService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Response;
 use App\Traits\APIResponse;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller
@@ -31,7 +30,7 @@ class StaffController extends Controller
         $validatedData = $request->all();
         $user = $this->staffService->staffService();
 
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
+        if (! Hash::check($validatedData['current_password'], $user->password)) {
             return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'mật khẩu hiện tại không đúng']);
         }
 
@@ -41,7 +40,7 @@ class StaffController extends Controller
             $validatedData['password'] = bcrypt($validatedData['new_password']);
             unset($validatedData['new_password']);
         }
-        $this->staffService->uploadImageIfExists($validatedData,$user);
+        $this->staffService->uploadImageIfExists($validatedData, $user);
         $user->update($validatedData);
 
         return $this->responseSuccess('Cập nhật thành công', ['data' => $user]);
@@ -51,6 +50,7 @@ class StaffController extends Controller
     {
 
         $profile = $this->staffService->staffService();
+
         return $this->responseSuccess('Xem thành công', [
             'id' => $profile->id,
             'email' => $profile->email,
@@ -58,9 +58,8 @@ class StaffController extends Controller
             'image' => $profile->image,
             'address' => $profile->address,
             'phone' => $profile->phone,
-            'created_at' => $profile->created_at
-        ])  ;
-
+            'created_at' => $profile->created_at,
+        ]);
 
     }
 
@@ -69,12 +68,12 @@ class StaffController extends Controller
         $user = $this->staffService->staffService();
         $schedules = $request->input('schedules');
         $storeId = $request->input('store_information_id');
-        if (!$storeId) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng',);
+        if (! $storeId) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
         } else {
             foreach ($schedules as $scheduleData) {
                 $day = $scheduleData['day'];
-                $startTime = Carbon::createFromFormat('H:i:s',  $scheduleData['start_time']);
+                $startTime = Carbon::createFromFormat('H:i:s', $scheduleData['start_time']);
                 $endTime = Carbon::createFromFormat('H:i:s', $scheduleData['end_time']);
 
                 // Kiểm tra xem đã tồn tại lịch làm việc cho ngày này chưa
@@ -84,22 +83,22 @@ class StaffController extends Controller
 
                 if ($existingSchedule) {
 
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này đã đăng ký giờ làm',$day]);
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này đã đăng ký giờ làm', $day]);
                 }
 
                 $openingHours = OpeningHour::where('store_information_id', $storeId)
                     ->where('day', $day)
                     ->first();
 
-                if (!$openingHours) {
-                    return  $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở ửa vui long đợi',$day]);
+                if (! $openingHours) {
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở ửa vui long đợi', $day]);
                 }
 
                 $storeOpeningTime = Carbon::createFromFormat('H:i:s', $openingHours->opening_time);
                 $storeClosingTime = Carbon::createFromFormat('H:i:s', $openingHours->closing_time);
 
                 if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
-                   return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa']);
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa']);
                 }
                 $schedule = new Schedule();
                 $schedule->user_id = $user->id;
@@ -111,6 +110,7 @@ class StaffController extends Controller
                 $schedule->save();
                 $createdSchedules[] = $schedule;
             }
+
             return $this->responseCreated('Đăng ký giờ làm thành công', ['data' => $schedules]);
         }
     }
@@ -128,7 +128,6 @@ class StaffController extends Controller
         }
     }
 
-
     public function seeSchedule()
     {
         $user = $this->staffService->staffService();
@@ -140,18 +139,20 @@ class StaffController extends Controller
 
         $response = $schedules->map(function ($schedule) {
             $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
+
             return [
                 'id' => $schedule->id,
                 'user_id' => $schedule->user_id,
                 'store_information_id' => $schedule->store_information_id,
                 'is_valid' => $schedule->is_valid,
-                'day'=>$schedule->day,
+                'day' => $schedule->day,
                 'start_time' => $schedule->start_time,
                 'end_time' => $schedule->end_time,
                 'created_at' => $schedule->created_at,
-                'error' => $error
+                'error' => $error,
             ];
         });
+
         return $this->responseSuccess('Xem lich lam thành công', ['data' => $response]);
     }
 }

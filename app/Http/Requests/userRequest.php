@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class userRequest extends FormRequest
 {
@@ -26,50 +25,51 @@ class userRequest extends FormRequest
      */
     public function rules(): array
     {
-        if(request()->isMethod('post')){
-        return [
-            'email' => 'required|string|email|unique:users',
-            'name' => 'nullable|string',
-            'password' => 'required|string|',
-            'role' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
+        if (request()->isMethod('post')) {
+            return [
+                'email' => 'required|string|email|unique:users',
+                'name' => 'nullable|string',
+                'password' => 'required|string|',
+                'role' => 'nullable|integer',
+                'image' => 'nullable|image|mimes:jpg,png,jpeg',
+                'address' => 'nullable|string',
+                'phone' => 'nullable|string',
 
-        ];
-    }else{
-        return [
-            'email' => 'nullable|string|email|unique:users',
-            'name' => 'nullable|string',
-            'password' => 'nullable|string',
-            'role' => 'nullable|integer|in:0,1',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
+            ];
+        } else {
+            return [
+                'email' => 'nullable|string|email|unique:users',
+                'name' => 'nullable|string',
+                'password' => 'nullable|string',
+                'role' => 'nullable|integer|in:0,1',
+                'image' => 'nullable|image|mimes:jpg,png,jpeg',
+                'address' => 'nullable|string',
+                'phone' => 'nullable|string',
 
-        ];
+            ];
+        }
+
     }
 
-    }
     public function messages(): array
+    {
 
-{
+        return [
+            'email.unique' => 'email da ton tai',
+            'email.required' => 'Vui lòng nhâp email',
+            'email.email' => 'Nhập đúng định dạng email!',
+            'password.required' => 'Nhập password!',
+            'password.confirmed' => 'Nhập lại password passwrod_confirmation!',
+            'name.required' => 'Vui lòng nhâp name',
+            'name.string' => ' name là kiểu chuỗi',
+            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
+            'phone.string' => 'phone là kiểu chuỗi',
+            'address.string' => 'phone là kiểu chuỗi',
 
-    return [
-        'email.unique' => 'email da ton tai',
-        'email.required' => 'Vui lòng nhâp email',
-        'email.email' => 'Nhập đúng định dạng email!',
-        'password.required' => 'Nhập password!',
-        'password.confirmed' => 'Nhập lại password passwrod_confirmation!',
-        'name.required' => 'Vui lòng nhâp name',
-        'name.string' => ' name là kiểu chuỗi',
-        'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-        'phone.string' => 'phone là kiểu chuỗi',
-        'address.string' => 'phone là kiểu chuỗi',
-
-    ];
+        ];
 
     }
+
     protected function failedValidation(Validator $validator)
     {
 

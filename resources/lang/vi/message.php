@@ -1,4 +1,5 @@
 <?php
+
 return [
     'category_list' => 'Xem thành công  tất  cả danh mục。',
     'category_created' => 'Danh mục đã được tạo thành công.',

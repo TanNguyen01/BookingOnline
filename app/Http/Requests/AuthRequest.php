@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class AuthRequest extends FormRequest
 {
@@ -33,17 +32,18 @@ class AuthRequest extends FormRequest
         ];
 
     }
+
     public function messages(): array
+    {
 
-{
-
-    return [
-        'email.required' => 'Vui lòng nhâp email',
-        'email.email' => 'Nhập đúng định dạng email!',
-        'password.required' => 'Nhập password!',
-    ];
+        return [
+            'email.required' => 'Vui lòng nhâp email',
+            'email.email' => 'Nhập đúng định dạng email!',
+            'password.required' => 'Nhập password!',
+        ];
 
     }
+
     protected function failedValidation(Validator $validator)
     {
 
@@ -54,5 +54,4 @@ class AuthRequest extends FormRequest
                 'status_code' => 402,
             ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
-
 }

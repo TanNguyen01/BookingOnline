@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\StoreInformation;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -19,6 +21,7 @@ class StoreService
     public function createStore($data)
     {
         $this->uploadImageIfExists($data);
+
         return StoreInformation::create($data);
     }
 
@@ -29,6 +32,7 @@ class StoreService
             $this->uploadImageIfExists($data, $store);
             $store->update($data);
         }
+
         return $store;
     }
 
@@ -41,13 +45,14 @@ class StoreService
             }
             $store->delete();
         }
+
         return $store;
     }
 
     protected function uploadImageIfExists(&$data, $store = null)
     {
         if (isset($data['image']) && $data['image']->isValid()) {
-            $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
+            $imageName = Str::random(12).'.'.$data['image']->getClientOriginalExtension();
             $data['image']->storeAs('', $imageName, 'images_store');
 
             if ($store && $store->image) {
