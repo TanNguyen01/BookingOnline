@@ -27,8 +27,8 @@ class AuthRequest extends FormRequest
     {
 
         return [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required',
         ];
 
     }
@@ -44,14 +44,5 @@ class AuthRequest extends FormRequest
 
     }
 
-    protected function failedValidation(Validator $validator)
-    {
 
-        $errors = (new ValidationException($validator))->errors();
-        throw new HttpResponseException(response()->json(
-            [
-                'error' => $errors,
-                'status_code' => 402,
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
-    }
 }
