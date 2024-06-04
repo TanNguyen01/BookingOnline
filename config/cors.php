@@ -17,7 +17,7 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['https://imtaedu.com', 'https://booking.imtaedu.com'], // Thay thế bằng các subdomain của bạn
+    'allowed_origins' => ['*'], // Thay thế bằng các subdomain của bạn
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
