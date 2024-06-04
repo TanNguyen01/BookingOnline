@@ -16,10 +16,11 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        {
-            $locale = $request->header('X-Locale', config('app.locale'));
-            App::setLocale($locale);
-            return $next($request);
-        }
+
+        $locale = $request->header('X-Locale', config('app.locale'));
+        App::setLocale($locale);
+
+        return $next($request);
+
     }
 }

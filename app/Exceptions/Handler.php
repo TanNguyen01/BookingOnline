@@ -3,12 +3,12 @@
 namespace App\Exceptions;
 
 use App\Traits\APIResponse;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as RequestAlias;
@@ -43,9 +43,9 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param RequestAlias $request
-     * @param Throwable $e
-     * @return Response
+     * @param  RequestAlias  $request
+     * @param  Throwable  $e
+     *
      * @throws Throwable
      */
     public function render($request, $e): Response
@@ -101,8 +101,6 @@ class Handler extends ExceptionHandler
     /**
      * Log the given exception.
      *
-     * @param Throwable $exception
-     * @return void
      * @throws BindingResolutionException
      */
     protected function log(Throwable $exception): void
@@ -116,9 +114,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for NotAcceptableHttpException.
-     *
-     * @param  NotAcceptableHttpException  $e
-     * @return JsonResponse
      */
     protected function responseForNotAcceptableHttpException(NotAcceptableHttpException $e): JsonResponse
     {
@@ -131,9 +126,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for BadRequestHttpException.
-     *
-     * @param  BadRequestHttpException  $e
-     * @return JsonResponse
      */
     protected function responseForBadRequestHttpException(BadRequestHttpException $e): JsonResponse
     {
@@ -145,9 +137,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for AuthenticationException.
-     *
-     * @param  AuthenticationException  $e
-     * @return JsonResponse
      */
     protected function responseForAuthenticationException(AuthenticationException $e): JsonResponse
     {
@@ -156,9 +145,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for UnprocessableEntityHttpException.
-     *
-     * @param  UnprocessableEntityHttpException  $e
-     * @return JsonResponse
      */
     protected function responseForUnprocessableEntityHttpException(UnprocessableEntityHttpException $e): JsonResponse
     {
@@ -170,9 +156,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for NotFoundHttpException.
-     *
-     * @param  NotFoundHttpException  $e
-     * @return JsonResponse
      */
     protected function responseForNotFoundHttpException(NotFoundHttpException $e): JsonResponse
     {
@@ -181,8 +164,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for AuthorizationException.
-     *
-     * @return JsonResponse
      */
     protected function responseForAuthorizationException(): JsonResponse
     {
@@ -191,9 +172,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for QueryException.
-     *
-     * @param  QueryException  $e
-     * @return JsonResponse
      */
     protected function responseForQueryException(QueryException $e): JsonResponse
     {
@@ -209,13 +187,10 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for ModelNotFoundException.
-     *
-     * @param  ModelNotFoundException  $e
-     * @return JsonResponse
      */
     protected function responseForModelNotFoundException(ModelNotFoundException $e): JsonResponse
     {
-        $id = [] !== $e->getIds() ? ' ' . implode(', ', $e->getIds()) : '.';
+        $id = $e->getIds() !== [] ? ' '.implode(', ', $e->getIds()) : '.';
 
         $model = class_basename($e->getModel());
 
@@ -224,9 +199,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for ValidationException.
-     *
-     * @param  ValidationException  $e
-     * @return JsonResponse
      */
     protected function responseForValidationException(ValidationException $e): JsonResponse
     {
@@ -235,8 +207,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Response for ThrottleRequestsException.
-     *
-     * @return JsonResponse
      */
     protected function responseForThrottleRequestsException(): JsonResponse
     {

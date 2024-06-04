@@ -2,16 +2,16 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\APIResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use App\Traits\APIResponse;
-
 
 class CheckUser
 {
     use APIResponse;
+
     /**
      * Handle an incoming request.
      *

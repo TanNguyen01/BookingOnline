@@ -15,8 +15,8 @@ class booking extends Model
         'status',
         'booking_time',
     ];
-    public $timestamps = false;
 
+    public $timestamps = false;
 
     public function schedule()
     {

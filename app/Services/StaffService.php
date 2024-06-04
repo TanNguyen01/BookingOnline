@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Booking;
@@ -18,7 +19,7 @@ class StaffService
             return null;
         }
 
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
+        if (! Hash::check($validatedData['current_password'], $user->password)) {
             return false;
         }
 
@@ -31,6 +32,7 @@ class StaffService
 
         $this->uploadImageIfExists($validatedData);
         $user->update($validatedData);
+
         return $user;
     }
 
@@ -44,9 +46,10 @@ class StaffService
                 'image' => $user->image,
                 'address' => $user->address,
                 'phone' => $user->phone,
-                'created_at' => $user->created_at
+                'created_at' => $user->created_at,
             ];
         }
+
         return null;
     }
 
@@ -58,7 +61,7 @@ class StaffService
         }
         foreach ($schedules as $scheduleData) {
             $day = $scheduleData['day'];
-            $startTime = Carbon::createFromFormat('H:i:s',  $scheduleData['start_time']);
+            $startTime = Carbon::createFromFormat('H:i:s', $scheduleData['start_time']);
             $endTime = Carbon::createFromFormat('H:i:s', $scheduleData['end_time']);
 
             // Kiểm tra xem đã tồn tại lịch làm việc cho ngày này chưa
@@ -75,8 +78,7 @@ class StaffService
                 ->where('day', $day)
                 ->first();
 
-            if (!$openingHours) {
-
+            if (! $openingHours) {
 
                 return ['error' => 'Vui lòng đợi ngày bạn chọn hiện chưa cập nhật giờ mở cửa'];
             }
@@ -99,10 +101,12 @@ class StaffService
             $schedule->created_at = now();
             $schedule->save();
         }
+
         return $schedules;
     }
 
-    public function getSchedule(){
+    public function getSchedule()
+    {
         return Schedule::all();
     }
 
@@ -119,11 +123,10 @@ class StaffService
         return $bookings;
     }
 
-
     protected function uploadImageIfExists(&$data, $user = null)
     {
         if (isset($data['image']) && $data['image']->isValid()) {
-            $imageName = Str::random(12) . "." . $data['image']->getClientOriginalExtension();
+            $imageName = Str::random(12).'.'.$data['image']->getClientOriginalExtension();
             $data['image']->storeAs('public/images/user', $imageName);
 
             if ($user && $user->image) {

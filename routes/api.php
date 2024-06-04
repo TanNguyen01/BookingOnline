@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 
 Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     // Services
@@ -53,17 +51,16 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     Route::delete('store_delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
 
     // Opening Hours
-    Route::get('/opening', [OpeningHourController::class ,'index'])->name('list.opening');
-    Route::get('/opening/{storeid}', [OpeningHourController::class ,'show'])->name('show.opening');
+    Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
+    Route::get('/opening/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
     Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
     Route::post('update_hours', [OpeningHourController::class, 'update'])->name('opening_hours.update');
     Route::delete('store_hours/delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
 });
 
-
 //nhân viên
 
-Route::middleware('auth:sanctum','checkuser')->group(function () {
+Route::middleware('auth:sanctum', 'checkuser')->group(function () {
     // xem lịch làm
     Route::get('seeSchedule', [StaffController::class, 'seeSchedule']);
     //  update profile user
@@ -79,25 +76,8 @@ Route::middleware('auth:sanctum','checkuser')->group(function () {
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
-
-
-
-
-
 Route::get('/auth', function (Request $request) {
     return response()->json(['message' => 'Vui lòng đăng nhập']);
 })->name('auth');
 
-
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
-
-
-
-
-
-
-
-
-
-
-

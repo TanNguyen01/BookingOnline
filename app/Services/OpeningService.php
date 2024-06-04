@@ -5,14 +5,14 @@ namespace App\Services;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
 use App\Models\StoreInformation;
-use Carbon\Carbon;
-use Illuminate\Http\Response;
 use App\Traits\APIResponse;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class OpeningService
 {
     use APIResponse;
+
     public function getAllOpeningHours()
     {
         return OpeningHour::with('storeInformation')->get();
@@ -42,7 +42,7 @@ class OpeningService
         }
 
         // Nếu có ngày đã tồn tại, trả về lỗi
-        if (!empty($existingDays)) {
+        if (! empty($existingDays)) {
 
             return ['error' => ['Ngày giờ mở cửa đã tồn tại' => $existingDays]];
         }
@@ -56,6 +56,7 @@ class OpeningService
                 'closing_time' => $data['closing_time'],
             ]);
         }
+
         return $openingHoursData;
     }
 
@@ -84,8 +85,8 @@ class OpeningService
                     ->get();
 
                 foreach ($schedules as $schedule) {
-                    $storeOpeningTime = Carbon::parse($data['day'] . ' ' . $data['opening_time']);
-                    $scheduleStartTime = Carbon::parse($data['day'] . ' ' . $schedule->start_time);
+                    $storeOpeningTime = Carbon::parse($data['day'].' '.$data['opening_time']);
+                    $scheduleStartTime = Carbon::parse($data['day'].' '.$schedule->start_time);
 
                     if ($scheduleStartTime->lt($storeOpeningTime)) {
                         $schedule->is_valid = false;
@@ -94,7 +95,7 @@ class OpeningService
                 }
             }
 
-            if (!empty($existingDays)) {
+            if (! empty($existingDays)) {
                 return ['error' => ['ngày đó chưa có cửa hàng chưa đăng ký vui longf đợi' => $existingDays]];
 
             }

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\categorie;
 use App\Traits\APIResponse;
-use Illuminate\Http\Response;
 
 class CategorieService
 {
@@ -18,7 +17,7 @@ class CategorieService
 
     public function getCategorieById($id)
     {
-      return categorie::find($id);
+        return categorie::find($id);
 
     }
 
@@ -37,7 +36,7 @@ class CategorieService
 
     public function deleteCategorie($id)
     {
-       return categorie::find($id);
+        return categorie::find($id);
 
     }
 }

@@ -5,15 +5,10 @@ namespace App\Http\Controllers\Api\Staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleRequest;
 use App\Http\Requests\StaffRequest;
-use App\Models\OpeningHour;
-use App\Models\Schedule;
 use App\Services\StaffService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Response;
 use App\Traits\APIResponse;
-use Carbon\Carbon;
-use Illuminate\Database\QueryException;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class StaffController extends Controller
 {
@@ -68,9 +63,9 @@ class StaffController extends Controller
 
         if (isset($createdSchedules['error'])) {
             return response()->json(['error' => $createdSchedules['error']], Response::HTTP_BAD_REQUEST);
-        }else
-
-        return $this->responseCreated('Đăng ký giờ làm thành công', ['data' => $createdSchedules]);
+        } else {
+            return $this->responseCreated('Đăng ký giờ làm thành công', ['data' => $createdSchedules]);
+        }
     }
 
     public function getEmployeeBookings()
@@ -89,23 +84,24 @@ class StaffController extends Controller
         return $this->responseSuccess('Xem booking thành công', ['data' => $bookings]);
     }
 
+    public function seeSchedule()
+    {
+        $schedules = $this->staffService->getSchedule();
+        $response = $schedules->map(function ($schedule) {
+            $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
 
-    public function seeSchedule(){
-       $schedules = $this->staffService->getSchedule();
-       $response = $schedules->map(function($schedule) {
-        $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
-        return [
-            'id' => $schedule->id,
-            'user_id' => $schedule->user_id,
-            'store_information_id' => $schedule->store_information_id,
-            'is_valid' => $schedule->is_valid,
-            'start_time' => $schedule->start_time,
-            'end_time' => $schedule->end_time,
-            'created_at' => $schedule->created_at,
-            'error' => $error
-        ];
-    });
-    return $this->responseSuccess('Xem lich lam thành công', ['data' => $response]);
+            return [
+                'id' => $schedule->id,
+                'user_id' => $schedule->user_id,
+                'store_information_id' => $schedule->store_information_id,
+                'is_valid' => $schedule->is_valid,
+                'start_time' => $schedule->start_time,
+                'end_time' => $schedule->end_time,
+                'created_at' => $schedule->created_at,
+                'error' => $error,
+            ];
+        });
+
+        return $this->responseSuccess('Xem lich lam thành công', ['data' => $response]);
     }
-
 }

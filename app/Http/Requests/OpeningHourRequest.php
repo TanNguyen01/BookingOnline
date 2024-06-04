@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class OpeningHourRequest extends FormRequest
 {
@@ -44,26 +43,25 @@ class OpeningHourRequest extends FormRequest
             ],
         ];
     }
-    public function messages(): array
 
+    public function messages(): array
     {
 
         return [
-           
+
             'store_information_id.required' => 'Vui lòng nhâp id store',
             'store_information_id.exists' => 'Cửa hàng không tồn tại',
             'opening_hours.required' => 'Vui lòng chọn ngày mở cửa',
-            'opening_hours.after_or_equal'=> ' ngày phải > bằng ngày hôm nay',
+            'opening_hours.after_or_equal' => ' ngày phải > bằng ngày hôm nay',
             'opening_hours.*.opening_time.required' => 'giờ mở cửa',
             'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
             'closing_time.required' => 'giờ đóng cửa',
             'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
             'opening_hours.*.opening_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
 
-
-
         ];
     }
+
     protected function failedValidation(Validator $validator)
     {
 

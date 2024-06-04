@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id', 'store_information_id', 'day', 'start_time', 'end_time',
     ];
@@ -23,5 +24,4 @@ class Schedule extends Model
     {
         return $this->belongsTo(StoreInformation::class);
     }
-
 }

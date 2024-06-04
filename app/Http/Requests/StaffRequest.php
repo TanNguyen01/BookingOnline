@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class StaffRequest extends FormRequest
 {
@@ -37,22 +36,23 @@ class StaffRequest extends FormRequest
         ];
 
     }
+
     public function messages(): array
+    {
 
-{
+        return [
+            'new_password.required' => 'new_password nhập new password!',
+            'current_password.required' => ' nhập current_password cũ',
+            'name.required' => 'Vui lòng nhâp name',
+            'name.string' => ' name là kiểu chuỗi',
+            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
+            'phone.string' => 'phone là kiểu chuỗi',
+            'address.string' => 'phone là kiểu chuỗi',
 
-    return [
-        'new_password.required' => 'new_password nhập new password!',
-        'current_password.required' =>' nhập current_password cũ',
-        'name.required' => 'Vui lòng nhâp name',
-        'name.string' => ' name là kiểu chuỗi',
-        'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-        'phone.string' => 'phone là kiểu chuỗi',
-        'address.string' => 'phone là kiểu chuỗi',
-
-    ];
+        ];
 
     }
+
     protected function failedValidation(Validator $validator)
     {
 

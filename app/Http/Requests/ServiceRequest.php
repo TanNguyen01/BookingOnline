@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class ServiceRequest extends FormRequest
 {
@@ -35,26 +34,26 @@ class ServiceRequest extends FormRequest
         ];
 
     }
+
     public function messages(): array
+    {
 
-{
+        return [
+            'name.unique' => 'tên  da ton tai',
+            'name.required' => 'Vui lòng nhâp name',
+            'email.email' => 'Nhập đúng định dạng email!',
+            'categorie_id.required' => 'nhập id category',
+            'categorie_id.integer' => 'nhập id category là kiểu số nguyên',
+            'categorie_id.exists' => 'không có danh mục nào',
+            'describe.required' => 'Nhâp mô tả của dịch vụ',
+            'describe.max' => 'tối đa 360 ký tự',
+            'price.required' => 'Nhập giá tiền',
+            'price.regex' => 'Nhập đúng giá tiền định dạng việt nam',
 
-    return [
-        'name.unique' => 'tên  da ton tai',
-        'name.required' => 'Vui lòng nhâp name',
-        'email.email' => 'Nhập đúng định dạng email!',
-        'categorie_id.required' => 'nhập id category',
-        'categorie_id.integer' => 'nhập id category là kiểu số nguyên',
-        'categorie_id.exists' => 'không có danh mục nào',
-        'describe.required' => 'Nhâp mô tả của dịch vụ',
-        'describe.max' => 'tối đa 360 ký tự',
-        'price.required' => 'Nhập giá tiền',
-        'price.regex' => 'Nhập đúng giá tiền định dạng việt nam',
-
-
-    ];
+        ];
 
     }
+
     protected function failedValidation(Validator $validator)
     {
 

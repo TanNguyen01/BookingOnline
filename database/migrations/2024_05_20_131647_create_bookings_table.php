@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('schedule_id');
             $table->unsignedBigInteger('user_id');
-            $table->enum('status',['đang chờ xác nhận','đã xác nhận','đã hủy']);
+            $table->enum('status', ['đang chờ xác nhận', 'đã xác nhận', 'đã hủy']);
             $table->timestamp('booking_time');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
