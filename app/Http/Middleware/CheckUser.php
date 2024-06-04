@@ -19,10 +19,15 @@ class CheckUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 1) {
-            return $next($request);
+        if (! Auth::check()) {
+            return $this->responseUnAuthenticated();
         }
 
-        return $this->responseUnAuthorized('Bạn không có quyền truy cập', Response::HTTP_FORBIDDEN);
+        if (Auth::user()->role !== 1) {
+            return $this->responseUnAuthorized();
+        }
+
+        return $next($request);
+
     }
 }

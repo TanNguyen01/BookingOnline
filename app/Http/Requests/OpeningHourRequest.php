@@ -51,11 +51,12 @@ class OpeningHourRequest extends FormRequest
 
             'store_information_id.required' => 'Vui lòng nhâp id store',
             'store_information_id.exists' => 'Cửa hàng không tồn tại',
-            'opening_hours.required' => 'Vui lòng chọn ngày mở cửa',
-            'opening_hours.after_or_equal' => ' ngày phải > bằng ngày hôm nay',
+            'opening_hours.*.day.required' => 'Vui lòng chọn ngày mở cửa',
+            'opening_hours.*.day.after_or_equal' => ' ngày phải > bằng ngày hôm nay',
             'opening_hours.*.opening_time.required' => 'giờ mở cửa',
             'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
             'closing_time.required' => 'giờ đóng cửa',
+            'opening_hours.*.closing_time.required' => ' vui lòng nhập  giờ đóng cửa cửa',
             'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
             'opening_hours.*.opening_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
 

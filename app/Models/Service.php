@@ -23,4 +23,9 @@ class Service extends Model
     {
         return $this->belongsTo(categorie::class);
     }
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_service');
+    }
 }
