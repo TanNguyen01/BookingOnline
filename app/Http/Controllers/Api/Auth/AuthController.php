@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -20,14 +21,16 @@ class AuthController extends Controller
     public function login(AuthRequest $request)
     {
 
-        if (! $token = auth()->attempt($request->validated())) {
-            return $this->responseBadRequest('đăng nhập thất bại vui long kiểm tra lại',
-                Response::HTTP_BAD_REQUEST);
+        if (!$token = auth()->attempt($request->validated())) {
+            return $this->responseBadRequest(null, 'đăng nhập thất bại vui long kiểm tra lại',);
         }
-        $user = User::where('email', $request->email)->first();
+        $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        return $this->responseSuccess('Đăng nhập thành công', [
+            'data' => $user,
+            'token' => $token
+        ]);
     }
 
     public function logout(Request $request)
