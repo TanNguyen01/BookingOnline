@@ -32,6 +32,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        if ($request->user()) {
+            $request->user()->currentAccessToken()->delete();
+        }
+
         Session::flush();
 
         return $this->responseSuccess(

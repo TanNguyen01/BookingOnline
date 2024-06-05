@@ -20,7 +20,7 @@ class Authenticate extends Middleware
             $this->auth->shouldUse('api');
         }else
         {
-            return $this->responseSuccess();
+            return $this->responseUnAuthenticated();
         }
         return $next($request);
     }
