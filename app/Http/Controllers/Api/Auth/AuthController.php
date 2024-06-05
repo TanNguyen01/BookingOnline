@@ -35,9 +35,7 @@ class AuthController extends Controller
         if ($request->user()) {
             $request->user()->currentAccessToken()->delete();
         }
-
         Session::flush();
-
         return $this->responseSuccess(
             'Đăng xuất thành công',
         );

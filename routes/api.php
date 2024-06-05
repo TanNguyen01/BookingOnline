@@ -73,6 +73,16 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
 });
 
+Route::get('list_store', [StoreInformationController::class, 'index'])->name('list.store');
+Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
+Route::get('list_categorie', [CategorieController::class, 'index'])->name('list.categorie');
+Route::get('list_user', [UserController::class, 'index'])->name('list.users');
+Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
+
+
+
+
+
 //
 //tạo booking khách hàng
 // chọn user
