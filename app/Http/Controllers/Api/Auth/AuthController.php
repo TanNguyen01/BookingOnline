@@ -24,7 +24,6 @@ class AuthController extends Controller
         }
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
-
         return $this->responseSuccess('Đăng nhập thành công', [
             'data' => $user,
             'token' => $token,

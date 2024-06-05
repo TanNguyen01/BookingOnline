@@ -102,8 +102,5 @@ Route::middleware('auth:sanctum', 'checkuser')->group(function () {
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
-// Route::get('/auth', function (Request $request) {
-//     return response()->json(['message' => 'Vui lòng đăng nhập']);
-// })->name('auth');
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
