@@ -67,8 +67,6 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
 
 
     //quản lý booking
-    Route::get('/listbooking', [BookingController::class, 'index']);
-    Route::get('/booking/{id}', [BookingController::class, 'show']);
     Route::post('/update_booking/{id}', [BookingController::class, 'update']);
     Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
 });
@@ -83,6 +81,11 @@ Route::post('/choose-service', [BookingController::class, 'chooseService']);
 Route::post('/choose-date', [BookingController::class, 'chooseDate']);
 // submit form
 Route::post('/bookings', [BookingController::class, 'store']);
+
+Route::get('/listbooking', [BookingController::class, 'index']);
+Route::get('/booking/{id}', [BookingController::class, 'show']);
+
+
 
 
 
@@ -113,10 +116,6 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 
 
 
-
-// Route::get('/auth', function (Request $request) {
-//     return response()->json(['message' => 'Vui lòng đăng nhập']);
-// })->name('auth');
 
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);

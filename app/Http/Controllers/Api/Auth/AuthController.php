@@ -28,9 +28,9 @@ class AuthController extends Controller
         }
         $user = User::where('email', $request->email)->first();
         $token = $user->createToken('auth-token')->plainTextToken;
-        return response()->json(['token' => $token]);
+        return $this->responseSuccess('Đăng nhập thành công', ['data' => $token]);
+        ;
     }
-
     public function logout(Request $request)
     {
         Session::flush();
