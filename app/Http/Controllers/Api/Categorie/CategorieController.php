@@ -27,7 +27,7 @@ class CategorieController extends Controller
         $categorie = $this->categorieService->getAllCategorie();
 
         return $this->responseSuccess(
-            __('message.category_list'),
+            __('category.list'),
             [
                 'data' => $categorie,
             ]
@@ -44,7 +44,7 @@ class CategorieController extends Controller
         $categorie = $this->categorieService->createCategorie($data);
 
         return $this->responseCreated(
-            __('message.category_created'),
+            __('category.created'),
 
             [
                 'data' => $categorie,
@@ -62,12 +62,12 @@ class CategorieController extends Controller
         if (! $categorie) {
             return $this->responseNotFound(
                 Response::HTTP_NOT_FOUND,
-                __('message.category_not_found'),
+                __('category.not_found'),
 
             );
         } else {
             return $this->responseSuccess(
-                __('message.category_list'),
+                __('category.show'),
 
                 [
                     'data' => $categorie,
@@ -86,14 +86,14 @@ class CategorieController extends Controller
         $categorie = $this->categorieService->updateCategorie($id, $data);
         if (! $categorie) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND,
-                __('message.category_not_found'),
+                __('category.not_found'),
 
             );
         } else {
             $categorie->update($data);
 
             return $this->responseSuccess(
-                __('message.category_updated'),
+                __('category.updated'),
                 [
                     'data' => $categorie,
 
@@ -111,7 +111,7 @@ class CategorieController extends Controller
         if (! $categorie) {
             return $this->responseNotFound(
                 Response::HTTP_NOT_FOUND,
-                __('message.category_not_found'),
+                __('category.not_found'),
 
             );
         } else {

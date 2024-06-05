@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         $users = $this->userService->getAllUsers();
 
-        return $this->responseSuccess('Lấy danh sách người dùng thành công', ['data' => $users]);
+        return $this->responseSuccess(__('user.list'), ['data' => $users]);
     }
 
     public function store(userRequest $request)
@@ -34,7 +34,7 @@ class UserController extends Controller
         $user = $this->userService->createUser($data);
 
         return $this->responseCreated(
-            'them thanh cong',
+            __('user.created'),
 
             [
                 'data' => $user,
@@ -47,10 +47,10 @@ class UserController extends Controller
     {
         $user = $this->userService->getUserById($id);
         if (! $user) {
-            return $this->responseNotFound('Không tìm thấy người dùng',Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
-        return $this->responseSuccess('Xem thông tin người dùng thành công', ['data' => $user]);
+        return $this->responseSuccess(__('user.show'), ['data' => $user]);
     }
 
     public function update(userRequest $request, $id)
@@ -58,17 +58,17 @@ class UserController extends Controller
 
         $user = $this->userService->updateUser($id, $request->all());
         if (! $user) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy người dùng');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
-        return $this->responseSuccess('Cập nhật thành công', ['data' => $user]);
+        return $this->responseSuccess(__('user.updated'), ['data' => $user]);
     }
 
     public function destroy($id)
     {
         $user = $this->userService->deleteUser($id);
         if (! $user) {
-            return $this->responseNotFound( 'Không tìm thấy người dùng',Response::HTTP_NOT_FOUND,);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);

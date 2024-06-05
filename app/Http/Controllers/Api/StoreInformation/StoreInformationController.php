@@ -23,16 +23,16 @@ class StoreInformationController extends Controller
     {
         $stores = $this->storeService->getAllStore();
 
-        return $this->responseSuccess('Xem danh sách hàng thành công', ['data' => $stores]);
+        return $this->responseSuccess(__('store.list'), ['data' => $stores]);
     }
 
     public function show(string $id)
     {
         $store = $this->storeService->getStoreById($id);
         if (! $store) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         } else {
-            return $this->responseSuccess('Xem thông tin cửa hàng thành công', ['data' => $store], Response::HTTP_OK);
+            return $this->responseSuccess(__('store.show'), ['data' => $store], Response::HTTP_OK);
 
         }
     }
@@ -41,24 +41,24 @@ class StoreInformationController extends Controller
     {
         $store = $this->storeService->createStore($request->all());
 
-        return $this->responseCreated('Thêm cửa hàng thành công', ['data' => $store]);
+        return $this->responseCreated(__('store.created'), ['data' => $store]);
     }
 
     public function update(StoreInformationRequest $request, $id)
     {
         $store = $this->storeService->updateStore($id, $request->all());
         if (! $store) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
 
-        return $this->responseSuccess('Cập nhật thành công', ['data' => $store]);
+        return $this->responseSuccess(__('store.updated'), ['data' => $store]);
     }
 
     public function destroy($id)
     {
         $store = $this->storeService->deleteStore($id);
         if (! $store) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
 
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);

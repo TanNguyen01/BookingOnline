@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Localization;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -43,7 +44,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
-            \App\Http\Middleware\SetLocale::class,
+           // \App\Http\Middleware\SetLocale::class,
 
         ],
     ];
@@ -74,6 +75,6 @@ class Kernel extends HttpKernel
         'force.json.validation' => \App\Http\Middleware\ForceJsonValidation::class,
         'checkadmin' => \App\Http\Middleware\CheckAdmim::class,
         'checkuser' => \App\Http\Middleware\CheckUser::class,
-
+         'language'=> Localization::class,
     ];
 }
