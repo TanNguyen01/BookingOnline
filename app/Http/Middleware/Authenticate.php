@@ -16,13 +16,12 @@ class Authenticate extends Middleware
      */
     public function handle($request, $next, ...$guards)
     {
-        $this->authenticate($request, $guards);
-
-        if ($request->expectsJson()) {
-            return $next($request);
+        if ($this->auth->guard('sanctum')->check()) {
+            $this->auth->shouldUse('api');
+        }else
+        {
+            return $this->responseSuccess();
         }
-        return $this->responseUnAuthenticated();
+        return $next($request);
     }
-
-
 }

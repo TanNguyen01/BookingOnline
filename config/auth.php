@@ -40,11 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-    ],
-    'api' => [
-        'driver' => 'token', // Hoặc 'passport' nếu bạn sử dụng Laravel Passport
-        'provider' => 'users',
-        'hash' => false,
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
 
     /*
