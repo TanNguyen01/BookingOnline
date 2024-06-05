@@ -32,30 +32,40 @@ Route::get('/set-locale/{locale}', function ($locale) {
 
 Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     // Services
+    Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
+
     Route::get('service/{id}', [ServiceController::class, 'show'])->name('show.service');
     Route::post('service_post', [ServiceController::class, 'store'])->name('store.service');
     Route::post('service_update/{id}', [ServiceController::class, 'update'])->name('update.service');
     Route::delete('delete_service/{id}', [ServiceController::class, 'destroy'])->name('destroy.service');
 
     // Categories
+    Route::get('list_categorie', [CategorieController::class, 'index'])->name('list.categorie');
+
     Route::get('categorie/{id}', [CategorieController::class, 'show'])->name('show.categorie');
     Route::post('categorie_post', [CategorieController::class, 'store'])->name('store.categorie');
     Route::post('categorie_update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
     Route::delete('delete_categorie/{id}', [CategorieController::class, 'destroy'])->name('destroy.categorie');
 
     // User Admin
+    Route::get('list_user', [UserController::class, 'index'])->name('list.users');
+
     Route::get('show_user/{id}', [UserController::class, 'show'])->name('show.users');
     Route::post('post', [UserController::class, 'store'])->name('store.user');
     Route::put('user/{id}', [UserController::class, 'update'])->name('update.user');
     Route::delete('deleteuser/{id}', [UserController::class, 'destroy'])->name('destroy.user');
 
     // Store Informations
+    Route::get('list_store', [StoreInformationController::class, 'index'])->name('list.store');
+
     Route::get('shows_store/{id}', [StoreInformationController::class, 'show'])->name('show.store');
     Route::post('store_post', [StoreInformationController::class, 'store'])->name('add.store');
     Route::post('store/{id}', [StoreInformationController::class, 'update'])->name('update.store');
     Route::delete('store_delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
 
     // Opening Hours
+    Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
+
     Route::get('/opening/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
     Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
     Route::post('update_hours', [OpeningHourController::class, 'update'])->name('opening_hours.update');
@@ -68,11 +78,6 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
     Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
 });
 
-Route::get('list_store', [StoreInformationController::class, 'index'])->name('list.store');
-Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
-Route::get('list_categorie', [CategorieController::class, 'index'])->name('list.categorie');
-Route::get('list_user', [UserController::class, 'index'])->name('list.users');
-Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
 
 
 
