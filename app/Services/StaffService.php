@@ -16,14 +16,15 @@ class StaffService
     public function uploadImageIfExists(&$data, $user = null)
     {
         if (isset($data['image']) && $data['image']->isValid()) {
-            $imageName = Str::random(12).'.'.$data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('', $imageName, 'images_user');
+            $imageName = Str::random(12) . '.' . $data['image']->getClientOriginalExtension();
+            $data['image']->storeAs('public/images/user', $imageName);
+            $newImageUrl = asset('storage/images/user/' . $imageName);
 
-            if ($user && $user->image) {
-                Storage::disk('images_user')->delete($user->image);
+            if (isset($data['old_image']) && Storage::disk('public')->exists('images/user/' . $data['old_image'])) {
+                Storage::disk('public')->delete('images/user/' . $data['old_image']);
             }
-
-            $data['image'] = Storage::disk('images_user')->url($imageName);
+            $data['image'] = $newImageUrl;
         }
     }
+
 }

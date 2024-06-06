@@ -39,20 +39,20 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/images'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
         'images_store' => [
             'driver' => 'local',
-            'root' => public_path('images/store'),
-            'url' => env('APP_URL').'/images/store',
+            'root' => storage_path('images/store'),
+            'url' => env('APP_URL').'/storage/images/store',
             'visibility' => 'public',
         ],
         'images_user' => [
             'driver' => 'local',
-            'root' => public_path('images/user'),
-            'url' => env('APP_URL').'/images/store',
+            'root' => storage_path('images/user'),
+            'url' => env('APP_URL').'/storage/images/user',
             'visibility' => 'public',
         ],
 
