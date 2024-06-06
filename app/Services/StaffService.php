@@ -23,7 +23,7 @@ class StaffService
                 Storage::disk('images_user')->delete($user->image);
             }
 
-            $data['image'] = $imageName;
+            $data['image'] = Storage::disk('images_user')->url($imageName);
         }
     }
 }

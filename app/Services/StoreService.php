@@ -54,12 +54,13 @@ class StoreService
         if (isset($data['image']) && $data['image']->isValid()) {
             $imageName = Str::random(12).'.'.$data['image']->getClientOriginalExtension();
             $data['image']->storeAs('', $imageName, 'images_store');
-
             if ($store && $store->image) {
+                // Xóa ảnh cũ nếu có
                 Storage::disk('images_store')->delete($store->image);
             }
 
-            $data['image'] = $imageName;
+            // Tạo URL cho ảnh lưu trong disk 'images_store'
+            $data['image'] = Storage::disk('images_store')->url($imageName);
         }
     }
 }

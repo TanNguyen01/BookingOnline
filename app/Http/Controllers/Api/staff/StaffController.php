@@ -118,9 +118,8 @@ class StaffController extends Controller
     public function getEmployeeBookings()
     {
         $user = $this->staffService->staffService();
-        $bookings = booking::whereHas('schedule', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->get();
+        $bookings = Booking::where('user_id', $user->id)->get();
+
         if ($bookings->isEmpty()) {
             return $this->responseNotFound('Hiện bạn không có booking nào', Response::HTTP_NOT_FOUND);
         } else {
