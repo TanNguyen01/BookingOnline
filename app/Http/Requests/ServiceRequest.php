@@ -26,12 +26,22 @@ class ServiceRequest extends FormRequest
     public function rules(): array
     {
 
-        return [
-            'name' => 'required|string|unique:services',
-            'categorie_id' => 'required|integer|exists:categories,id',
-            'describe' => 'required|string|max:360',
-            'price' => ['required', 'regex:/^\d{1,9}(,\d{3})*(\.\d{1,2})?$/'],
-        ];
+
+        if (request()->isMethod('post')) {
+            return [
+                'name' => 'required|string|unique:services',
+                'categorie_id' => 'required|integer|exists:categories,id',
+                'describe' => 'required|string|max:360',
+                'price' => ['required', 'regex:/^\d{1,9}$/'],
+            ];
+        } elseif(request()->isMethod('put')) {
+            return [
+                'name' => 'required|string',
+                'categorie_id' => 'required|integer|exists:categories,id',
+                'describe' => 'required|string|max:360',
+                'price' => ['required', 'regex:/^\d{1,9}$/'],
+            ];
+        }
 
     }
 
@@ -39,7 +49,7 @@ class ServiceRequest extends FormRequest
     {
 
         return [
-            'name.unique' => 'tên  da ton tai',
+            'name.unique' => 'tên dịch vụ đã tồn tại',
             'name.required' => 'Vui lòng nhâp name',
             'email.email' => 'Nhập đúng định dạng email!',
             'categorie_id.required' => 'nhập id category',

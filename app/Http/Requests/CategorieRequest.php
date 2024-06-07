@@ -26,10 +26,15 @@ class CategorieRequest extends FormRequest
     public function rules(): array
     {
 
-        return [
-            'name' => 'required|string|unique:categories',
-
-        ];
+        if (request()->isMethod('post')) {
+            return [
+                'name' => 'required|string|unique:categories',
+            ];
+        } else {
+            return [
+                'name' => 'required|string',
+            ];
+        }
 
     }
 

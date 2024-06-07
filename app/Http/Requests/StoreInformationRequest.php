@@ -26,20 +26,29 @@ class StoreInformationRequest extends FormRequest
     public function rules(): array
     {
 
-        return [
-            'name' => 'required|string|unique:store_information',
-            'image' => 'required|image|mimes:jpg,png,jpeg',
-            'address' => 'required|string',
-            'phone' => 'required|string',
-        ];
+        if (request()->isMethod('post')) {
+            return [
+                'name' => 'required|string|unique:store_information',
+                'image' => 'required|image|mimes:jpg,png,jpeg',
+                'address' => 'required|string',
+                'phone' => 'required|string',
 
+            ];
+        } elseif (request()->isMethod('put')) {
+            return  [
+                'name' => 'required|string',
+                'address' => 'required|string',
+                'phone' => 'required|string',
+                'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            ];
+        }
     }
 
     public function messages(): array
     {
 
         return [
-            'name.unique' => 'ten cua hang da ton tai',
+            'name.unique' => 'Tên cửa hàng đã tồn tại',
             'address.string' => 'phone là kiểu chuỗi',
             'address.required' => 'Vui lòng nhâp address',
             'phone.string' => 'phone là kiểu chuỗi',
@@ -50,7 +59,6 @@ class StoreInformationRequest extends FormRequest
             'image.required' => 'chon Hình ảnh',
 
         ];
-
     }
 
     protected function failedValidation(Validator $validator)
@@ -61,6 +69,8 @@ class StoreInformationRequest extends FormRequest
             [
                 'error' => $errors,
                 'status_code' => 402,
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
     }
 }

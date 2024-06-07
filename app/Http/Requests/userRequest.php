@@ -38,7 +38,7 @@ class userRequest extends FormRequest
             ];
         } else {
             return [
-                'email' => 'nullable|string|email|unique:users',
+                'email' => 'nullable|string|email',
                 'name' => 'nullable|string',
                 'password' => 'nullable|string',
                 'role' => 'nullable|integer|in:0,1',
@@ -55,16 +55,16 @@ class userRequest extends FormRequest
     {
 
         return [
-            'email.unique' => 'email da ton tai',
+            'email.unique' => 'email đã tồn tại',
             'email.required' => 'Vui lòng nhâp email',
             'email.email' => 'Nhập đúng định dạng email!',
             'password.required' => 'Nhập password!',
             'password.confirmed' => 'Nhập lại password passwrod_confirmation!',
             'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
+            'name.string' => ' Name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'address.string' => 'phone là kiểu chuỗi',
+            'phone.string' => 'Phone là kiểu chuỗi',
+            'address.string' => 'Phone là kiểu chuỗi',
 
         ];
 

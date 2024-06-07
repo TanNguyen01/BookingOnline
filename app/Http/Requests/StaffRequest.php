@@ -27,28 +27,25 @@ class StaffRequest extends FormRequest
     {
 
         return [
-            'name' => 'required|string',
-            'image' => 'required|image|mimes:jpg,png,jpeg',
+            'current_password' => 'required|string',
+            'name' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
-            'current_password' => 'required|string',
             'new_password' => 'nullable|string',
         ];
 
     }
-
     public function messages(): array
     {
-
         return [
+            'current_password.required' => 'Nhập current_password cũ',
             'new_password.required' => 'new_password nhập new password!',
-            'current_password.required' => ' nhập current_password cũ',
             'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
+            'name.string' => ' Name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'address.string' => 'phone là kiểu chuỗi',
-
+            'phone.string' => 'Phone là kiểu chuỗi',
+            'address.string' => 'Phone là kiểu chuỗi',
         ];
 
     }
