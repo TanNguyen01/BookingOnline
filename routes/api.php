@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Session;
    // return response()->json(['message' => 'Locale set to '.$locale]);
 //});
 
-// Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () {
     // Services
     Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
     Route::get('service/{id}', [ServiceController::class, 'show'])->name('show.service');
@@ -74,7 +74,7 @@ use Illuminate\Support\Facades\Session;
     Route::get('/booking/{id}', [BookingController::class, 'show']);
     Route::post('/update_booking/{id}', [BookingController::class, 'update']);
     Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
-// });
+});
 
 
 
