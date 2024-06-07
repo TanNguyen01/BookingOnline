@@ -24,13 +24,13 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-Route::get('/set-locale/{locale}', function ($locale) {
-    Session::put('locale', $locale);
+//Route::get('/set-locale/{locale}', function ($locale) {
+  //  Session::put('locale', $locale);
 
-    return response()->json(['message' => 'Locale set to '.$locale]);
-});
+   // return response()->json(['message' => 'Locale set to '.$locale]);
+//});
 
-Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () {
     // Services
     Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
     Route::get('service/{id}', [ServiceController::class, 'show'])->name('show.service');
@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
 
     // Categories
     Route::get('list_categorie', [CategorieController::class, 'index'])->name('list.categorie');
+
     Route::get('categorie/{id}', [CategorieController::class, 'show'])->name('show.categorie');
     Route::post('categorie_post', [CategorieController::class, 'store'])->name('store.categorie');
     Route::post('categorie_update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
@@ -47,13 +48,15 @@ Route::middleware(['auth:sanctum', 'checkadmin'])->group(function () {
 
     // User Admin
     Route::get('list_user', [UserController::class, 'index'])->name('list.users');
+
     Route::get('show_user/{id}', [UserController::class, 'show'])->name('show.users');
     Route::post('post', [UserController::class, 'store'])->name('store.user');
-    Route::put('user_update/{id}', [UserController::class, 'update'])->name('update.user');
+    Route::put('user/{id}', [UserController::class, 'update'])->name('update.user');
     Route::delete('deleteuser/{id}', [UserController::class, 'destroy'])->name('destroy.user');
 
     // Store Informations
     Route::get('list_store', [StoreInformationController::class, 'index'])->name('list.store');
+
     Route::get('shows_store/{id}', [StoreInformationController::class, 'show'])->name('show.store');
     Route::post('store_post', [StoreInformationController::class, 'store'])->name('add.store');
     Route::post('store/{id}', [StoreInformationController::class, 'update'])->name('update.store');
@@ -105,8 +108,12 @@ Route::middleware('auth:sanctum', 'checkuser')->group(function () {
     // xem tất cả booking
     Route::get('listbooking', [StaffController::class, 'getEmployeeBookings']);
 });
-Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('login', [AuthController::class, 'login'])->name('login');
+
+  Route::middleware('language')->group(function(){
+      Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+      Route::post('login', [AuthController::class, 'login'])->name('login');
+  });
+
 
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);

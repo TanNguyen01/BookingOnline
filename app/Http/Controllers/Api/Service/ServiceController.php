@@ -23,41 +23,41 @@ class ServiceController extends Controller
     {
         $services = $this->serviceService->getAllService();
 
-        return $this->responseSuccess('Lấy danh sách thành công', ['data' => $services]);
+        return $this->responseSuccess(__('service.list'), ['data' => $services]);
     }
 
     public function show($id)
     {
         $service = $this->serviceService->getServiceById($id);
         if (! $service) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy dịch vụ');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('service.not_found'));
         }
 
-        return $this->responseSuccess('Xem dịch vụ thành công', ['data' => $service]);
+        return $this->responseSuccess(__('service.show'), ['data' => $service]);
     }
 
     public function store(ServiceRequest $request)
     {
         $service = $this->serviceService->createService($request->all());
 
-        return $this->responseCreated('Thêm thành công', ['data' => $service]);
+        return $this->responseCreated(__('service.created'), ['data' => $service]);
     }
 
     public function update(ServiceRequest $request, $id)
     {
         $service = $this->serviceService->updateService($id, $request->all());
         if (! $service) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy dịch vụ');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('service.not_found'));
         }
 
-        return $this->responseSuccess('Cập nhật thành công', ['data' => $service]);
+        return $this->responseSuccess(__('service.updated'), ['data' => $service]);
     }
 
     public function destroy($id)
     {
         $service = $this->serviceService->deleteService($id);
         if (! $service) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy dịch vụ');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('service.not_found'));
         }
 
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);

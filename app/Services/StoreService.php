@@ -39,28 +39,31 @@ class StoreService
     public function deleteStore($id)
     {
         $store = StoreInformation::find($id);
-        if ($store) {
-            if ($store->image) {
-                Storage::disk('images_store')->delete($store->image);
+    if ($store) {
+        if ($store->image) {
+            // Lấy tên file từ URL của ảnh
+            $imageName = basename($store->image);
+            if (Storage::disk('public')->exists('images/store/'.$imageName)) {
+                Storage::disk('public')->delete('images/store/'.$imageName);
             }
-            $store->delete();
         }
+        $store->delete();
+    }
 
-        return $store;
+    return $store;
     }
 
     protected function uploadImageIfExists(&$data, $store = null)
     {
         if (isset($data['image']) && $data['image']->isValid()) {
             $imageName = Str::random(12).'.'.$data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('', $imageName, 'images_store');
-            if ($store && $store->image) {
-                // Xóa ảnh cũ nếu có
-                Storage::disk('images_store')->delete($store->image);
-            }
+            $data['image']->storeAs('public/images/store', $imageName);
+            $newImageUrl = asset('storage/images/store/'.$imageName);
 
-            // Tạo URL cho ảnh lưu trong disk 'images_store'
-            $data['image'] = Storage::disk('images_store')->url($imageName);
+            if (isset($data['old_image']) && Storage::disk('public')->exists('images/store/'.$data['old_image'])) {
+                Storage::disk('public')->delete('images/store/'.$data['old_image']);
+            }
+            $data['image'] = $newImageUrl;
         }
     }
 }

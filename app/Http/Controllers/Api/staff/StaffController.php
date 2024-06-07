@@ -31,7 +31,7 @@ class StaffController extends Controller
         $user = $this->staffService->staffService();
 
         if (! Hash::check($validatedData['current_password'], $user->password)) {
-            return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'mật khẩu hiện tại không đúng']);
+            return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('auth.failed')]);
         }
 
         unset($validatedData['current_password']);
@@ -43,7 +43,7 @@ class StaffController extends Controller
         $this->staffService->uploadImageIfExists($validatedData, $user);
         $user->update($validatedData);
 
-        return $this->responseSuccess('Cập nhật thành công', ['data' => $user]);
+        return $this->responseSuccess(__('user.updated'), ['data' => $user]);
     }
 
     public function showProfile()
@@ -51,7 +51,7 @@ class StaffController extends Controller
 
         $profile = $this->staffService->staffService();
 
-        return $this->responseSuccess('Xem thành công', [
+        return $this->responseSuccess(__('user.show'), [
             'id' => $profile->id,
             'email' => $profile->email,
             'name' => $profile->name,
@@ -69,7 +69,7 @@ class StaffController extends Controller
         $schedules = $request->input('schedules');
         $storeId = $request->input('store_information_id');
         if (! $storeId) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy cửa hàng');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         } else {
             foreach ($schedules as $scheduleData) {
                 $day = $scheduleData['day'];

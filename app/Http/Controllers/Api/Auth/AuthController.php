@@ -20,11 +20,11 @@ class AuthController extends Controller
     {
 
         if (! $token = auth()->attempt($request->validated())) {
-            return $this->responseBadRequest(null, 'đăng nhập thất bại vui long kiểm tra lại');
+            return $this->responseBadRequest(null, __('auth.failed'));
         }
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
-        return $this->responseSuccess('Đăng nhập thành công', [
+        return $this->responseSuccess(__('auth.success'), [
             'data' => $user,
             'token' => $token,
         ]);
@@ -37,7 +37,7 @@ class AuthController extends Controller
         }
         Session::flush();
         return $this->responseSuccess(
-            'Đăng xuất thành công',
+            __('auth.logout_success'),
         );
     }
 }
