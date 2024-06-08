@@ -109,7 +109,7 @@ Route::middleware('auth:sanctum', 'checkuser')->group(function () {
 });
 
   Route::middleware('language')->group(function(){
-      Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+      Route::post('logout', [AuthController::class, 'logout'])->name('logout');
       Route::post('login', [AuthController::class, 'login'])->name('login');
   });
 
