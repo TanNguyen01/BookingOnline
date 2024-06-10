@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class StaffRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,37 +27,39 @@ class StaffRequest extends FormRequest
     {
 
         return [
-            'current_password' => 'required|string',
-            'name' => 'nullable|string',
+            require
+            'name' => 'required|string',
+            'password' => 'required|string',
+            'role' => 'required|integer|in:0,1',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'new_password' => 'nullable|string',
+            'address' => 'required|string',
+            'phone' => 'required|string',
         ];
-
     }
+
     public function messages(): array
     {
         return [
-            'current_password.required' => 'Nhập current_password cũ',
-            'new_password.required' => 'new_password nhập new password!',
+            'password.required' => 'Nhập password!',
             'name.required' => 'Vui lòng nhâp name',
             'name.string' => ' Name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
             'phone.string' => 'Phone là kiểu chuỗi',
             'address.string' => 'Phone là kiểu chuỗi',
-        ];
 
+        ];
     }
 
-  //  protected function failedValidation(Validator $validator)
-    //{
+    protected function failedValidation(Validator $validator)
+    {
 
-      //  $errors = (new ValidationException($validator))->errors();
-       // throw new HttpResponseException(response()->json(
-         //   [
-          //      'error' => $errors,
-           //     'status_code' => 402,
-           // ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
-   // }
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $errors,
+                'status_code' => 402,
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
+    }
 }

@@ -15,12 +15,9 @@ class ForceJsonValidation
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->isMethod('POST') && empty($request->all())) {
-            // Trả về lỗi 422 nếu không có dữ liệu
-            return response()->json(['errors' => ['message' => 'aaaaaaaaa']], 401);
+        if (($request->isMethod('POST') || $request->isMethod('PUT')) && empty($request->all())) {
+            return response()->json(['errors' => ['message' => 'Request body cannot be empty']], 401);
         }
-
-        // Tiếp tục xử lý request
         return $next($request);
 
     }

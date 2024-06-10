@@ -13,7 +13,7 @@ class Schedule extends Model
         'user_id', 'store_information_id', 'day', 'start_time', 'end_time',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

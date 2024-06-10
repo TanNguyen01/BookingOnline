@@ -61,6 +61,7 @@ class OpeningHourRequest extends FormRequest
             'opening_hours.*.opening_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
 
         ];
+        
     }
 
    // protected function failedValidation(Validator $validator)

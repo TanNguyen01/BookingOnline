@@ -12,7 +12,7 @@ class ServiceBooking extends Model
         'booking_id',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function service()
     {

@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class CategorieRequest extends FormRequest
+class UpdateCategorieRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,28 +25,30 @@ class CategorieRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'name' => 'required|string|unique:categories',
-            ];
+        return [
+            'name' => 'required|string',
+        ];
     }
 
     public function messages(): array
     {
+
         return [
-            'name.unique' => 'Tên đã tồn tại',
             'name.required' => 'Vui lòng nhâp name',
 
         ];
     }
 
-   // protected function failedValidation(Validator $validator)
-   // {
+    protected function failedValidation(Validator $validator)
+    {
 
-      //  $errors = (new ValidationException($validator))->errors();
-       // throw new HttpResponseException(response()->json(
-         //   [
-            //    'error' => $errors,
-            //    'status_code' => 402,
-          //  ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
-  //  }
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $errors,
+                'status_code' => 402,
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
+    }
 }

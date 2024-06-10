@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Service;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Services\ServiceService;
 use App\Traits\APIResponse;
 use Illuminate\Http\Response;
@@ -43,7 +44,7 @@ class ServiceController extends Controller
         return $this->responseCreated(__('service.created'), ['data' => $service]);
     }
 
-    public function update(ServiceRequest $request, $id)
+    public function update(UpdateServiceRequest $request, $id)
     {
         $service = $this->serviceService->updateService($id, $request->all());
         if (! $service) {

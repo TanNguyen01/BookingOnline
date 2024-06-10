@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () 
     Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
     Route::get('service/{id}', [ServiceController::class, 'show'])->name('show.service');
     Route::post('service_post', [ServiceController::class, 'store'])->name('store.service');
-    Route::post('service_update/{id}', [ServiceController::class, 'update'])->name('update.service');
+    Route::put('service_update/{id}', [ServiceController::class, 'update'])->name('update.service');
     Route::delete('delete_service/{id}', [ServiceController::class, 'destroy'])->name('destroy.service');
 
     // Categories
@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () 
 
     Route::get('categorie/{id}', [CategorieController::class, 'show'])->name('show.categorie');
     Route::post('categorie_post', [CategorieController::class, 'store'])->name('store.categorie');
-    Route::post('categorie_update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
+    Route::put('categorie_update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
     Route::delete('delete_categorie/{id}', [CategorieController::class, 'destroy'])->name('destroy.categorie');
 
     // User Admin
@@ -59,12 +59,11 @@ Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () 
 
     Route::get('shows_store/{id}', [StoreInformationController::class, 'show'])->name('show.store');
     Route::post('store_post', [StoreInformationController::class, 'store'])->name('add.store');
-    Route::post('store/{id}', [StoreInformationController::class, 'update'])->name('update.store');
+    Route::put('store/{id}', [StoreInformationController::class, 'update'])->name('update.store');
     Route::delete('store_delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
 
     // Opening Hours
     Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
-
     Route::get('/opening/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
     Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
     Route::post('update_hours', [OpeningHourController::class, 'update'])->name('opening_hours.update');
@@ -110,7 +109,7 @@ Route::middleware('auth:sanctum', 'checkuser')->group(function () {
 });
 
   Route::middleware('language')->group(function(){
-      Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+      Route::post('logout', [AuthController::class, 'logout'])->name('logout');
       Route::post('login', [AuthController::class, 'login'])->name('login');
   });
 
