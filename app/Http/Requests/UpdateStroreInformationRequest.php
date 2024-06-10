@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class StoreInformationRequest extends FormRequest
+class UpdateStroreInformationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,18 +25,16 @@ class StoreInformationRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'name' => 'required|string|unique:store_information',
-                'image' => 'required|image|mimes:jpg,png,jpeg',
-                'address' => 'required|string',
-                'phone' => 'required|string',
-            ];
+        return  [
+            'name' => 'required|string',
+            'address' => 'required|string',
+            'phone' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+        ];
     }
     public function messages(): array
     {
-
         return [
-            'name.unique' => 'Tên cửa hàng đã tồn tại',
             'address.string' => 'phone là kiểu chuỗi',
             'address.required' => 'Vui lòng nhâp address',
             'phone.string' => 'phone là kiểu chuỗi',
@@ -44,7 +42,6 @@ class StoreInformationRequest extends FormRequest
             'name.required' => 'Vui lòng nhâp name',
             'name.string' => ' name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'image.required' => 'chon Hình ảnh',
         ];
     }
 

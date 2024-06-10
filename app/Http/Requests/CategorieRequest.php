@@ -25,28 +25,18 @@ class CategorieRequest extends FormRequest
      */
     public function rules(): array
     {
-
-        if (request()->isMethod('post')) {
             return [
                 'name' => 'required|string|unique:categories',
             ];
-        } else {
-            return [
-                'name' => 'required|string',
-            ];
-        }
-
     }
 
     public function messages(): array
     {
-
         return [
-            'name.unique' => 'tên da ton tai',
+            'name.unique' => 'Tên đã tồn tại',
             'name.required' => 'Vui lòng nhâp name',
 
         ];
-
     }
 
     protected function failedValidation(Validator $validator)

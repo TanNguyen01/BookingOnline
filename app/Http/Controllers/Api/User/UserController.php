@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\userRequest;
 use App\Services\UserService;
 use App\Traits\APIResponse;
@@ -53,7 +54,7 @@ class UserController extends Controller
         return $this->responseSuccess(__('user.show'), ['data' => $user]);
     }
 
-    public function update(userRequest $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
 
         $user = $this->userService->updateUser($id, $request->all());

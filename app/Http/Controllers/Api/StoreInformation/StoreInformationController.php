@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\StoreInformation;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInformationRequest;
+use App\Http\Requests\UpdateStroreInformationRequest;
 use App\Services\StoreService;
 use App\Traits\APIResponse;
 use Illuminate\Http\Response;
@@ -44,7 +45,7 @@ class StoreInformationController extends Controller
         return $this->responseCreated(__('store.created'), ['data' => $store]);
     }
 
-    public function update(StoreInformationRequest $request, $id)
+    public function update(UpdateStroreInformationRequest $request, $id)
     {
         $store = $this->storeService->updateStore($id, $request->all());
         if (! $store) {

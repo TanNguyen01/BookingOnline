@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class StoreInformationRequest extends FormRequest
+class UpdateServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,26 +25,29 @@ class StoreInformationRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'name' => 'required|string|unique:store_information',
-                'image' => 'required|image|mimes:jpg,png,jpeg',
-                'address' => 'required|string',
-                'phone' => 'required|string',
-            ];
+
+        return [
+            'name' => 'required|string',
+            'categorie_id' => 'required|integer|exists:categories,id',
+            'describe' => 'required|string|max:360',
+            'price' => ['required', 'regex:/^\d{1,9}$/'],
+        ];
     }
+
     public function messages(): array
     {
 
         return [
-            'name.unique' => 'Tên cửa hàng đã tồn tại',
-            'address.string' => 'phone là kiểu chuỗi',
-            'address.required' => 'Vui lòng nhâp address',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'phone.required' => 'Vui lòng nhâp phone',
             'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'image.required' => 'chon Hình ảnh',
+            'email.email' => 'Nhập đúng định dạng email!',
+            'categorie_id.required' => 'nhập id category',
+            'categorie_id.integer' => 'nhập id category là kiểu số nguyên',
+            'categorie_id.exists' => 'không có danh mục nào',
+            'describe.required' => 'Nhâp mô tả của dịch vụ',
+            'describe.max' => 'tối đa 360 ký tự',
+            'price.required' => 'Nhập giá tiền',
+            'price.regex' => 'Nhập đúng giá tiền định dạng việt nam',
+
         ];
     }
 

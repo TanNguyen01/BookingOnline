@@ -25,32 +25,16 @@ class userRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (request()->isMethod('post')) {
-            return [
-                'email' => 'required|string|email|unique:users',
-                'name' => 'nullable|string',
-                'password' => 'required|string|',
-                'role' => 'nullable|integer',
-                'image' => 'nullable|image|mimes:jpg,png,jpeg',
-                'address' => 'nullable|string',
-                'phone' => 'nullable|string',
-
-            ];
-        } else {
-            return [
-                'email' => 'nullable|string|email',
-                'name' => 'nullable|string',
-                'password' => 'nullable|string',
-                'role' => 'nullable|integer|in:0,1',
-                'image' => 'nullable|image|mimes:jpg,png,jpeg',
-                'address' => 'nullable|string',
-                'phone' => 'nullable|string',
-
-            ];
-        }
-
+        return [
+            'email' => 'required|string|email|unique:users',
+            'name' => 'nullable|string',
+            'password' => 'required|string|',
+            'role' => 'nullable|integer',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string',
+        ];
     }
-
     public function messages(): array
     {
 
@@ -65,9 +49,7 @@ class userRequest extends FormRequest
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
             'phone.string' => 'Phone là kiểu chuỗi',
             'address.string' => 'Phone là kiểu chuỗi',
-
         ];
-
     }
 
     protected function failedValidation(Validator $validator)
@@ -78,6 +60,8 @@ class userRequest extends FormRequest
             [
                 'error' => $errors,
                 'status_code' => 402,
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
     }
 }

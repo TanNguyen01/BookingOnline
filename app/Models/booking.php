@@ -13,7 +13,7 @@ class booking extends Model
         'user_id', 'day', 'time', 'status',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

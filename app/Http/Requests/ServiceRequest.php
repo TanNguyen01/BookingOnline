@@ -25,31 +25,17 @@ class ServiceRequest extends FormRequest
      */
     public function rules(): array
     {
-
-
-        if (request()->isMethod('post')) {
-            return [
-                'name' => 'required|string|unique:services',
-                'categorie_id' => 'required|integer|exists:categories,id',
-                'describe' => 'required|string|max:360',
-                'price' => ['required', 'regex:/^\d{1,9}$/'],
-            ];
-        } elseif(request()->isMethod('put')) {
-            return [
-                'name' => 'required|string',
-                'categorie_id' => 'required|integer|exists:categories,id',
-                'describe' => 'required|string|max:360',
-                'price' => ['required', 'regex:/^\d{1,9}$/'],
-            ];
-        }
-
+        return [
+            'name' => 'required|string|unique:services',
+            'categorie_id' => 'required|integer|exists:categories,id',
+            'describe' => 'required|string|max:360',
+            'price' => ['required', 'regex:/^\d{1,9}$/'],
+        ];
     }
-
     public function messages(): array
     {
-
         return [
-            'name.unique' => 'tên dịch vụ đã tồn tại',
+            'name.unique' => 'Tên dịch vụ đã tồn tại',
             'name.required' => 'Vui lòng nhâp name',
             'email.email' => 'Nhập đúng định dạng email!',
             'categorie_id.required' => 'nhập id category',
@@ -61,7 +47,6 @@ class ServiceRequest extends FormRequest
             'price.regex' => 'Nhập đúng giá tiền định dạng việt nam',
 
         ];
-
     }
 
     protected function failedValidation(Validator $validator)
@@ -72,6 +57,8 @@ class ServiceRequest extends FormRequest
             [
                 'error' => $errors,
                 'status_code' => 402,
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
     }
 }

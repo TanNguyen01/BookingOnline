@@ -16,7 +16,7 @@ class OpeningHour extends Model
         'closing_time',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function storeInformation()
     {

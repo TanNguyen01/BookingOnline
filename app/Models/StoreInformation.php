@@ -18,7 +18,7 @@ class StoreInformation extends Model
         'phone',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     // vì mỗi cửa hàng trong bảng Store_Information có thể có nhiều bản ghi trong bảng opening_hours,
     public function openingHours()

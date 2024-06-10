@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Categorie;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategorieRequest;
+use App\Http\Requests\UpdateCategorieRequest;
 use App\Services\CategorieService;
 use App\Traits\APIResponse;
 use Illuminate\Http\Response;
@@ -80,7 +81,7 @@ class CategorieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategorieRequest $request, string $id)
+    public function update(UpdateCategorieRequest $request, string $id)
     {
         $data = $request->all();
         $categorie = $this->categorieService->updateCategorie($id, $data);

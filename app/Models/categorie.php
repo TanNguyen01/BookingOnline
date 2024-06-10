@@ -13,7 +13,7 @@ class categorie extends Model
         'name',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function getNameAttribute($value)
     {

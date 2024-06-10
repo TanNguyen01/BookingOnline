@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class StoreInformationRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,26 +25,28 @@ class StoreInformationRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'name' => 'required|string|unique:store_information',
-                'image' => 'required|image|mimes:jpg,png,jpeg',
-                'address' => 'required|string',
-                'phone' => 'required|string',
-            ];
-    }
-    public function messages(): array
-    {
 
         return [
-            'name.unique' => 'Tên cửa hàng đã tồn tại',
-            'address.string' => 'phone là kiểu chuỗi',
-            'address.required' => 'Vui lòng nhâp address',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'phone.required' => 'Vui lòng nhâp phone',
+            require
+            'name' => 'required|string',
+            'password' => 'required|string',
+            'role' => 'required|integer|in:0,1',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'address' => 'required|string',
+            'phone' => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'password.required' => 'Nhập password!',
             'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
+            'name.string' => ' Name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'image.required' => 'chon Hình ảnh',
+            'phone.string' => 'Phone là kiểu chuỗi',
+            'address.string' => 'Phone là kiểu chuỗi',
+
         ];
     }
 
