@@ -70,7 +70,7 @@ Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () 
     Route::delete('store_hours/delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
 
     //quản lý booking
-    Route::get('/listbooking', [BookingController::class, 'index']);
+    Route::get('/alllistbooking', [BookingController::class, 'index']);
     Route::get('/booking/{id}', [BookingController::class, 'show']);
     Route::post('/update_booking/{id}', [BookingController::class, 'update']);
     Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
