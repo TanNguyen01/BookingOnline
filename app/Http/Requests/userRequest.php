@@ -55,16 +55,16 @@ class userRequest extends FormRequest
     {
 
         return [
-            'email.unique' => 'email da ton tai',
-            'email.required' => 'Vui lòng nhâp email',
-            'email.email' => 'Nhập đúng định dạng email!',
-            'password.required' => 'Nhập password!',
-            'password.confirmed' => 'Nhập lại password passwrod_confirmation!',
-            'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'address.string' => 'phone là kiểu chuỗi',
+            'email.unique' => __('user.email_unique'),
+            'email.required' => __('user.email_required'),
+            'email.email' => __('user.email_email'),
+            'password.required' => __('user.password_required'),
+            'password.confirmed' => __('user.password_confirmed'),
+            'name.required' => __('user.name_required'),
+            'name.string' => __('user.name_string'),
+            'image.mimes' => __('user.image_mimes'),
+            'phone.string' => __('user.phone_string'),
+            'address.string' => __('user.address_string'),
 
         ];
 

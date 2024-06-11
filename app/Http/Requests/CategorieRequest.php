@@ -33,8 +33,8 @@ class CategorieRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Tên đã tồn tại',
-            'name.required' => 'Vui lòng nhâp name',
+            'name.unique' => __("category.name_unique"),
+            'name.required' => __("category.name_required"),
 
         ];
     }

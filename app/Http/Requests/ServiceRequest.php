@@ -39,16 +39,15 @@ class ServiceRequest extends FormRequest
     {
 
         return [
-            'name.unique' => 'tên  da ton tai',
-            'name.required' => 'Vui lòng nhâp name',
-            'email.email' => 'Nhập đúng định dạng email!',
-            'categorie_id.required' => 'nhập id category',
+            'name.unique' => __('service.name_unique'),
+            'name.required' => __('service.name_required'),
+            'categorie_id.required' => __('service.category_id_required'),
             'categorie_id.integer' => 'nhập id category là kiểu số nguyên',
             'categorie_id.exists' => 'không có danh mục nào',
-            'describe.required' => 'Nhâp mô tả của dịch vụ',
-            'describe.max' => 'tối đa 360 ký tự',
-            'price.required' => 'Nhập giá tiền',
-            'price.regex' => 'Nhập đúng giá tiền định dạng việt nam',
+            'describe.required' => __('service.describe_required'),
+            'describe.max' => __('service.describe_max'),
+            'price.required' => __('service.price_required'),
+            'price.regex' => __('service.price_regex'),
 
         ];
 

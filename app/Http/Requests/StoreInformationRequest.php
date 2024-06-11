@@ -39,15 +39,16 @@ class StoreInformationRequest extends FormRequest
     {
 
         return [
-            'name.unique' => 'ten cua hang da ton tai',
-            'address.string' => 'phone là kiểu chuỗi',
-            'address.required' => 'Vui lòng nhâp address',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'phone.required' => 'Vui lòng nhâp phone',
-            'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'image.required' => 'chon Hình ảnh',
+            'name.unique' => __("store.name_unique"),
+            'name.required' => __("store.name_required"),
+            'name.string' => __('store.name_string'),
+            'address.string' => __('store.address_string'),
+            'address.required' => __('store.address_required'),
+            'phone.string' => __('store.phone_string'),
+            'phone.required' => __('store.phone_required'),
+
+            'image.mimes' => __('store.image_mimes'),
+            'image.required' => __('store.image_required'),
 
         ];
 

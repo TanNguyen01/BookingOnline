@@ -49,19 +49,19 @@ class OpeningHourRequest extends FormRequest
 
         return [
 
-            'store_information_id.required' => 'Vui lòng nhâp id store',
-            'store_information_id.exists' => 'Cửa hàng không tồn tại',
-            'opening_hours.*.day.required' => 'Vui lòng chọn ngày mở cửa',
-            'opening_hours.*.day.after_or_equal' => ' ngày phải > bằng ngày hôm nay',
-            'opening_hours.*.opening_time.required' => 'giờ mở cửa',
-            'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-            'closing_time.required' => 'giờ đóng cửa',
-            'opening_hours.*.closing_time.required' => ' vui lòng nhập  giờ đóng cửa cửa',
-            'opening_hours.*.opening_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-            'opening_hours.*.opening_time.after' => 'Giờ đóng của phải sau giờ mở cửa',
+            'store_information_id.required' => __('openingHours.store_information_id_required'),
+            'store_information_id.exists' => __('openingHours.exists'),
+            'opening_hours.*.day.required' =>__('openingHours.opening_hours_day_required'),
+            'opening_hours.*.day.after_or_equal' => __('openingHours.opening_hours_day_after_or_equal'),
+            'opening_hours.*.opening_time.required' => __('openingHours.opening_hours_opening_time_required'),
+            'opening_hours.*.opening_time.date_format' => __('openingHours.opening_hours_opening_time_date_format'),
+
+            'opening_hours.*.closing_time.required' => __('openingHours.closing_time_required'),
+
+            'opening_hours.*.opening_time.after' => __('openingHours.opening_hours_opening_time_after'),
 
         ];
-        
+
     }
 
    // protected function failedValidation(Validator $validator)

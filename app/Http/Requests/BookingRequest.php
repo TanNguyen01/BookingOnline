@@ -37,13 +37,13 @@ class BookingRequest extends FormRequest
     {
 
         return [
-            'user_id.required' => 'Nhập user id ',
-            'user_id.exists' => 'User không tồn tại',
-            'day.required' => 'Chọn ngày',
-            'day.after_or_equal' => 'Chọn ngày  phải > = ngày hôm nay',
-            'time.required' => 'Chọn giờ!',
-            'service_id.required' => 'Chọn dịch vụ id ',
-            'service_id.exists' => 'Dịch vụ không tồn tại',
+            'user_id.required' => __('booking.user_id_required'),
+            'user_id.exists' => __('booking.user_id_exists'),
+            'day.required' => __('booking.day_required'),
+            'day.after_or_equal' => __('booking.day_after_or_equal'),
+            'time.required' => __('booking.time_required'),
+            'service_id.required' => __('booking.service_id_required'),
+            'service_id.exists' => __('booking.service_id_exists'),
 
         ];
     }
