@@ -27,7 +27,7 @@ class OpeningHourRequest extends FormRequest
     {
 
         return [
-            'store_information_id' => 'required|exists:store_information,id',
+            'store_information_id' => 'exists:store_information,id',
             'opening_hours' => 'required|array',
             'opening_hours.*.day' => 'required|date|after_or_equal:today',
             'opening_hours.*.opening_time' => [
@@ -49,7 +49,7 @@ class OpeningHourRequest extends FormRequest
 
         return [
 
-            'store_information_id.required' => __('openingHours.store_information_id_required'),
+           // 'store_information_id.required' => __('openingHours.store_information_id_required'),
             'store_information_id.exists' => __('openingHours.exists'),
             'opening_hours.*.day.required' =>__('openingHours.opening_hours_day_required'),
             'opening_hours.*.day.after_or_equal' => __('openingHours.opening_hours_day_after_or_equal'),
@@ -71,9 +71,9 @@ class OpeningHourRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
-                'status_code' => 402,
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
 
-                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+
             ]
         ));
     }

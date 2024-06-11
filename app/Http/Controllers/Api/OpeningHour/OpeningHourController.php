@@ -11,6 +11,7 @@ use App\Traits\APIResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class OpeningHourController extends Controller
 {
@@ -27,7 +28,14 @@ class OpeningHourController extends Controller
     {
         $openingHours = $this->openingService->getAllOpeningHours();
 
-        return response()->responseSuccess(__('openingHours.list'), ['data' => $openingHours], Response::HTTP_OK);
+      //  return response()->responseSuccess(__('openingHours.list'), ['data' => $openingHours], Response::HTTP_OK);
+        return $this->responseSuccess(
+            __('openingHours.list'),
+            [
+                'data' => $openingHours,
+            ]
+        );
+
     }
 
     public function show($storeid)
@@ -36,7 +44,13 @@ class OpeningHourController extends Controller
         if (! $storeid) {
             return $this->responseNotFound(__('store.not_found'), Response::HTTP_NOT_FOUND);
         } else {
-            return response()->responseSuccess(__('openingHours.show'), ['data' => $openingHours], Response::HTTP_OK);
+            return $this->responseSuccess(
+                __('openingHours.show'),
+                [
+                    'data' => $openingHours,
+                ]
+            );
+            // return response()->responseSuccess(__('openingHours.show'), ['data' => $openingHours], Response::HTTP_OK);
         }
     }
 
@@ -81,10 +95,9 @@ class OpeningHourController extends Controller
         }
     }
 
-    public function update(OpeningHourRequest $request)
+    public function update(OpeningHourRequest $request,$storeId)
     {
 
-        $storeId = $request->input('store_information_id');
         $openingHoursData = $request->input('opening_hours');
 
         // Kiểm tra xem storeId có tồn tại không

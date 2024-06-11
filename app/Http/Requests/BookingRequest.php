@@ -29,7 +29,7 @@ class BookingRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'day' => 'required|date|after_or_equal:today',
             'time' => 'required',
-            'service_id' => 'required|exists:services,id',
+            // 'service_id' => 'required|exists:services,id',
         ];
     }
 
@@ -55,9 +55,7 @@ class BookingRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
-                'status_code' => 402,
-
-            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ]
         ));
     }

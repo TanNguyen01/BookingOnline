@@ -8,10 +8,7 @@ use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
-use App\Models\booking;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,93 +22,91 @@ use Illuminate\Support\Facades\Session;
 */
 
 //Route::get('/set-locale/{locale}', function ($locale) {
-  //  Session::put('locale', $locale);
+//  Session::put('locale', $locale);
 
-   // return response()->json(['message' => 'Locale set to '.$locale]);
+// return response()->json(['message' => 'Locale set to '.$locale]);
 //});
 
-Route::middleware(['auth:sanctum', 'checkadmin','language'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+
     // Services
-    Route::get('list_service', [ServiceController::class, 'index'])->name('list.service');
-    Route::get('service/{id}', [ServiceController::class, 'show'])->name('show.service');
-    Route::post('service_post', [ServiceController::class, 'store'])->name('store.service');
-    Route::put('service_update/{id}', [ServiceController::class, 'update'])->name('update.service');
-    Route::delete('delete_service/{id}', [ServiceController::class, 'destroy'])->name('destroy.service');
+    Route::prefix('services')->group(function () {
+        Route::get('/list', [ServiceController::class, 'index'])->name('list.service');
+        Route::get('/{id}', [ServiceController::class, 'show'])->name('show.service');
+        Route::post('/post', [ServiceController::class, 'store'])->name('store.service');
+        Route::put('/update/{id}', [ServiceController::class, 'update'])->name('update.service');
+        Route::delete('delete/{id}', [ServiceController::class, 'destroy'])->name('destroy.service');
+    });
 
     // Categories
-    Route::get('list_categorie', [CategorieController::class, 'index'])->name('list.categorie');
-
-    Route::get('categorie/{id}', [CategorieController::class, 'show'])->name('show.categorie');
-    Route::post('categorie_post', [CategorieController::class, 'store'])->name('store.categorie');
-    Route::put('categorie_update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
-    Route::delete('delete_categorie/{id}', [CategorieController::class, 'destroy'])->name('destroy.categorie');
+    Route::prefix('categories')->group(function () {
+        Route::get('/list', [CategorieController::class, 'index'])->name('list.categorie');
+        Route::get('/{id}', [CategorieController::class, 'show'])->name('show.categorie');
+        Route::post('/post', [CategorieController::class, 'store'])->name('store.categorie');
+        Route::put('/update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
+        Route::delete('/delete/{id}', [CategorieController::class, 'destroy'])->name('destroy.categorie');
+    });
 
     // User Admin
-    Route::get('list_user', [UserController::class, 'index'])->name('list.users');
-
-    Route::get('show_user/{id}', [UserController::class, 'show'])->name('show.users');
-    Route::post('post', [UserController::class, 'store'])->name('store.user');
-    Route::put('user/{id}', [UserController::class, 'update'])->name('update.user');
-    Route::delete('deleteuser/{id}', [UserController::class, 'destroy'])->name('destroy.user');
+    Route::prefix('admin_users')->group(function () {
+        Route::get('/list', [UserController::class, 'index'])->name('list.users');
+        Route::get('/show/{id}', [UserController::class, 'show'])->name('show.users');
+        Route::post('/post', [UserController::class, 'store'])->name('store.user');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('update.user');
+        Route::delete('delete/{id}', [UserController::class, 'destroy'])->name('destroy.user');
+    });
 
     // Store Informations
-    Route::get('list_store', [StoreInformationController::class, 'index'])->name('list.store');
-
-    Route::get('shows_store/{id}', [StoreInformationController::class, 'show'])->name('show.store');
-    Route::post('store_post', [StoreInformationController::class, 'store'])->name('add.store');
-    Route::put('store/{id}', [StoreInformationController::class, 'update'])->name('update.store');
-    Route::delete('store_delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
+    Route::prefix('stores')->group(function () {
+        Route::get('/list', [StoreInformationController::class, 'index'])->name('list.store');
+        Route::get('/show/{id}', [StoreInformationController::class, 'show'])->name('show.store');
+        Route::post('/post', [StoreInformationController::class, 'store'])->name('add.store');
+        Route::put('/update/{id}', [StoreInformationController::class, 'update'])->name('update.store');
+        Route::delete('/delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
+    });
 
     // Opening Hours
-    Route::get('/opening', [OpeningHourController::class, 'index'])->name('list.opening');
-    Route::get('/opening/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
-    Route::post('/opening_hours', [OpeningHourController::class, 'store'])->name('store.opening');
-    Route::post('update_hours', [OpeningHourController::class, 'update'])->name('opening_hours.update');
-    Route::delete('store_hours/delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+    Route::prefix('opening-hours')->group(function () {
+        Route::get('/list', [OpeningHourController::class, 'index'])->name('list.opening');
+        Route::get('/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
+        Route::post('/post', [OpeningHourController::class, 'store'])->name('store.opening');
+        Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->name('opening_hours.update');
+        Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+    });
 
-    //quản lý booking
-    Route::get('/listbooking', [BookingController::class, 'index']);
-    Route::get('/booking/{id}', [BookingController::class, 'show']);
-    Route::post('/update_booking/{id}', [BookingController::class, 'update']);
-    Route::delete('/delete_booking/{id}', [BookingController::class, 'destroy']);
+    // Booking Management
+    Route::prefix('bookings')->group(function () {
+        Route::get('/list', [BookingController::class, 'index']);
+        Route::get('/{id}', [BookingController::class, 'show']);
+        Route::post('/update/{id}', [BookingController::class, 'update']);
+        Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
+    });
 });
 
 
-
-
-
-
-//
-//tạo booking khách hàng
-// chọn user
-Route::post('/choose-employee', [BookingController::class, 'chooseEmployee']);
-// chọn dịch vụ
-Route::post('/choose-service', [BookingController::class, 'chooseService']);
-// chọn ngày giờ
-Route::post('/choose-date', [BookingController::class, 'chooseDate']);
-// submit form
-Route::post('/bookings', [BookingController::class, 'store']);
-
+Route::prefix('client')->group(function () {
+    Route::get('/listStore', [BookingController::class, 'listStore']);
+    Route::post('/store_booking', [BookingController::class, 'store']);
+});
 //nhân viên
 
-Route::middleware('auth:sanctum', 'checkuser')->group(function () {
+Route::middleware('auth:sanctum', 'checkuser')->prefix('user')->group(function () {
     // xem lịch làm
-    Route::get('seeSchedule', [StaffController::class, 'seeSchedule']);
+    Route::get('/seeSchedule', [StaffController::class, 'seeSchedule']);
     // thêm lịch làm user
-    Route::post('schedules', [StaffController::class, 'CreateSchedule']);
+    Route::post('/schedules', [StaffController::class, 'createSchedule']);
     //  update profile user
-    Route::post('profile/update', [StaffController::class, 'updateProfile']);
+    Route::post('/profile/update', [StaffController::class, 'updateProfile']);
     // xem profile user
-    Route::get('showprofile', [StaffController::class, 'showProfile']);
-
+    Route::get('/showprofile', [StaffController::class, 'showProfile']);
     // xem tất cả booking
-    Route::get('listbooking', [StaffController::class, 'getEmployeeBookings']);
+    Route::get('/listbooking', [StaffController::class, 'getEmployeeBookings']);
 });
 
-  Route::middleware('language')->group(function(){
-      Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-      Route::post('login', [AuthController::class, 'login'])->name('login');
-  });
+Route::middleware('language')->prefix('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+});
 
 
 
