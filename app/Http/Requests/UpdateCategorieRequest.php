@@ -47,8 +47,9 @@ class UpdateCategorieRequest extends FormRequest
             [
                 'error' => $errors,
                 'status_code' => 402,
-            ],
-            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            ]
         ));
     }
 }

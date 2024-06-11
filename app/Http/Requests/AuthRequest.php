@@ -37,11 +37,25 @@ class AuthRequest extends FormRequest
     {
 
         return [
-            'email.required' => 'Vui lòng nhâp email',
-            'email.email' => 'Nhập đúng định dạng email!',
-            'password.required' => 'Nhập password!',
+            'email.required' => __("auth.email_required"),
+            'email.email' => __("auth.email_email"),
+            'password.required' => __("auth.password_required"),
         ];
 
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $errors,
+                'status_code' => 402,
+
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            ]
+        ));
     }
 
 

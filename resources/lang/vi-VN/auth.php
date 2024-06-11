@@ -10,4 +10,10 @@ return [
 
     /** Logout */
     "logout_success" => "Dang xuat thanh cong.",
+
+
+    /** Validate */
+    'email_required' => 'Vui lòng nhâp email',
+    'email_email' => 'Nhập đúng định dạng email!',
+    'password_required' => 'Nhập password!',
 ];

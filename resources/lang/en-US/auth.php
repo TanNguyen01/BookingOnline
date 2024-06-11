@@ -10,4 +10,9 @@ return [
 
     /** Logout */
     "logout_success" => "User logged out successfully.",
+
+    /** Validate */
+      "email_required" => "Email is required.",
+      "email_email" => "Email is not valid.",
+      "password_required" => "Password is required.",
 ];

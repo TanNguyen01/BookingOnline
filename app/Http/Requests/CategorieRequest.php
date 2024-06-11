@@ -33,20 +33,23 @@ class CategorieRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Tên đã tồn tại',
-            'name.required' => 'Vui lòng nhâp name',
+            'name.unique' => __("category.name_unique"),
+            'name.required' => __("category.name_required"),
 
         ];
     }
 
-   // protected function failedValidation(Validator $validator)
-   // {
+    protected function failedValidation(Validator $validator)
+    {
 
-      //  $errors = (new ValidationException($validator))->errors();
-       // throw new HttpResponseException(response()->json(
-         //   [
-            //    'error' => $errors,
-            //    'status_code' => 402,
-          //  ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
-  //  }
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $errors,
+                'status_code' => 402,
+
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            ]
+        ));
+    }
 }

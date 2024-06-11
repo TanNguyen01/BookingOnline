@@ -33,9 +33,9 @@ class BookingController extends Controller
         // Kiểm tra xem user có tồn tại và có vai trò là nhân viên không
         $employee = User::where('id', $user_id)->where('role', 1)->first();
         if (! $employee) {
-            return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
+            return $this->responseBadRequest(__('user.not_found'));
         } else {
-            return $this->responseCreated('nhân viên hợp lệ');
+            return $this->responseCreated(__('user.accept'));
         }
     }
 
@@ -44,10 +44,10 @@ class BookingController extends Controller
         $service_id = $request->service_id;
         $service = Service::find($service_id);
         if (! $service) {
-            return $this->responseBadRequest('Dịch vụ không tồn tại.');
+            return $this->responseBadRequest(__('service.not_found'));
         }
 
-        return $this->responseCreated('dịch vụ hợp lệ');
+        return $this->responseCreated(__('service.accept'));
     }
 
     public function chooseDate(Request $request)
@@ -114,16 +114,16 @@ class BookingController extends Controller
             // Commit transaction nếu mọi thứ thành công
             DB::commit();
 
-            return $this->responseCreated('Thêm thành công', ['data' => $booking]);
+            return $this->responseCreated(__('booking.create'), ['data' => $booking]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
 
             // Log lỗi để kiểm tra
-            Log::error('Error while creating booking: '.$e->getMessage());
+            Log::error(__('booking.error_create').$e->getMessage());
 
             // Trả về thông báo lỗi
-            return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, 'Đã xảy ra lỗi. Vui lòng thử lại sau');
+            return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('booking.error'));
         }
     }
 
@@ -136,15 +136,15 @@ class BookingController extends Controller
             $booking->status = $status;
             $booking->save();
 
-            return $this->responseSuccess('Trạng thái của đặt chỗ đã được cập nhật thành công', ['data' => $booking]);
+            return $this->responseSuccess(__('booking.update'), ['data' => $booking]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // Xử lý khi không tìm thấy booking
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm booking ');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         } catch (\Exception $e) {
             // Xử lý ngoại lệ khác
-            Log::error('Error while updating booking status: '.$e->getMessage());
+            Log::error(__('booking.error_update').$e->getMessage());
 
-            return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, 'Đã xảy ra lỗi khi cập nhật trạng thái của đặt chỗ');
+            return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('booking.error'));
         }
     }
 
@@ -152,24 +152,24 @@ class BookingController extends Controller
     {
         $bookings = $this->bookingService->getAllBooking();
 
-        return $this->responseSuccess('Lấy danh sách thành công', ['data' => $bookings]);
+        return $this->responseSuccess(__('booking.list'), ['data' => $bookings]);
     }
 
     public function show($id)
     {
         $booking = $this->bookingService->getBookingById($id);
         if (! $booking) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm booking');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
 
-        return $this->responseSuccess('Xem dịch vụ thành công', ['data' => $booking]);
+        return $this->responseSuccess(__('booking.show'), ['data' => $booking]);
     }
 
     public function destroy($id)
     {
         $booking = $this->bookingService->getBookingById($id);
         if (! $booking) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy booking');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
 
         return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
