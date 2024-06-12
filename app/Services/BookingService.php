@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Base;
 use App\Models\booking;
 use App\Traits\APIResponse;
 
@@ -9,9 +10,14 @@ class BookingService
 {
     use APIResponse;
 
-    public function getAllBooking()
+    public function getAllBases()
     {
-        return booking::query()->get();
+        return Base::query()->get();
+
+    }
+    public function getBaseByID($id)
+    {
+        return Base::find($id);
 
     }
 

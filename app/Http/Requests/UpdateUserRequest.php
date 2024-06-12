@@ -27,10 +27,9 @@ class UpdateUserRequest extends FormRequest
     {
 
         return [
-            require
             'name' => 'required|string',
             'password' => 'required|string',
-            'role' => 'required|integer|in:0,1',
+            'role' => 'nullable|integer|in:0,1',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
@@ -57,9 +56,7 @@ class UpdateUserRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
-                'status_code' => 402,
-
-                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ]
         ));
     }

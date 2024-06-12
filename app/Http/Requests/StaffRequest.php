@@ -57,9 +57,9 @@ class StaffRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
-                'status_code' => 402,
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
 
-                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+
             ]
         ));
     }

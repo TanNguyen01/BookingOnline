@@ -33,7 +33,7 @@ class StoreInformationController extends Controller
         if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         } else {
-            return $this->responseSuccess(__('store.show'), ['data' => $store], Response::HTTP_OK);
+            return $this->responseSuccess(__('store.show'), ['data' => $store]);
 
         }
     }

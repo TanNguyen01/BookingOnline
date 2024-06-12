@@ -51,12 +51,8 @@ class AuthRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
-                'status_code' => 402,
-
-                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ]
         ));
     }
-
-
 }

@@ -27,7 +27,7 @@ class OpeningHourRequest extends FormRequest
     {
 
         return [
-            'store_information_id' => 'required|exists:store_information,id',
+            'store_information_id' => 'exists:store_information,id',
             'opening_hours' => 'required|array',
             'opening_hours.*.day' => 'required|date|after_or_equal:today',
             'opening_hours.*.opening_time' => [
@@ -71,9 +71,9 @@ class OpeningHourRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
-                'status_code' => 402,
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
 
-                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+
             ]
         ));
     }
