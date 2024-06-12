@@ -27,6 +27,7 @@ class UpdateUserRequest extends FormRequest
     {
 
         return [
+
             'name' => 'required|string',
             'password' => 'required|string',
             'role' => 'nullable|integer|in:0,1',
@@ -56,6 +57,7 @@ class UpdateUserRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ]
         ));

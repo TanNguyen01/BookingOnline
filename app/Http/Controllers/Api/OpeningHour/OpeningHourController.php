@@ -39,7 +39,7 @@ class OpeningHourController extends Controller
     {
         $openingHours = $this->openingService->getOpeningHour($storeid);
         if (! $storeid) {
-            return $this->responseNotFound(__('store.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,__('store.not_found'));
         } else {
             return $this->responseSuccess(
                 __('openingHours.show'),
