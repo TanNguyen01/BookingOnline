@@ -9,9 +9,9 @@ use App\Models\Schedule;
 use App\Services\OpeningService;
 use App\Traits\APIResponse;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\JsonResponse;
 
 class OpeningHourController extends Controller
 {
@@ -27,22 +27,19 @@ class OpeningHourController extends Controller
     public function index()
     {
         $openingHours = $this->openingService->getAllOpeningHours();
-
-      //  return response()->responseSuccess(__('openingHours.list'), ['data' => $openingHours], Response::HTTP_OK);
         return $this->responseSuccess(
             __('openingHours.list'),
             [
                 'data' => $openingHours,
             ]
         );
-
     }
 
     public function show($storeid)
     {
         $openingHours = $this->openingService->getOpeningHour($storeid);
         if (! $storeid) {
-            return $this->responseNotFound(__('store.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND,__('store.not_found'));
         } else {
             return $this->responseSuccess(
                 __('openingHours.show'),
@@ -50,7 +47,6 @@ class OpeningHourController extends Controller
                     'data' => $openingHours,
                 ]
             );
-            // return response()->responseSuccess(__('openingHours.show'), ['data' => $openingHours], Response::HTTP_OK);
         }
     }
 
@@ -181,10 +177,51 @@ class OpeningHourController extends Controller
                 ->delete();
 
             if ($deletedRows > 0) {
-                return response()->json(null, Response::HTTP_NO_CONTENT);
+                return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
             } else {
-                return response()->json([Response::HTTP_BAD_REQUEST, 'message' => 'Không có ngày nào để xóa']);
+                return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'không có ngày nào để xóa']);
             }
         }
+    }
+    public function store5(Request $request)
+    {
+        $storeId = $request->store_information_id;
+        $openingTime = $request->opening_time;
+        $closingTime = $request->closing_time;
+        if (!$storeId) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+        }
+        $opening = $this->openingService->createOpeningHours($storeId);
+        if (!$opening) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+        }
+
+        $existingDays = [];
+        $currentDate = date('Y-m-d');
+
+        // Thêm 5 ngày liên tiếp bắt đầu từ ngày hôm sau
+        for ($i = 1; $i <= 5; $i++) {
+            $nextDay = date('Y-m-d', strtotime($currentDate . ' + ' . $i . ' days'));
+            $existingNextDayEntry = OpeningHour::where('store_information_id', $storeId)
+                ->where('day', $nextDay)
+                ->first();
+
+            if (!$existingNextDayEntry) {
+                OpeningHour::create([
+                    'store_information_id' => $storeId,
+                    'day' => $nextDay,
+                    'opening_time' => $openingTime,
+                    'closing_time' => $closingTime,
+                ]);
+            } else {
+                $existingDays[] = $nextDay;
+            }
+        }
+
+        if (!empty($existingDays)) {
+            return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('openingHours.exists'), $existingDays);
+        }
+
+        return $this->responseCreated(__('openingHours.create'), ['data' => $request->all()]);
     }
 }

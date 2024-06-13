@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Categorie\CategorieController;
+use App\Http\Controllers\APi\Client\ClientController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\staff\StaffController;
@@ -72,6 +73,9 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
         Route::post('/post', [OpeningHourController::class, 'store'])->name('store.opening');
         Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->name('opening_hours.update');
         Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+        // thêm 5 ngày mở cửa liên tiếp
+        Route::post('/post_5day', [OpeningHourController::class, 'store5']);
+
     });
 
     // Booking Management
@@ -85,7 +89,10 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
 
 
 Route::prefix('client')->group(function () {
-    Route::get('/listStore', [BookingController::class, 'listStore']);
+    Route::get('/listSchedule/StoreId/{storeId}/UserId/{userId}', [ClientController::class, 'getWorkingHoursByUserAndStore']);
+    Route::get('/listUser/{storeId}', [ClientController::class, 'getUsersByStoreInformation']);
+    Route::get('/listService', [ClientController::class, 'listService']);
+    Route::get('/listStore', [ClientController::class, 'listStore']);
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên

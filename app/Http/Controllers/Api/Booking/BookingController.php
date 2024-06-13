@@ -28,11 +28,6 @@ class BookingController extends Controller
     }
 
     use APIResponse;
-    public function listStore()
-    {
-        $stores = StoreInformation::all();
-        return $this->responseSuccess(__('store.list'), ['data' => $stores]);
-    }
 
     public function chooseStore(Request $request)
     {
@@ -76,27 +71,38 @@ class BookingController extends Controller
     }
 
     public function chooseDate(Request $request)
-    {
-        $user_id = $request->user_id;
-        $day = $request->day;
-        $store_id = $request->store_id;
+{
+    $user_id = $request->user_id;
+    $day = $request->day;
+    $store_id = $request->store_id;
+    $appointment_time = $request->time;
+    $schedules = Schedule::where('user_id', $user_id)
+        ->where('store_information_id', $store_id)
+        ->where('is_valid', 1)
+        ->whereDate('day', '=', $day)
+        ->get();
 
-        $schedules = Schedule::where('user_id', $user_id)
-            ->where('store_information_id', $store_id)
-            ->where('is_valid', 1)
-            ->whereDate('day', '=', $day)
-            ->get();
-        if ($schedules->isEmpty()) {
-            return $this->responseBadRequest('Nhân viên không làm việc vào ngày này.');
-        }
-        $time_slots = $schedules->map(function ($schedule) {
-            return [
-                'start_time' => $schedule->start_time,
-                'end_time' => $schedule->end_time,
-            ];
-        });
-        return $this->responseCreated('ngày giờ hợp lệ.', [$time_slots]);
+    if ($schedules->isEmpty()) {
+        return $this->responseBadRequest('Nhân viên không làm việc vào ngày này.');
     }
+    $valid_schedule = $schedules->first(function ($schedule) use ($appointment_time) {
+        return $appointment_time >= $schedule->start_time && $appointment_time <= $schedule->end_time;
+    });
+
+    if (!$valid_schedule) {
+        return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
+    }
+
+    $time_slots = $schedules->map(function ($schedule) {
+        return [
+            'start_time' => $schedule->start_time,
+            'end_time' => $schedule->end_time,
+        ];
+    });
+
+    return $this->responseCreated('Ngày giờ hợp lệ.', ['time_slots' => $time_slots]);
+}
+
 
 
     public function store(BookingRequest $request)
@@ -251,8 +257,8 @@ class BookingController extends Controller
     }
     public function destroy($id)
     {
-        $Booking = $this->bookingService->getBookingByID($id);
-        if (! $Booking) {
+        $Base = $this->bookingService->getBaseByID($id);
+        if (! $Base) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
 
