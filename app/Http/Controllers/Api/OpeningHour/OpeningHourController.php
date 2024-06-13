@@ -50,9 +50,9 @@ class OpeningHourController extends Controller
         }
     }
 
-    public function store(OpeningHourRequest $request)
+    public function store(OpeningHourRequest $request,  $storeId)
     {
-        $storeId = $request->input('store_information_id');
+
         $openingHoursData = $request->input('opening_hours');
         $opening = $this->openingService->createOpeningHours($storeId);
         if (! $storeId) {
@@ -183,9 +183,9 @@ class OpeningHourController extends Controller
             }
         }
     }
-    public function store5(Request $request)
+    public function store5(Request $request, $storeId)
     {
-        $storeId = $request->store_information_id;
+
         $openingTime = $request->opening_time;
         $closingTime = $request->closing_time;
         if (!$storeId) {

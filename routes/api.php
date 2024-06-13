@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Categorie\CategorieController;
-use App\Http\Controllers\APi\Client\ClientController;
+use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\staff\StaffController;
@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
 
     // Store Informations
     Route::prefix('stores')->group(function () {
-        Route::get('/list', [StoreInformationController::class, 'index'])->name('list.store');
+        Route::get('/list', [StoreInformationController::class, 'index']);
         Route::get('/show/{id}', [StoreInformationController::class, 'show'])->name('show.store');
         Route::post('/post', [StoreInformationController::class, 'store'])->name('add.store');
         Route::put('/update/{id}', [StoreInformationController::class, 'update'])->name('update.store');
@@ -70,11 +70,11 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     Route::prefix('opening-hours')->group(function () {
         Route::get('/list', [OpeningHourController::class, 'index'])->name('list.opening');
         Route::get('/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
-        Route::post('/post', [OpeningHourController::class, 'store'])->name('store.opening');
+        Route::post('/post/{storeId}', [OpeningHourController::class, 'store'])->name('store.opening');
         Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->name('opening_hours.update');
         Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
         // thêm 5 ngày mở cửa liên tiếp
-        Route::post('/post_5day', [OpeningHourController::class, 'store5']);
+        Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
 
     });
 
@@ -89,17 +89,17 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
 
 
 Route::prefix('client')->group(function () {
-    Route::get('/listSchedule/StoreId/{storeId}/UserId/{userId}', [ClientController::class, 'getWorkingHoursByUserAndStore']);
-    Route::get('/listUser/{storeId}', [ClientController::class, 'getUsersByStoreInformation']);
-    Route::get('/listService', [ClientController::class, 'listService']);
-    Route::get('/listStore', [ClientController::class, 'listStore']);
+    Route::post('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
+    Route::post('/list-user', [ClientController::class, 'getUsersByStoreInformation']);
+    Route::get('/list-service', [ClientController::class, 'listService']);
+    Route::get('/list-store', [ClientController::class, 'listStore']);
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
 
 Route::middleware('auth:sanctum', 'checkuser')->prefix('user')->group(function () {
     // xem lịch làm
-    Route::get('/seeSchedule', [StaffController::class, 'seeSchedule']);
+    Route::get('/see-schedule', [StaffController::class, 'seeSchedule']);
     // thêm lịch làm user
     Route::post('/schedules', [StaffController::class, 'createSchedule']);
     //  update profile user

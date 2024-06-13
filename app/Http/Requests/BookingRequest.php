@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -56,7 +57,8 @@ class BookingRequest extends FormRequest
             [
                 'error' => $errors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
-            ]
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,9 +27,9 @@ class UpdateStroreInformationRequest extends FormRequest
     public function rules(): array
     {
         return  [
-            'name' => 'string|nullable',
-            'address' => 'string|nullable',
-            'phone' => 'string|nullable',
+            'name' => 'required|string|nullable',
+            'address' => 'required|string|nullable',
+            'phone' => 'required|string|nullable',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
         ];
     }
@@ -36,10 +37,10 @@ class UpdateStroreInformationRequest extends FormRequest
     {
         return [
             'address.string' => 'phone là kiểu chuỗi',
-            //'address.required' => 'Vui lòng nhâp address',
+            'address.required' => 'Vui lòng nhâp address',
             'phone.string' => 'phone là kiểu chuỗi',
-            //'phone.required' => 'Vui lòng nhâp phone',
-           // 'name.required' => 'Vui lòng nhâp name',
+            'phone.required' => 'Vui lòng nhâp phone',
+            'name.required' => 'Vui lòng nhâp name',
             'name.string' => ' name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
         ];
@@ -53,7 +54,8 @@ class UpdateStroreInformationRequest extends FormRequest
             [
                 'error' => $errors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
-            ]
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
 }
