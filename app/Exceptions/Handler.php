@@ -9,6 +9,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as RequestAlias;
@@ -22,7 +23,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Throwable;
 
-class Handler extends ExceptionHandler
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
+
+
+class Handler extends FormRequest
 {
     use APIResponse;
 
@@ -215,5 +221,17 @@ class Handler extends ExceptionHandler
             'Too Many Attempts Please Try Again Later.',
             429
         );
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $errors,
+                'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
+            ],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
     }
 }

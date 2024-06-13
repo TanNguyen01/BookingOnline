@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
 
     // Store Informations
     Route::prefix('stores')->group(function () {
-        Route::get('/list', [StoreInformationController::class, 'index'])->name('list.store');
+        Route::get('/list', [StoreInformationController::class, 'index']);
         Route::get('/show/{id}', [StoreInformationController::class, 'show'])->name('show.store');
         Route::post('/post', [StoreInformationController::class, 'store'])->name('add.store');
         Route::put('/update/{id}', [StoreInformationController::class, 'update'])->name('update.store');
@@ -70,11 +70,11 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     Route::prefix('opening-hours')->group(function () {
         Route::get('/list', [OpeningHourController::class, 'index'])->name('list.opening');
         Route::get('/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
-        Route::post('/post', [OpeningHourController::class, 'store'])->name('store.opening');
+        Route::post('/post/{storeId}', [OpeningHourController::class, 'store'])->name('store.opening');
         Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->name('opening_hours.update');
         Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
         // thêm 5 ngày mở cửa liên tiếp
-        Route::post('/post_5day', [OpeningHourController::class, 'store5']);
+        Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
 
     });
 
