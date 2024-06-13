@@ -28,7 +28,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 
 
-class Handler extends FormRequest
+class Handler extends ExceptionHandler
 {
     use APIResponse;
 
