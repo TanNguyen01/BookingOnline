@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Categorie\CategorieController;
-use App\Http\Controllers\APi\Client\ClientController;
+use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\staff\StaffController;

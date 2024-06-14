@@ -192,8 +192,8 @@ class BookingController extends Controller
                 'staff_phone' => $employeeData->data->phone,
                 'staff_email' => $employeeData->data->email,
                 'staff_address' => $employeeData->data->address,
-                'service_id' => array_map(function ($service) {
-                    return $service->id;
+                'service_name' => array_map(function ($service) {
+                    return $service->name;
                 }, $services),
                 'time_order' => $booking->time,
                 'date_order' => $booking->day,
