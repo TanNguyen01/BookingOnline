@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Api\Client;
+namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\StoreInformation;
+use App\Models\User;
 use App\Models\User;
 use App\Services\ServiceService;
 use App\Services\StoreService;

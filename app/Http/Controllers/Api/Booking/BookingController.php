@@ -116,6 +116,9 @@ class BookingController extends Controller
         if (!$valid_schedule) {
             return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
         }
+        if (!$valid_schedule) {
+            return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
+        }
 
         // Thu thập các khoảng thời gian làm việc
         $time_slots = $schedules->map(function ($schedule) {
@@ -210,6 +213,8 @@ class BookingController extends Controller
                 'staff_address' => $employeeData->data->address,
                 'service_name' => array_map(function ($service) {
                     return $service->name;
+                'service_name' => array_map(function ($service) {
+                    return $service->name;
                 }, $services),
                 'time_order' => $booking->time,
                 'date_order' => $booking->day,
@@ -228,7 +233,14 @@ class BookingController extends Controller
             return $this->responseBadRequest('Đã xảy ra lỗi. Vui lòng thử lại sau');
         }
     }
-    public function update(Request $request, $id)
+
+
+
+
+
+
+
+  public function update(Request $request, $id)
     {
         $status = $request->status;
         try {
