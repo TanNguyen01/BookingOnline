@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('phone');
             $table->string('status'); // trạng thái của từng mục cụ thể
             $table->text('note')->nullable();
-            $table->string('staff_name');
-            $table->string('store_name');
             $table->timestamps();
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
         });
