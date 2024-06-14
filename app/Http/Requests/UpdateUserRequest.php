@@ -35,6 +35,8 @@ class UpdateUserRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
+            'store_information_id' => 'nullable|integer|exists:store_information,id',
+
         ];
     }
 
@@ -47,6 +49,8 @@ class UpdateUserRequest extends FormRequest
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
             'phone.string' => 'Phone là kiểu chuỗi',
             'address.string' => 'Phone là kiểu chuỗi',
+            'store_infomation_id.exists' =>'Không có cửa hàng nào'
+
 
         ];
     }

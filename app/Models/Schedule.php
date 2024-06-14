@@ -10,7 +10,7 @@ class Schedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'store_information_id', 'day', 'start_time', 'end_time',
+        'user_id', 'day', 'start_time', 'end_time',
     ];
 
     // public $timestamps = false;
@@ -20,8 +20,4 @@ class Schedule extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function storeInformation()
-    {
-        return $this->belongsTo(StoreInformation::class);
-    }
 }

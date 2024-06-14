@@ -28,7 +28,6 @@ class ScheduleRequest extends FormRequest
     {
 
         return [
-            'store_information_id' => 'required|exists:store_information,id',
             'schedules' => 'required|array',
             'schedules.*.day' => 'required|date',
 
@@ -51,8 +50,6 @@ class ScheduleRequest extends FormRequest
     {
 
         return [
-            'store_information_id.required' => 'Vui lòng nhâp id store',
-            'store_information_id.exists' => 'Cửa hàng không tồn tại',
             'schedules.*.day' => 'Vui lòng chọn ngày đăng ký làm',
             'schedules.*.day.*.start_time.required' => 'giờ bắt đầu mở cửa',
             'schedules.*.day.*.start_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',

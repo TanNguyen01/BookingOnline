@@ -89,17 +89,17 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
 
 
 Route::prefix('client')->group(function () {
-    Route::get('/listSchedule/StoreId/{storeId}/UserId/{userId}', [ClientController::class, 'getWorkingHoursByUserAndStore']);
-    Route::get('/listUser/{storeId}', [ClientController::class, 'getUsersByStoreInformation']);
-    Route::get('/listService', [ClientController::class, 'listService']);
-    Route::get('/listStore', [ClientController::class, 'listStore']);
+    Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
+    Route::get('/list-user', [ClientController::class, 'getUsersByStoreInformation']);
+    Route::get('/list-service', [ClientController::class, 'listService']);
+    Route::get('/list-store', [ClientController::class, 'listStore']);
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
 
 Route::middleware('auth:sanctum', 'checkuser')->prefix('user')->group(function () {
     // xem lịch làm
-    Route::get('/seeSchedule', [StaffController::class, 'seeSchedule']);
+    Route::get('/see-schedule', [StaffController::class, 'seeSchedule']);
     // thêm lịch làm user
     Route::post('/schedules', [StaffController::class, 'createSchedule']);
     //  update profile user

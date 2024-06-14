@@ -16,13 +16,14 @@ class Base extends Model
         'note',
         'email',
         'name',
-        'staff_name','store_name',
+        'staff_name',
+        'store_name',
     ];
 
 
     public function booking()
     {
-        return $this->belongsTo(Booking::class, 'booking_id', 'id');
+        return $this->belongsTo(booking::class, 'booking_id', 'id');
     }
 }
 

@@ -25,6 +25,7 @@ class User extends Authenticatable
         'role',
         'address',
         'phone',
+        'store_information_id'
 
     ];
 
@@ -50,5 +51,9 @@ class User extends Authenticatable
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
+    }
+    public function storeInformation()
+    {
+        return $this->belongsTo(StoreInformation::class, 'store_information_id');
     }
 }

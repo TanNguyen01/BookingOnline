@@ -12,6 +12,7 @@ use App\Services\StaffService;
 use App\Traits\APIResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller
@@ -30,7 +31,7 @@ class StaffController extends Controller
         $validatedData = $request->all();
         $user = $this->staffService->staffService();
 
-        if (! Hash::check($validatedData['current_password'], $user->password)) {
+        if (!Hash::check($validatedData['current_password'], $user->password)) {
             return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('auth.failed')]);
         }
 
@@ -58,67 +59,96 @@ class StaffController extends Controller
             'image' => $profile->image,
             'address' => $profile->address,
             'phone' => $profile->phone,
+            'store_infomation_id' => $profile->store_information_id,
             'created_at' => $profile->created_at,
         ]);
-
     }
+
 
     public function createSchedule(ScheduleRequest $request)
     {
         $user = $this->staffService->staffService();
         $schedules = $request->input('schedules');
-        $storeId = $request->input('store_information_id');
-        if (! $storeId) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
-        } else {
+        $createdSchedules = [];
+
+        // Sử dụng transaction để đảm bảo tất cả các lịch trình đều hợp lệ trước khi lưu
+        DB::beginTransaction();
+        try {
             foreach ($schedules as $scheduleData) {
                 $day = $scheduleData['day'];
                 $startTime = Carbon::createFromFormat('H:i:s', $scheduleData['start_time']);
                 $endTime = Carbon::createFromFormat('H:i:s', $scheduleData['end_time']);
 
                 // Kiểm tra xem đã tồn tại lịch làm việc cho ngày này chưa
-                $existingSchedule = Schedule::where('store_information_id', $storeId)
+                $existingSchedule = Schedule::where('user_id', $user->id)
                     ->where('day', $day)
                     ->first();
 
                 if ($existingSchedule) {
-
+                    DB::rollBack();
                     return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này đã đăng ký giờ làm', $day]);
                 }
 
-                $openingHours = OpeningHour::where('store_information_id', $storeId)
+                // Kiểm tra giờ mở cửa của cửa hàng
+                $openingHours = OpeningHour::where('store_information_id', $user->store_information_id)
                     ->where('day', $day)
                     ->first();
 
-                if (! $openingHours) {
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở ửa vui long đợi', $day]);
+                if (!$openingHours) {
+                    DB::rollBack();
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở cửa, vui lòng đợi', $day]);
                 }
 
                 $storeOpeningTime = Carbon::createFromFormat('H:i:s', $openingHours->opening_time);
                 $storeClosingTime = Carbon::createFromFormat('H:i:s', $openingHours->closing_time);
 
                 if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa']);
+                    DB::rollBack();
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa', $day]);
                 }
-                $schedule = new Schedule();
-                $schedule->user_id = $user->id;
-                $schedule->store_information_id = $storeId;
-                $schedule->day = $day;
-                $schedule->start_time = $startTime;
-                $schedule->end_time = $endTime;
-                $schedule->created_at = now();
-                $schedule->save();
-                $createdSchedules[] = $schedule;
+
+                // Lưu lịch trình vào mảng tạm thời để lưu sau khi tất cả đã được kiểm tra
+                $createdSchedules[] = [
+                    'user_id' => $user->id,
+                    'day' => $day,
+                    'start_time' => $startTime,
+                    'end_time' => $endTime,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
             }
 
+            // Nếu tất cả đều hợp lệ, lưu tất cả lịch trình vào cơ sở dữ liệu
+            Schedule::insert($createdSchedules);
+            DB::commit();
+
             return $this->responseCreated('Đăng ký giờ làm thành công', ['data' => $schedules]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->responseNotFound([Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi trong quá trình đăng ký giờ làm', $e->getMessage()]);
         }
     }
+
 
     public function getEmployeeBookings()
     {
         $user = $this->staffService->staffService();
-        $bookings = Booking::where('user_id', $user->id)->get();
+
+        // Lấy danh sách các booking của nhân viên dựa trên user_id và lấy thêm thông tin store_name
+        $bookings = booking::where('user_id', $user->id)
+            ->with(['user.storeInformation:id,name,address'])
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'day' => $booking->day,
+                    'time' => $booking->time,
+                    'status' => $booking->status,
+                    'store_name' => $booking->user->storeInformation->name,
+                    'store_address' => $booking->user->storeInformation->address,
+
+                ];
+            });
 
         if ($bookings->isEmpty()) {
             return $this->responseNotFound('Hiện bạn không có booking nào', Response::HTTP_NOT_FOUND);
@@ -127,31 +157,41 @@ class StaffController extends Controller
         }
     }
 
+
     public function seeSchedule()
     {
         $user = $this->staffService->staffService();
-        $schedules = Schedule::where('user_id', $user->id)->get();
+        $schedules = Schedule::where('user_id', $user->id)
+            ->with(['user.storeInformation:id,name,address'])
+            ->get()
+            ->map(function ($schedule) {
+                $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
+                return [
+                    'id' => $schedule->id,
+                    'user_id' => $schedule->user_id,
+                    'store_name' => $schedule->user->storeInformation->name,
+                    'store_address' => $schedule->user->storeInformation->address,
+                    'day' => $schedule->day,
+                    'start_time' => $schedule->start_time,
+                    'end_time' => $schedule->end_time,
+                    'is_valid' => $schedule->is_valid,
+                    'created_at' => $schedule->created_at,
+                    'error' => $error,
+                ];
+            });
 
         if ($schedules->isEmpty()) {
-            return $this->responseNotFound('Không có lịch làm nào được tìm thấy', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound('Hiện bạn không có lịch làm nào', Response::HTTP_NOT_FOUND);
+        } else {
+            $error = $schedules->contains(function ($schedule) {
+                return $schedule['is_valid'] == 0;
+            });
+
+            if ($error) {
+                return $this->responseBadRequest('Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi', Response::HTTP_BAD_REQUEST);
+            } else {
+                return $this->responseSuccess('Xem lịch làm thành công', ['data' => $schedules]);
+            }
         }
-
-        $response = $schedules->map(function ($schedule) {
-            $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
-
-            return [
-                'id' => $schedule->id,
-                'user_id' => $schedule->user_id,
-                'store_information_id' => $schedule->store_information_id,
-                'is_valid' => $schedule->is_valid,
-                'day' => $schedule->day,
-                'start_time' => $schedule->start_time,
-                'end_time' => $schedule->end_time,
-                'created_at' => $schedule->created_at,
-                'error' => $error,
-            ];
-        });
-
-        return $this->responseSuccess('Xem lich lam thành công', ['data' => $response]);
     }
 }
