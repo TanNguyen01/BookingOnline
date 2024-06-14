@@ -12,7 +12,7 @@ class OpeningService
 
     public function getAllOpeningHours()
     {
-        return OpeningHour::with('storeInformation')->get();
+        return OpeningHour::with('storeInformation:id,name,address')->get();
     }
 
     public function getOpeningHour($storeid)
