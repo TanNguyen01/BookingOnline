@@ -147,7 +147,7 @@ class BookingController extends Controller
             DB::beginTransaction();
 
             // Tạo đặt chỗ
-            $booking = Booking::create([
+            $booking = booking::create([
                 'user_id' => $user_id,
                 'day' => $request->day,
                 'time' => $request->time,
