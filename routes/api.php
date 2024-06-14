@@ -89,8 +89,8 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
 
 
 Route::prefix('client')->group(function () {
-    Route::post('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
-    Route::post('/list-user', [ClientController::class, 'getUsersByStoreInformation']);
+    Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
+    Route::get('/list-user', [ClientController::class, 'getUsersByStoreInformation']);
     Route::get('/list-service', [ClientController::class, 'listService']);
     Route::get('/list-store', [ClientController::class, 'listStore']);
     Route::post('/store_booking', [BookingController::class, 'store']);
