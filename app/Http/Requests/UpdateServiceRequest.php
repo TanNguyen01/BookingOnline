@@ -54,7 +54,6 @@ class UpdateServiceRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(response()->json(
             [

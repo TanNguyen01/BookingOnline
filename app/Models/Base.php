@@ -16,6 +16,7 @@ class Base extends Model
         'note',
         'email',
         'name',
+        'staff_name','store_name',
     ];
 
 

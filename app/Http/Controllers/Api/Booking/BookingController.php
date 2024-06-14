@@ -222,19 +222,21 @@ class BookingController extends Controller
         $status = $request->status;
         try {
             DB::beginTransaction();
-            $booking = $this->bookingService->getBookingById($id);
-            $base = Base::where('booking_id', $booking->id)->first();
+            $base = Base::findOrFail($id);
             if (($status === 'pending' || $status === 'confirmed' || $status === 'canceled') &&
-                ($booking->status === 'doing' || $booking->status === 'done')
+                ($base->status === 'doing' || $base->status === 'done')
             ) {
-                return $this->responseBadRequest(__('booking.invalid_status_transition'));
+                return $this->responseBadRequest(__('Không thể cập nhật trạng thái'));
             }
-            $booking->status = $status;
-            $booking->save();
-
-            // Cập nhật trạng thái của base
             $base->status = $status;
             $base->save();
+
+            // Cập nhật trạng thái của base
+            $booking = $base->booking;
+            if ($booking) {
+                $booking->status = $status;
+                $booking->save();
+            }
             // Commit transaction
             DB::commit();
             return $this->responseSuccess(__('booking.update'), ['data' => $base]);

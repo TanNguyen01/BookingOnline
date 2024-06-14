@@ -53,15 +53,13 @@ class UpdateUserRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(response()->json(
             [
                 'error' => $errors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
-
             ],
-              JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
 }
