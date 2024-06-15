@@ -37,7 +37,6 @@ class userRequest extends FormRequest
                 'store_information_id' => 'nullable|integer|exists:store_information,id',
             ];
     }
-
     public function messages(): array
     {
 

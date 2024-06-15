@@ -181,15 +181,10 @@ class StaffController extends Controller
         if ($schedules->isEmpty()) {
             return $this->responseNotFound('Hiện bạn không có lịch làm nào', Response::HTTP_NOT_FOUND);
         } else {
-            $error = $schedules->contains(function ($schedule) {
+             $schedules->contains(function ($schedule) {
                 return $schedule['is_valid'] == 0;
             });
-
-            if ($error) {
-                return $this->responseBadRequest(['Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi',$schedules], Response::HTTP_BAD_REQUEST,);
-            } else {
                 return $this->responseSuccess('Xem lịch làm thành công', ['data' => $schedules]);
-            }
         }
     }
 }
