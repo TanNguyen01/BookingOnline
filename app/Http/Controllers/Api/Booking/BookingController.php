@@ -95,9 +95,8 @@ class BookingController extends Controller
         if (!$user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
-
+        // Lấy thông tin cửa hàng của người dùng
         $store_information_id = $user->store_information_id;
-
         // Lấy lịch làm việc hợp lệ của người dùng trong ngày đã chọn
         $schedules = Schedule::where('user_id', $user_id)
             ->where('is_valid', 1)
@@ -108,7 +107,18 @@ class BookingController extends Controller
             return $this->responseBadRequest('Nhân viên không làm việc vào ngày này.');
         }
 
-        // Kiểm tra xem giờ hẹn có nằm trong khoảng thời gian làm việc nào không
+        // Lấy danh sách các booking của user trong ngày đã chọn
+        $existing_bookings = Booking::where('user_id', $user_id)
+            ->whereDate('day', '=', $day)
+            ->pluck('time')
+            ->toArray();
+
+        // Kiểm tra xem giờ hẹn mới có trùng với các booking đã tồn tại không
+        if (in_array($appointment_time, $existing_bookings)) {
+            return $this->responseBadRequest('Giờ hẹn đã được đặt. Vui lòng chọn lại.');
+        }
+
+        // Kiểm tra xem giờ hẹn mới có nằm trong khoảng thời gian làm việc nào không
         $valid_schedule = $schedules->first(function ($schedule) use ($appointment_time) {
             return $appointment_time >= $schedule->start_time && $appointment_time <= $schedule->end_time;
         });
@@ -116,19 +126,38 @@ class BookingController extends Controller
         if (!$valid_schedule) {
             return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
         }
-        if (!$valid_schedule) {
-            return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
-        }
 
         // Thu thập các khoảng thời gian làm việc
-        $time_slots = $schedules->map(function ($schedule) {
+        $time_slots = $schedules->flatMap(function ($schedule) {
             return [
-                'start_time' => $schedule->start_time,
-                'end_time' => $schedule->end_time,
+                [
+                    'start_time' => $schedule->start_time,
+                    'end_time' => $schedule->end_time,
+                ]
             ];
         });
+
+        // Kiểm tra xem giờ hẹn mới có cách nhau ít nhất 1 tiếng so với các giờ hẹn đã đặt
+        $is_valid_time_slot = true;
+        foreach ($existing_bookings as $existing_booking) {
+            $existing_timestamp = strtotime($existing_booking);
+            $appointment_timestamp = strtotime($appointment_time);
+
+            if (abs($existing_timestamp - $appointment_timestamp) < 3600) { // 3600 giây = 1 tiếng
+                $is_valid_time_slot = false;
+                break;
+            }
+        }
+
+        if (!$is_valid_time_slot) {
+            return $this->responseBadRequest('Nhân viên đang có lịch vào giờ này vui lòng chọn giờ khác');
+        }
+
         return $this->responseCreated('Ngày giờ hợp lệ.', ['time_slots' => $time_slots]);
     }
+
+
+
 
     public function store(BookingRequest $request)
     {
@@ -238,7 +267,7 @@ class BookingController extends Controller
 
 
 
-  public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $status = $request->status;
         try {

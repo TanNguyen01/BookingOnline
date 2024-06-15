@@ -26,7 +26,6 @@ class userRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (request()->isMethod('post')) {
             return [
                 'email' => 'required|string|email|unique:users',
                 'name' => 'nullable|string',
@@ -35,21 +34,8 @@ class userRequest extends FormRequest
                 'image' => 'nullable|image|mimes:jpg,png,jpeg',
                 'address' => 'nullable|string',
                 'phone' => 'nullable|string',
-
+                'store_information_id' => 'nullable|integer|exists:store_information,id',
             ];
-        } else {
-            return [
-                'email' => 'nullable|string|email|unique:users',
-                'name' => 'nullable|string',
-                'password' => 'nullable|string',
-                'role' => 'nullable|integer|in:0,1',
-                'image' => 'nullable|image|mimes:jpg,png,jpeg',
-                'address' => 'nullable|string',
-                'phone' => 'nullable|string',
-
-            ];
-        }
-
     }
 
     public function messages(): array
@@ -66,6 +52,8 @@ class userRequest extends FormRequest
             'image.mimes' => __('user.image_mimes'),
             'phone.string' => __('user.phone_string'),
             'address.string' => __('user.address_string'),
+            'store_infomation_id.exists' =>'Không có cửa hàng nào'
+
 
         ];
 
