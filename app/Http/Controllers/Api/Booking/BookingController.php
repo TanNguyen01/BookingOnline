@@ -108,7 +108,7 @@ class BookingController extends Controller
         }
 
         // Lấy danh sách các booking của user trong ngày đã chọn
-        $existing_bookings = Booking::where('user_id', $user_id)
+        $existing_bookings = booking::where('user_id', $user_id)
             ->whereDate('day', '=', $day)
             ->pluck('time')
             ->toArray();
@@ -137,13 +137,13 @@ class BookingController extends Controller
             ];
         });
 
-        // Kiểm tra xem giờ hẹn mới có cách nhau ít nhất 1 tiếng so với các giờ hẹn đã đặt
+        // Kiểm tra xem giờ hẹn mới có cách nhau ít nhất 30 phut so với các giờ hẹn đã đặt
         $is_valid_time_slot = true;
         foreach ($existing_bookings as $existing_booking) {
             $existing_timestamp = strtotime($existing_booking);
             $appointment_timestamp = strtotime($appointment_time);
 
-            if (abs($existing_timestamp - $appointment_timestamp) < 3600) { // 3600 giây = 1 tiếng
+            if (abs($existing_timestamp - $appointment_timestamp) < 1800) { // 3600 giây = 1 tiếng
                 $is_valid_time_slot = false;
                 break;
             }

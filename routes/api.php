@@ -75,9 +75,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
         Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
         // thêm 5 ngày mở cửa liên tiếp
         Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
-
     });
-
     // Booking Management
     Route::prefix('bookings')->group(function () {
         Route::get('/list', [BookingController::class, 'index']);
@@ -86,9 +84,8 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
         Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
     });
 });
-
-
 Route::prefix('client')->group(function () {
+    Route::get('/list_time', [ClientController::class, 'chooseTime']);
     Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
     Route::get('/list-user', [ClientController::class, 'getUsersByStoreInformation']);
     Route::get('/list-service', [ClientController::class, 'listService']);
