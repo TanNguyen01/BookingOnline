@@ -29,12 +29,12 @@ class userRequest extends FormRequest
             return [
                 'email' => 'required|string|email|unique:users',
                 'name' => 'nullable|string',
-                'password' => 'required|string|min:6',
+                'password' => 'required|string|min:6|max:15',
                 'role' => 'nullable|integer',
                 'image' => 'nullable|image|mimes:jpg,png,jpeg',
                 'address' => 'nullable|string',
                 'phone' => 'nullable|string',
-                'store_information_id' => 'nullable|integer|exists:store_information,id',
+                'store_id' => 'nullable|integer|exists:store_information,id',
             ];
     }
     public function messages(): array
@@ -53,7 +53,7 @@ class userRequest extends FormRequest
             'image.mimes' => __('user.image_mimes'),
             'phone.string' => __('user.phone_string'),
             'address.string' => __('user.address_string'),
-            'store_information_id.exists' =>'Không có cửa hàng nào'
+            'store_id.exists' =>'Không có cửa hàng nào'
 
 
         ];

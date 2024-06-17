@@ -50,7 +50,7 @@ class ClientController extends Controller
         }
 
         // Lấy tất cả người dùng có store_information_id khớp với storeId
-        $users = User::where('store_information_id', $storeId)->get();
+        $users = User::where('store_id', $storeId)->get();
 
         if ($users->isEmpty()) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy người dùng nào.');
@@ -69,7 +69,7 @@ class ClientController extends Controller
             return $this->responseBadRequest('Không tìm thấy thông tin người dùng');
         }
 
-        $storeId = $user->store_information_id;
+        $storeId = $user->store_id;
 
         // Kiểm tra và lấy thông tin cửa hàng dựa trên store_information_id từ người dùng
         $store = StoreInformation::find($storeId);
@@ -87,7 +87,7 @@ class ClientController extends Controller
 
         // Chuẩn bị dữ liệu trả về, bao gồm store_information_id, store_name và danh sách lịch làm việc
         $responseData = [
-            'store_information_id' => $storeId,
+            'store_id' => $storeId,
             'store_name' => $store->name,
             'schedules' => $schedules
         ];

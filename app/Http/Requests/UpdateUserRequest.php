@@ -28,14 +28,13 @@ class UpdateUserRequest extends FormRequest
     {
 
         return [
-
             'name' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'required|string|min:6|max:15',
             'role' => 'required|integer|in:0,1',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
-            'store_information_id' => 'nullable|integer|exists:store_information,id',
+            'store_id' => 'nullable|integer|exists:store_information,id',
 
         ];
     }
@@ -53,7 +52,7 @@ class UpdateUserRequest extends FormRequest
             'address.string' => 'Phone là kiểu chuỗi',
             'password.min' =>'Mật khẩu phải nhiều hơn 6 kí tự',
             'password.max' => 'Mật khẩu phải ít hơn 15 ký tự!',
-            'store_information_id.exists' =>'Không có cửa hàng nào'
+            'store_id.exists' =>'Không có cửa hàng nào'
 
         ];
     }

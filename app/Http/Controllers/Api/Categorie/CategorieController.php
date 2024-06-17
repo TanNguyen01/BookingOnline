@@ -33,7 +33,6 @@ class CategorieController extends Controller
                 'data' => $categorie,
             ]
         );
-
     }
 
     /**
@@ -60,7 +59,7 @@ class CategorieController extends Controller
     public function show(string $id)
     {
         $categorie = $this->categorieService->getCategorieById($id);
-        if (! $categorie) {
+        if (!$categorie) {
             return $this->responseNotFound(
                 Response::HTTP_NOT_FOUND,
                 __('category.not_found'),
@@ -85,8 +84,9 @@ class CategorieController extends Controller
     {
         $data = $request->all();
         $categorie = $this->categorieService->updateCategorie($id, $data);
-        if (! $categorie) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND,
+        if (!$categorie) {
+            return $this->responseNotFound(
+                Response::HTTP_NOT_FOUND,
                 __('category.not_found'),
 
             );
@@ -109,7 +109,7 @@ class CategorieController extends Controller
     public function destroy(string $id)
     {
         $categorie = $this->categorieService->deleteCategorie($id);
-        if (! $categorie) {
+        if (!$categorie) {
             return $this->responseNotFound(
                 Response::HTTP_NOT_FOUND,
                 __('category.not_found'),

@@ -25,7 +25,7 @@ class User extends Authenticatable
         'role',
         'address',
         'phone',
-        'store_information_id'
+        'store_id'
 
     ];
 
@@ -54,6 +54,6 @@ class User extends Authenticatable
     }
     public function storeInformation()
     {
-        return $this->belongsTo(StoreInformation::class, 'store_information_id');
+        return $this->belongsTo(StoreInformation::class, 'store_id');
     }
 }

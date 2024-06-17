@@ -59,7 +59,7 @@ class StaffController extends Controller
             'image' => $profile->image,
             'address' => $profile->address,
             'phone' => $profile->phone,
-            'store_infomation_id' => $profile->store_information_id,
+            'store_id' => $profile->store_id,
             'created_at' => $profile->created_at,
         ]);
     }
@@ -78,7 +78,7 @@ class StaffController extends Controller
                 $endTime = Carbon::createFromFormat('H:i:s', $scheduleData['end_time']);
 
                 // Kiểm tra giờ mở cửa của cửa hàng
-                $openingHours = OpeningHour::where('store_information_id', $user->store_information_id)
+                $openingHours = OpeningHour::where('store_id', $user->store_id)
                     ->where('day', $day)
                     ->first();
 
@@ -181,10 +181,28 @@ class StaffController extends Controller
         if ($schedules->isEmpty()) {
             return $this->responseNotFound('Hiện bạn không có lịch làm nào', Response::HTTP_NOT_FOUND);
         } else {
-             $schedules->contains(function ($schedule) {
+            $schedules->contains(function ($schedule) {
                 return $schedule['is_valid'] == 0;
             });
-                return $this->responseSuccess('Xem lịch làm thành công', ['data' => $schedules]);
+            return $this->responseSuccess('Xem lịch làm thành công', ['data' => $schedules]);
         }
+    }
+
+    public function viewStoreOpeningHours()
+    {
+        $user = $this->staffService->staffService();
+        $openingHours = OpeningHour::where('store_id', $user->store_id)->get();
+        if ($openingHours->isEmpty()) {
+            return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Cửa hàng chưa cập nhật giờ mở cửa']);
+        }
+        $formattedHours = $openingHours->map(function ($hour) {
+            return [
+                'day' => $hour->day,
+                'opening_time' => $hour->opening_time,
+                'closing_time' => $hour->closing_time,
+            ];
+        });
+
+        return $this->responseSuccess('Giờ mở cửa của cửa hàng', ['data' => $formattedHours]);
     }
 }

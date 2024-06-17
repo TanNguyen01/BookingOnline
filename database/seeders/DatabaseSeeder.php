@@ -32,6 +32,12 @@ class DatabaseSeeder extends Seeder
         //     'price'=>'123',
         //     'describe' => 'aaaaaaaaaaa'
         // ]);
+        // \App\Models\StoreInformation::query()->create([
+        //     'name' => 'StoreTesst',
+        //     'image' => 'asdasdasda.jpg',
+        //     'address' => 'Thanh Ha - Hai Duong',
+        //     'phone' => '0926755061',
+        // ]);
         \App\Models\User::query()->create([
             'email' => 'admin1@gmail.com',
             'role' => '0',
@@ -67,30 +73,39 @@ class DatabaseSeeder extends Seeder
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
+            'store_id' => 3
         ]);
         \App\Models\User::query()->create([
             'email' => 'user2@gmail.com',
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
+            'store_id' => 3
+
         ]);
         \App\Models\User::query()->create([
             'email' => 'user3@gmail.com',
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
+            'store_id' => 3
+
         ]);
         \App\Models\User::query()->create([
             'email' => 'user4@gmail.com',
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
+            'store_id' => 3
+
         ]);
         \App\Models\User::query()->create([
             'email' => 'user5@gmail.com',
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
+            'store_id' => 3
+
         ]);
         // \App\Models\User::factory(5)->create([
         // ]);

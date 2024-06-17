@@ -29,7 +29,7 @@ class ScheduleRequest extends FormRequest
 
         return [
             'schedules' => 'required|array',
-            'schedules.*.day' => 'required|date',
+            'schedules.*.day' => 'required|date|after_or_equal:today',
 
             'schedules.*.start_time' => [
                 'required',
@@ -50,6 +50,7 @@ class ScheduleRequest extends FormRequest
     {
 
         return [
+            'schedules.*.day.after_or_equal' => ' ngày chọn phải >= ngày hôm nay',
             'schedules.*.day' => 'Vui lòng chọn ngày đăng ký làm',
             'schedules.*.day.*.start_time.required' => 'giờ bắt đầu mở cửa',
             'schedules.*.day.*.start_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',

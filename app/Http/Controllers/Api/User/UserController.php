@@ -47,7 +47,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->userService->getUserById($id);
-        if (! $user) {
+        if (!$user) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
@@ -58,7 +58,7 @@ class UserController extends Controller
     {
 
         $user = $this->userService->updateUser($id, $request->all());
-        if (! $user) {
+        if (!$user) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
@@ -68,7 +68,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = $this->userService->deleteUser($id);
-        if (! $user) {
+        if (!$user) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 

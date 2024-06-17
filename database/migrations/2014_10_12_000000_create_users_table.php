@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('image')->nullable();
             $table->string('phone')->nullable();
-            $table->unsignedBigInteger('store_information_id')->nullable();
-            $table->foreign('store_information_id')->references('id')->on('store_information')->onDelete('cascade');
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('store_information')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

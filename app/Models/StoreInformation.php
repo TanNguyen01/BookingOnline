@@ -23,7 +23,7 @@ class StoreInformation extends Model
     // vì mỗi cửa hàng trong bảng Store_Information có thể có nhiều bản ghi trong bảng opening_hours,
     public function openingHours()
     {
-        return $this->hasMany(OpeningHour::class, 'store_information_id');
+        return $this->hasMany(OpeningHour::class, 'store_id');
     }
 
     public function schedules()

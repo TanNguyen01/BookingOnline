@@ -10,7 +10,7 @@ class OpeningHour extends Model
     use HasFactory;
 
     protected $fillable = [
-        'store_information_id',
+        'store_id',
         'day',
         'opening_time',
         'closing_time',
@@ -20,6 +20,6 @@ class OpeningHour extends Model
 
     public function storeInformation()
     {
-        return $this->belongsTo(StoreInformation::class, 'store_information_id');
+        return $this->belongsTo(StoreInformation::class, 'store_id');
     }
 }

@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
-
     // Services
     Route::prefix('services')->group(function () {
         Route::get('/list', [ServiceController::class, 'index'])->name('list.service');
@@ -105,6 +104,8 @@ Route::middleware('auth:sanctum', 'checkuser')->prefix('user')->group(function (
     Route::get('/showprofile', [StaffController::class, 'showProfile']);
     // xem tất cả booking
     Route::get('/listbooking', [StaffController::class, 'getEmployeeBookings']);
+    // xem giờ mở cửa của cửa hàng
+    Route::get('/see-opeening-hours', [StaffController::class, 'viewStoreOpeningHours']);
 });
 
 Route::middleware('language')->prefix('auth')->group(function () {

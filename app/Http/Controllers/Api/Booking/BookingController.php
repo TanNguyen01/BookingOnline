@@ -38,8 +38,8 @@ class BookingController extends Controller
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
 
-        $store_information_id = $user->store_information_id;
-        $store = StoreInformation::find($store_information_id);
+        $store_id = $user->store_id;
+        $store = StoreInformation::find($store_id);
 
         if (!$store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
@@ -58,15 +58,15 @@ class BookingController extends Controller
             return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
         }
 
-        $store_information_id = $employee->store_information_id;
-        $store = StoreInformation::find($store_information_id);
+        $store_id = $employee->store_id;
+        $store = StoreInformation::find($store_id);
 
         if (!$store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
 
         // Kiểm tra xem nhân viên có được gán cho cửa hàng này hay không
-        $isEmployeeOfStore = $employee->store_information_id === $store_information_id;
+        $isEmployeeOfStore = $employee->store_id;
 
         if (!$isEmployeeOfStore) {
             return $this->responseBadRequest('Người dùng không được gán cho cửa hàng này.');
@@ -96,7 +96,7 @@ class BookingController extends Controller
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
         // Lấy thông tin cửa hàng của người dùng
-        $store_information_id = $user->store_information_id;
+        $store_id = $user->store_id;
         // Lấy lịch làm việc hợp lệ của người dùng trong ngày đã chọn
         $schedules = Schedule::where('user_id', $user_id)
             ->where('is_valid', 1)
