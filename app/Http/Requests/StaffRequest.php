@@ -33,7 +33,7 @@ class StaffRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
-            'store_information_id' => 'nullable|integer|exists:store_information,id',
+            'new_password' => 'nullable|string|min:6|max:15',
         ];
 
     }
@@ -41,12 +41,13 @@ class StaffRequest extends FormRequest
     {
         return [
             'current_password.required' => 'Nhập current_password cũ',
+            'new_password.min' => 'Mật khẩu mới phải nhiều hơn 6 kí tự!',
+            'new_password.max' => 'Mật khẩu mới phải ít hơn 15 ký tự!',
             'name.required' => 'Vui lòng nhâp name',
             'name.string' => ' Name là kiểu chuỗi',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
             'phone.string' => 'Phone là kiểu chuỗi',
             'address.string' => 'Phone là kiểu chuỗi',
-            'store_infomation_id.exists' =>'Không có cửa hàng nào'
         ];
 
     }

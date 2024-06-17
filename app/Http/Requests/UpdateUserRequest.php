@@ -31,7 +31,7 @@ class UpdateUserRequest extends FormRequest
 
             'name' => 'required|string',
             'password' => 'required|string',
-            'role' => 'nullable|integer|in:0,1',
+            'role' => 'required|integer|in:0,1',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
@@ -46,11 +46,14 @@ class UpdateUserRequest extends FormRequest
             'password.required' => 'Nhập password!',
             'name.required' => 'Vui lòng nhâp name',
             'name.string' => ' Name là kiểu chuỗi',
+            'role.required' =>'Chọn tư cách cho user',
+            'role.in' =>'Chọn tư cách cho user chỉ  0:Admin , 1:staff',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
             'phone.string' => 'Phone là kiểu chuỗi',
             'address.string' => 'Phone là kiểu chuỗi',
-            'store_infomation_id.exists' =>'Không có cửa hàng nào'
-
+            'password.min' =>'Mật khẩu phải nhiều hơn 6 kí tự',
+            'password.max' => 'Mật khẩu phải ít hơn 15 ký tự!',
+            'store_information_id.exists' =>'Không có cửa hàng nào'
 
         ];
     }

@@ -29,7 +29,7 @@ class userRequest extends FormRequest
             return [
                 'email' => 'required|string|email|unique:users',
                 'name' => 'nullable|string',
-                'password' => 'required|string|',
+                'password' => 'required|string|min:6',
                 'role' => 'nullable|integer',
                 'image' => 'nullable|image|mimes:jpg,png,jpeg',
                 'address' => 'nullable|string',
@@ -46,12 +46,14 @@ class userRequest extends FormRequest
             'email.email' => __('user.email_email'),
             'password.required' => __('user.password_required'),
             'password.confirmed' => __('user.password_confirmed'),
+            'password.min' => __("auth.password_min"),
+            'password.max' => __("auth.password_max"),
             'name.required' => __('user.name_required'),
             'name.string' => __('user.name_string'),
             'image.mimes' => __('user.image_mimes'),
             'phone.string' => __('user.phone_string'),
             'address.string' => __('user.address_string'),
-            'store_infomation_id.exists' =>'Không có cửa hàng nào'
+            'store_information_id.exists' =>'Không có cửa hàng nào'
 
 
         ];

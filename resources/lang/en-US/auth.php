@@ -12,7 +12,9 @@ return [
     "logout_success" => "User logged out successfully.",
 
     /** Validate */
-      "email_required" => "Email is required.",
-      "email_email" => "Email is not valid.",
-      "password_required" => "Password is required.",
+    "email_required" => "Email is required.",
+    "email_email" => "Email is not valid.",
+    "password_required" => "Password is required.",
+    'password_min' => "The password must be at least 6 characters long!",
+    'password_max' => "The password must be less than 15 characters long!"
 ];

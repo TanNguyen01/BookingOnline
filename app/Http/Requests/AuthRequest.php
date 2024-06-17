@@ -29,7 +29,7 @@ class AuthRequest extends FormRequest
 
         return [
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|string|min:6|max:10',
         ];
 
     }
@@ -41,6 +41,8 @@ class AuthRequest extends FormRequest
             'email.required' => __("auth.email_required"),
             'email.email' => __("auth.email_email"),
             'password.required' => __("auth.password_required"),
+            'password.min' => __("auth.password_min"),
+            'password.max' => __("auth.password_max"),
         ];
 
     }

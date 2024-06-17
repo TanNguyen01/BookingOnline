@@ -21,4 +21,6 @@ return [
     'image_mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
     'phone_string' => 'phone là kiểu chuỗi',
     'address_string' => 'phone là kiểu chuỗi',
+    'password_min' => "Mật khẩu phải nhiều hơn 6 kí tự!",
+    'password_max' => "Mật khẩu phải ít hơn 15 ký tự!"
 ];
