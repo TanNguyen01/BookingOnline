@@ -81,7 +81,7 @@ class OpeningHourController extends Controller
             }
         }
         if (!empty($existingDays)) {
-            return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('openingHours.exists'), $existingDays);
+            return $this->responseBadRequest(['Ngày này đã có giờ mở cửa vui lòng kiểm tra lại', $existingDays]);
         }
         foreach ($openingHoursData as $data) {
             OpeningHour::create([
