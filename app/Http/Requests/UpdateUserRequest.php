@@ -34,7 +34,7 @@ class UpdateUserRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
-            'store_id' => 'nullable|integer|exists:store_informations,id',
+            'store_id' => 'nullable|integer|exists:store_information,id',
 
         ];
     }
