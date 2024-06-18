@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OpeningHourRequest;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
+use App\Models\StoreInformation;
 use App\Models\User;
 use App\Services\OpeningService;
 use App\Traits\APIResponse;
@@ -39,17 +40,23 @@ class OpeningHourController extends Controller
 
     public function show($storeid)
     {
-        $openingHours = $this->openingService->getOpeningHour($storeid);
         if (!$storeid) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
-        } else {
-            return $this->responseSuccess(
-                __('openingHours.show'),
-                [
-                    'data' => $openingHours,
-                ]
-            );
         }
+        $store = StoreInformation::find($storeid);
+        if (!$store) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+        }
+        $openingHours = $store->openingHours()->get(['day', 'opening_time', 'closing_time']);
+        if ($openingHours->isEmpty()) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+        }
+        return $this->responseSuccess(
+            __('openingHours.show'),
+            [
+                'data' => $openingHours,
+            ]
+        );
     }
 
 

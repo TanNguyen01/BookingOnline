@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 // return response()->json(['message' => 'Locale set to '.$locale]);
 //});
 
-// Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
     Route::prefix('services')->group(function () {
         Route::get('/list', [ServiceController::class, 'index'])->name('list.service');
@@ -82,7 +82,7 @@ use Illuminate\Support\Facades\Route;
         Route::post('/update/{id}', [BookingController::class, 'update']);
         Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
     });
-// });
+});
 Route::prefix('client')->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
     Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
@@ -92,16 +92,15 @@ Route::prefix('client')->group(function () {
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
-
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/showprofile', [StaffController::class, 'showProfile']);
+    Route::post('/profile/update', [StaffController::class, 'updateProfile']);
+});
 Route::middleware('auth:sanctum', 'checkuser')->prefix('user')->group(function () {
     // xem lịch làm
     Route::get('/see-schedule', [StaffController::class, 'seeSchedule']);
     // thêm lịch làm user
     Route::post('/schedules', [StaffController::class, 'createSchedule']);
-    //  update profile user
-    Route::post('/profile/update', [StaffController::class, 'updateProfile']);
-    // xem profile user
-    Route::get('/showprofile', [StaffController::class, 'showProfile']);
     // xem tất cả booking
     Route::get('/listbooking', [StaffController::class, 'getEmployeeBookings']);
     // xem giờ mở cửa của cửa hàng
