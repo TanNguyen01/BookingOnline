@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/set-locale/{locale}', function ($locale) {
-//  Session::put('locale', $locale);
-
-// return response()->json(['message' => 'Locale set to '.$locale]);
-//});
+Route::post('/set-locale/{locale}', function ($locale) {
+ Session::put('locale', $locale);
+return response()->json(['message' => 'Locale set to '.$locale]);
+});
 
 Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
