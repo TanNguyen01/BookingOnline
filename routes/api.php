@@ -91,11 +91,6 @@ Route::prefix('client')->group(function () {
     Route::get('/list-store', [ClientController::class, 'listStore']);
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
-
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/showprofile', [StaffController::class, 'showProfile']);
-    Route::post('/profile/update', [StaffController::class, 'updateProfile']);
-});
 //nhân viên
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/showprofile', [StaffController::class, 'showProfile']);
