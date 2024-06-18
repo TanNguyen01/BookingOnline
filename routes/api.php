@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 // return response()->json(['message' => 'Locale set to '.$locale]);
 //});
 
-Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+// Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
     Route::prefix('services')->group(function () {
         Route::get('/list', [ServiceController::class, 'index'])->name('list.service');
@@ -90,6 +90,11 @@ Route::prefix('client')->group(function () {
     Route::get('/list-service', [ClientController::class, 'listService']);
     Route::get('/list-store', [ClientController::class, 'listStore']);
     Route::post('/store_booking', [BookingController::class, 'store']);
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/showprofile', [StaffController::class, 'showProfile']);
+    Route::post('/profile/update', [StaffController::class, 'updateProfile']);
 });
 //nhân viên
 Route::middleware(['auth:sanctum'])->group(function () {
