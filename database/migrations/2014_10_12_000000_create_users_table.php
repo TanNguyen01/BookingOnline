@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('phone')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
-            $table->foreign('store_id')->references('id')->on('store_information')->onDelete('cascade');
+            $table->foreign('store_id')->references('id')->on('store_informations')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

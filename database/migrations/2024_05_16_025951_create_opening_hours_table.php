@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('opening_hours', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('store_id');
-            $table->foreign('store_id')->references('id')->on('store_information')->onDelete('cascade');
+            $table->foreign('store_id')->references('id')->on('store_informations')->onDelete('cascade');
             $table->date('day');
             $table->time('opening_time');
             $table->time('closing_time');

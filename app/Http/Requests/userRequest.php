@@ -34,7 +34,7 @@ class userRequest extends FormRequest
                 'image' => 'nullable|image|mimes:jpg,png,jpeg',
                 'address' => 'nullable|string',
                 'phone' => 'nullable|string',
-                'store_id' => 'nullable|integer|exists:store_information,id',
+                'store_id' => 'nullable|integer|exists:store_informations,id',
             ];
     }
     public function messages(): array

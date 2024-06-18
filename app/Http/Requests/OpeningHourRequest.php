@@ -28,7 +28,7 @@ class OpeningHourRequest extends FormRequest
     {
 
         return [
-            'store_id' => 'exists:store_information,id',
+            'store_id' => 'exists:store_informations,id',
             'opening_hours' => 'required|array',
             'opening_hours.*.day' => 'required|date|after_or_equal:today',
             'opening_hours.*.opening_time' => [
