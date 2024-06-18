@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 // return response()->json(['message' => 'Locale set to '.$locale]);
 //});
 
-// Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
     Route::prefix('services')->group(function () {
         Route::get('/list', [ServiceController::class, 'index'])->name('list.service');
