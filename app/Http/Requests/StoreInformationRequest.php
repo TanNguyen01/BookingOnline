@@ -28,7 +28,7 @@ class StoreInformationRequest extends FormRequest
     {
 
         return [
-            'name' => 'required|string|unique:store_informations',
+            'name' => 'required|string|unique:store_information',
             'image' => 'required|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
