@@ -8,6 +8,7 @@ use App\Http\Requests\StaffRequest;
 use App\Models\booking;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
+use App\Models\StoreInformation;
 use App\Services\StaffService;
 use App\Traits\APIResponse;
 use Carbon\Carbon;
@@ -190,11 +191,22 @@ class StaffController extends Controller
 
     public function viewStoreOpeningHours()
     {
+        // Lấy thông tin người dùng hiện tại
         $user = $this->staffService->staffService();
-        $openingHours = OpeningHour::where('store_id', $user->store_id)->get();
-        if ($openingHours->isEmpty()) {
-            return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Cửa hàng chưa cập nhật giờ mở cửa']);
+
+        // Lấy thông tin cửa hàng
+        $store = StoreInformation::find($user->store_id);
+        if (!$store) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng không tồn tại');
         }
+
+        // Lấy giờ mở cửa của cửa hàng
+        $openingHours = OpeningHour::where('store_id', $store->id)->get();
+        if ($openingHours->isEmpty()) {
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng chưa cập nhật giờ mở cửa');
+        }
+
+        // Định dạng giờ mở cửa
         $formattedHours = $openingHours->map(function ($hour) {
             return [
                 'day' => $hour->day,
@@ -203,6 +215,11 @@ class StaffController extends Controller
             ];
         });
 
-        return $this->responseSuccess('Giờ mở cửa của cửa hàng', ['data' => $formattedHours]);
+        // Bao gồm thông tin cửa hàng trong phản hồi
+        return $this->responseSuccess('Giờ mở cửa của cửa hàng', [
+            'store_id' => $store->id,
+            'store_name' => $store->name,
+            'data' => $formattedHours,
+        ]);
     }
 }
