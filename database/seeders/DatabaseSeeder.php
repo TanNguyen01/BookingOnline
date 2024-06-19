@@ -39,85 +39,32 @@ class DatabaseSeeder extends Seeder
         //     'phone' => '0926755061',
         // ]);
         \App\Models\User::query()->create([
-            'email' => 'admin1@gmail.com',
-            'role' => '0',
-            'name' => 'Admin',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'admin2@gmail.com',
-            'role' => '0',
-            'name' => 'Admin',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
+            [
 
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'admin3@gmail.com',
-            'role' => '0',
-            'name' => 'Admin',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'admin4@gmail.com',
-            'role' => '0',
-            'name' => 'Admin',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'admin5@gmail.com',
-            'role' => '0',
-            'name' => 'Admin',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'user1@gmail.com',
-            'role' => '1',
-            'name' => 'user',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'user2@gmail.com',
-            'role' => '1',
-            'name' => 'user',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'user3@gmail.com',
-            'role' => '1',
-            'name' => 'user',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'user4@gmail.com',
-            'role' => '1',
-            'name' => 'user',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        \App\Models\User::query()->create([
-            'email' => 'user5@gmail.com',
-            'role' => '1',
-            'name' => 'user',
-            'password' => Hash::make('12345678'),
-            'store_id' => 'null',
-
-        ]);
-        // \App\Models\User::factory(5)->create([
-        // ]);
-
+                'email' => 'admin1@gmail.com',
+                'role' => '0',
+                'name' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'email' => 'admin2@gmail.com',
+                'role' => '0',
+                'name' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'email' => 'admin3@gmail.com',
+                'role' => '0',
+                'name' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'email' => 'admin5@gmail.com',
+                'role' => '0',
+                'name' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ],
+        ],
+        );
     }
 }
