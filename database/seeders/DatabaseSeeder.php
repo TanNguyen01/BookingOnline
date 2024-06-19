@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\booking;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -38,30 +39,31 @@ class DatabaseSeeder extends Seeder
         //     'address' => 'Thanh Ha - Hai Duong',
         //     'phone' => '0926755061',
         // ]);
-        \App\Models\User::query()->create([
+        DB::table('users')->insert([
             [
 
                 'email' => 'admin1@gmail.com',
                 'role' => 0,
-                'name' => 'Admin',
+                'name' => 'Admin1',
                 'password' => Hash::make('12345678'),
+
             ],
             [
                 'email' => 'admin2@gmail.com',
                 'role' => 0,
-                'name' => 'Admin',
+                'name' => 'Admin2',
                 'password' => Hash::make('12345678'),
             ],
             [
                 'email' => 'admin3@gmail.com',
                 'role' => 0,
-                'name' => 'Admin',
+                'name' => 'Admin3',
                 'password' => Hash::make('12345678'),
             ],
             [
                 'email' => 'admin5@gmail.com',
                 'role' => 0,
-                'name' => 'Admin',
+                'name' => 'Admin4',
                 'password' => Hash::make('12345678'),
             ],
         ],
