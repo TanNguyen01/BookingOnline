@@ -9,7 +9,6 @@ return [
     'not_found' => 'Không tìm thấy danh mục.',
 
     /** Validate */
-
     'name_unique' => 'Tên đã tồn tại',
     'name_required' => 'Vui lòng nhâp name',
 ];

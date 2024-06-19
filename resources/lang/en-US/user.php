@@ -7,19 +7,18 @@ return [
     'updated' => 'User updated successfully.',
     'deleted' => 'User deleted successfully.',
     'not_found' => 'User not found.',
-    'accept'=> 'User accept',
+    'accept' => 'User accept',
 
     /** validate */
+    'email_unique' => 'User email is already exists',
+    'email_required' => 'User email is required',
+    'email.email' => 'User email is not invalid',
+    'name_required' => 'Username is required',
+    'name_string' => 'Username must be string',
+    'password_required' => 'User password is required',
+    'password_confirmed' => 'confirm user password',
+    'phone_string' => 'phone must be string',
+    'address_string' => 'address must be string',
 
-      "email_unique"=>"User email is already exists",
-      "email_required"=> "User email is required",
-      "email.email"=> "User email is not invalid",
-      "name_required"=> "Username is required",
-      "name_string"=> "Username must be string",
-      "password_required"=>"User password is required",
-      "password_confirmed"=> "confirm user password",
-      "phone_string"=> "phone must be string",
-      "address_string"=> "address must be string",
-
-      "image_mimes"=>  "User image must be a file of type: jpeg, jpg, png.",
+    'image_mimes' => 'User image must be a file of type: jpeg, jpg, png.',
 ];

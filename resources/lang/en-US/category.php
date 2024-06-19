@@ -9,7 +9,6 @@ return [
     'not_found' => 'Category not found.',
 
     /** Validate */
-
-       "name_unique" => "Category name already exists.",
-       "name_required" => "Category name is required.",
+    'name_unique' => 'Category name already exists.',
+    'name_required' => 'Category name is required.',
 ];

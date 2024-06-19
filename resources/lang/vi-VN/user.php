@@ -7,10 +7,9 @@ return [
     'updated' => 'Nguoi dung đã được cập nhật thành công.',
     'deleted' => 'Nguoi dung đã được xóa thành công.',
     'not_found' => 'Không tìm thấy nguoi dung hoac nhan vien nay.',
-    'accept'=> "nhan vien hop le",
+    'accept' => 'nhan vien hop le',
 
     /** Validate */
-
     'email_unique' => 'email da ton tai',
     'email_required' => 'Vui lòng nhâp email',
     'email_email' => 'Nhập đúng định dạng email!',
