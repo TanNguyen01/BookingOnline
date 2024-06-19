@@ -24,6 +24,7 @@ class booking extends Model
     {
         return $this->belongsToMany(Service::class, 'booking_service');
     }
+
     public function bases()
     {
         return $this->hasMany(Base::class, 'booking_id', 'id');

@@ -30,7 +30,7 @@ class StoreInformationController extends Controller
     public function show(string $id)
     {
         $store = $this->storeService->getStoreById($id);
-        if (!$store) {
+        if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         } else {
             return $this->responseSuccess(__('store.show'), ['data' => $store]);
@@ -47,7 +47,7 @@ class StoreInformationController extends Controller
     public function update(UpdateStroreInformationRequest $request, $id)
     {
         $store = $this->storeService->updateStore($id, $request->all());
-        if (!$store) {
+        if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
 
@@ -57,7 +57,7 @@ class StoreInformationController extends Controller
     public function destroy($id)
     {
         $store = $this->storeService->deleteStore($id);
-        if (!$store) {
+        if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
 

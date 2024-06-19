@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -37,6 +36,7 @@ class StaffRequest extends FormRequest
         ];
 
     }
+
     public function messages(): array
     {
         return [

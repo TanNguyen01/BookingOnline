@@ -25,7 +25,7 @@ class User extends Authenticatable
         'role',
         'address',
         'phone',
-        'store_id'
+        'store_id',
 
     ];
 
@@ -48,10 +48,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
     }
+
     public function storeInformation()
     {
         return $this->belongsTo(StoreInformation::class, 'store_id');

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -38,11 +37,11 @@ class AuthRequest extends FormRequest
     {
 
         return [
-            'email.required' => __("auth.email_required"),
-            'email.email' => __("auth.email_email"),
-            'password.required' => __("auth.password_required"),
-            'password.min' => __("auth.password_min"),
-            'password.max' => __("auth.password_max"),
+            'email.required' => __('auth.email_required'),
+            'email.email' => __('auth.email_email'),
+            'password.required' => __('auth.password_required'),
+            'password.min' => __('auth.password_min'),
+            'password.max' => __('auth.password_max'),
         ];
 
     }

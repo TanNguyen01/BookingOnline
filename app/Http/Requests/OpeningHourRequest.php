@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -50,9 +49,9 @@ class OpeningHourRequest extends FormRequest
 
         return [
 
-           // 'store_information_id.required' => __('openingHours.store_information_id_required'),
+            // 'store_information_id.required' => __('openingHours.store_information_id_required'),
             'store_id.exists' => __('openingHours.exists'),
-            'opening_hours.*.day.required' =>__('openingHours.opening_hours_day_required'),
+            'opening_hours.*.day.required' => __('openingHours.opening_hours_day_required'),
             'opening_hours.*.day.after_or_equal' => __('openingHours.opening_hours_day_after_or_equal'),
             'opening_hours.*.opening_time.required' => __('openingHours.opening_hours_opening_time_required'),
             'opening_hours.*.opening_time.date_format' => __('openingHours.opening_hours_opening_time_date_format'),

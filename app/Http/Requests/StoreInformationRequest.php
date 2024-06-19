@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -40,8 +39,8 @@ class StoreInformationRequest extends FormRequest
     {
 
         return [
-            'name.unique' => __("store.name_unique"),
-            'name.required' => __("store.name_required"),
+            'name.unique' => __('store.name_unique'),
+            'name.required' => __('store.name_required'),
             'name.string' => __('store.name_string'),
             'address.string' => __('store.address_string'),
             'address.required' => __('store.address_required'),

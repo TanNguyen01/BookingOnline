@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -45,14 +44,14 @@ class UpdateUserRequest extends FormRequest
             'password.required' => 'Nhập password!',
             'name.required' => 'Vui lòng nhâp name',
             'name.string' => ' Name là kiểu chuỗi',
-            'role.required' =>'Chọn tư cách cho user',
-            'role.in' =>'Chọn tư cách cho user chỉ  0:Admin , 1:staff',
+            'role.required' => 'Chọn tư cách cho user',
+            'role.in' => 'Chọn tư cách cho user chỉ  0:Admin , 1:staff',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
             'phone.string' => 'Phone là kiểu chuỗi',
             'address.string' => 'Phone là kiểu chuỗi',
-            'password.min' =>'Mật khẩu phải nhiều hơn 6 kí tự',
+            'password.min' => 'Mật khẩu phải nhiều hơn 6 kí tự',
             'password.max' => 'Mật khẩu phải ít hơn 15 ký tự!',
-            'store_id.exists' =>'Không có cửa hàng nào'
+            'store_id.exists' => 'Không có cửa hàng nào',
 
         ];
     }

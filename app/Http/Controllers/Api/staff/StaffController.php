@@ -32,7 +32,7 @@ class StaffController extends Controller
         $validatedData = $request->all();
         $user = $this->staffService->staffService();
 
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
+        if (! Hash::check($validatedData['current_password'], $user->password)) {
             return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('auth.failed')]);
         }
 
@@ -83,8 +83,9 @@ class StaffController extends Controller
                     ->where('day', $day)
                     ->first();
 
-                if (!$openingHours) {
+                if (! $openingHours) {
                     DB::rollBack();
+
                     return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở cửa, vui lòng đợi', $day]);
                 }
 
@@ -93,6 +94,7 @@ class StaffController extends Controller
 
                 if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
                     DB::rollBack();
+
                     return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa', $day]);
                 }
 
@@ -122,9 +124,11 @@ class StaffController extends Controller
                 }
             }
             DB::commit();
+
             return $this->responseCreated('Đăng ký hoặc cập nhật giờ làm thành công', ['data' => $schedules]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->responseNotFound([Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi trong quá trình đăng ký hoặc cập nhật giờ làm', $e->getMessage()]);
         }
     }
@@ -156,7 +160,6 @@ class StaffController extends Controller
         }
     }
 
-
     public function seeSchedule()
     {
         $user = $this->staffService->staffService();
@@ -165,6 +168,7 @@ class StaffController extends Controller
             ->get()
             ->map(function ($schedule) {
                 $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
+
                 return [
                     'id' => $schedule->id,
                     'user_id' => $schedule->user_id,
@@ -185,6 +189,7 @@ class StaffController extends Controller
             $schedules->contains(function ($schedule) {
                 return $schedule['is_valid'] == 0;
             });
+
             return $this->responseSuccess('Xem lịch làm thành công', ['data' => $schedules]);
         }
     }
@@ -196,7 +201,7 @@ class StaffController extends Controller
 
         // Lấy thông tin cửa hàng
         $store = StoreInformation::find($user->store_id);
-        if (!$store) {
+        if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng không tồn tại');
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,16 +25,16 @@ class CategorieRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'name' => 'required|string|unique:categories',
-            ];
+        return [
+            'name' => 'required|string|unique:categories',
+        ];
     }
 
     public function messages(): array
     {
         return [
-            'name.unique' => __("category.name_unique"),
-            'name.required' => __("category.name_required"),
+            'name.unique' => __('category.name_unique'),
+            'name.required' => __('category.name_required'),
 
         ];
     }

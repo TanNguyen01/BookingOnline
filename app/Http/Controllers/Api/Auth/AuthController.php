@@ -24,6 +24,7 @@ class AuthController extends Controller
         }
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
+
         return $this->responseSuccess(__('auth.success'), [
             'data' => $user,
             'token' => $token,
@@ -36,6 +37,7 @@ class AuthController extends Controller
             $request->user()->currentAccessToken()->delete();
         }
         Session::flush();
+
         return $this->responseSuccess(
             __('auth.logout_success'),
         );

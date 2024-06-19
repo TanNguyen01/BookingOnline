@@ -34,41 +34,40 @@ class BookingController extends Controller
         $user_id = $request->user_id;
         $user = User::find($user_id);
 
-        if (!$user) {
+        if (! $user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
 
         $store_id = $user->store_id;
         $store = StoreInformation::find($store_id);
 
-        if (!$store) {
+        if (! $store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
 
         return $this->responseSuccess('Lấy thông tin cửa hàng thành công', ['data' => $store]);
     }
 
-
     public function chooseEmployee(Request $request)
     {
         $user_id = $request->user_id;
         $employee = User::where('id', $user_id)->where('role', 1)->first();
 
-        if (!$employee) {
+        if (! $employee) {
             return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
         }
 
         $store_id = $employee->store_id;
         $store = StoreInformation::find($store_id);
 
-        if (!$store) {
+        if (! $store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
 
         // Kiểm tra xem nhân viên có được gán cho cửa hàng này hay không
         $isEmployeeOfStore = $employee->store_id;
 
-        if (!$isEmployeeOfStore) {
+        if (! $isEmployeeOfStore) {
             return $this->responseBadRequest('Người dùng không được gán cho cửa hàng này.');
         }
 
@@ -92,7 +91,7 @@ class BookingController extends Controller
         $day = $request->day;
         $appointment_time = $request->time;
         $user = User::find($user_id);
-        if (!$user) {
+        if (! $user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
         // Lấy thông tin cửa hàng của người dùng
@@ -123,7 +122,7 @@ class BookingController extends Controller
             return $appointment_time >= $schedule->start_time && $appointment_time <= $schedule->end_time;
         });
 
-        if (!$valid_schedule) {
+        if (! $valid_schedule) {
             return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
         }
 
@@ -133,7 +132,7 @@ class BookingController extends Controller
                 [
                     'start_time' => $schedule->start_time,
                     'end_time' => $schedule->end_time,
-                ]
+                ],
             ];
         });
 
@@ -149,15 +148,12 @@ class BookingController extends Controller
             }
         }
 
-        if (!$is_valid_time_slot) {
+        if (! $is_valid_time_slot) {
             return $this->responseBadRequest('Nhân viên đang có lịch vào giờ này vui lòng chọn giờ khác');
         }
 
         return $this->responseCreated('Ngày giờ hợp lệ.', ['time_slots' => $time_slots]);
     }
-
-
-
 
     public function store(BookingRequest $request)
     {
@@ -256,16 +252,11 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
-            Log::error('Lỗi : ' . $e->getMessage());
+            Log::error('Lỗi : '.$e->getMessage());
+
             return $this->responseBadRequest('Đã xảy ra lỗi. Vui lòng thử lại sau');
         }
     }
-
-
-
-
-
-
 
     public function update(Request $request, $id)
     {
@@ -289,35 +280,42 @@ class BookingController extends Controller
             }
             // Commit transaction
             DB::commit();
+
             return $this->responseSuccess(__('booking.update'), ['data' => $base]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             DB::rollBack();
+
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         } catch (\Exception $e) {
             // Xử lý ngoại lệ khác
             DB::rollBack();
-            Log::error(__('booking.error_update') . $e->getMessage());
+            Log::error(__('booking.error_update').$e->getMessage());
+
             return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('booking.error'));
         }
     }
+
     public function index()
     {
         $Bases = $this->bookingService->getAllBases();
 
         return $this->responseSuccess(__('booking.list'), ['data' => $Bases]);
     }
+
     public function show($id)
     {
         $Base = $this->bookingService->getBaseByID($id);
-        if (!$Base) {
+        if (! $Base) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
+
         return $this->responseSuccess(__('booking.show'), ['data' => $Base]);
     }
+
     public function destroy($id)
     {
         $Base = $this->bookingService->getBaseByID($id);
-        if (!$Base) {
+        if (! $Base) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
 
