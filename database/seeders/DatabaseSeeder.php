@@ -82,14 +82,14 @@ class DatabaseSeeder extends Seeder
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
-            'store_id' => 3
+            'store_id' => 'null',
         ]);
         \App\Models\User::query()->create([
             'email' => 'user2@gmail.com',
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
-            'store_id' => 3
+            'store_id' => 'null',
 
         ]);
         \App\Models\User::query()->create([
@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
-            'store_id' => 3
+            'store_id' => 'null',
 
         ]);
         \App\Models\User::query()->create([
@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
-            'store_id' => 3
+            'store_id' => 'null',
 
         ]);
         \App\Models\User::query()->create([
@@ -113,7 +113,7 @@ class DatabaseSeeder extends Seeder
             'role' => '1',
             'name' => 'user',
             'password' => Hash::make('12345678'),
-            'store_id' => 3
+            'store_id' => 'null',
 
         ]);
         // \App\Models\User::factory(5)->create([
