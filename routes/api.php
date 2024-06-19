@@ -24,8 +24,9 @@ use Illuminate\Support\Facades\Session;
 */
 
 Route::post('/set-locale/{locale}', function ($locale) {
- Session::put('locale', $locale);
-return response()->json(['message' => 'Locale set to '.$locale]);
+    Session::put('locale', $locale);
+
+    return response()->json(['message' => 'Locale set to '.$locale]);
 });
 
 Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
@@ -111,7 +112,5 @@ Route::middleware('language')->prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
-
-
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);

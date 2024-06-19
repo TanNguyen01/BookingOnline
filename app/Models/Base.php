@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Base extends Model
 {
     use HasFactory;
-    protected $fillable= [
+
+    protected $fillable = [
         'booking_id',
         'date',
         'phone',
@@ -20,12 +21,8 @@ class Base extends Model
         'store_name',
     ];
 
-
     public function booking()
     {
         return $this->belongsTo(booking::class, 'booking_id', 'id');
     }
 }
-
-
-

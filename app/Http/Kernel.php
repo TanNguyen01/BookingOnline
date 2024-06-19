@@ -74,6 +74,6 @@ class Kernel extends HttpKernel
         'force.json.validation' => \App\Http\Middleware\ForceJsonValidation::class,
         'checkadmin' => \App\Http\Middleware\CheckAdmim::class,
         'checkuser' => \App\Http\Middleware\CheckUser::class,
-         'language'=> Localization::class,
+        'language' => Localization::class,
     ];
 }

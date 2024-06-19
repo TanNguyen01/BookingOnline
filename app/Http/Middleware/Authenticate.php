@@ -2,10 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Illuminate\Http\Request;
 use App\Traits\APIResponse;
-
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class Authenticate extends Middleware
 {
@@ -18,10 +16,10 @@ class Authenticate extends Middleware
     {
         if ($this->auth->guard('sanctum')->check()) {
             $this->auth->shouldUse('api');
-        }else
-        {
+        } else {
             return $this->responseUnAuthenticated();
         }
+
         return $next($request);
     }
 }

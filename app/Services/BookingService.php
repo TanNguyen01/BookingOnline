@@ -15,6 +15,7 @@ class BookingService
         return Base::query()->get();
 
     }
+
     public function getBaseByID($id)
     {
         return Base::find($id);

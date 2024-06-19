@@ -39,18 +39,18 @@ class StoreService
     public function deleteStore($id)
     {
         $store = StoreInformation::find($id);
-    if ($store) {
-        if ($store->image) {
-            // Lấy tên file từ URL của ảnh
-            $imageName = basename($store->image);
-            if (Storage::disk('public')->exists('images/store/'.$imageName)) {
-                Storage::disk('public')->delete('images/store/'.$imageName);
+        if ($store) {
+            if ($store->image) {
+                // Lấy tên file từ URL của ảnh
+                $imageName = basename($store->image);
+                if (Storage::disk('public')->exists('images/store/'.$imageName)) {
+                    Storage::disk('public')->delete('images/store/'.$imageName);
+                }
             }
+            $store->delete();
         }
-        $store->delete();
-    }
 
-    return $store;
+        return $store;
     }
 
     protected function uploadImageIfExists(&$data, $store = null)

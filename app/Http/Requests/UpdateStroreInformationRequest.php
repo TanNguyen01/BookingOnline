@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Handler;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,13 +25,14 @@ class UpdateStroreInformationRequest extends FormRequest
      */
     public function rules(): array
     {
-        return  [
+        return [
             'name' => 'required|string|nullable',
             'address' => 'required|string|nullable',
             'phone' => 'required|string|nullable',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
         ];
     }
+
     public function messages(): array
     {
         return [

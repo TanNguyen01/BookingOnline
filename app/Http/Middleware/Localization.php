@@ -17,11 +17,12 @@ class Localization
     public function handle(Request $request, Closure $next): Response
     {
 
-         if($request->hasHeader('Accept-Language')) {
+        if ($request->hasHeader('Accept-Language')) {
 
-             App::setLocale($request->header('Accept-Language'));
+            App::setLocale($request->header('Accept-Language'));
 
-         }
+        }
+
         return $next($request);
     }
 }

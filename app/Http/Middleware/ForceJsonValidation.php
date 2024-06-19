@@ -18,6 +18,7 @@ class ForceJsonValidation
         if (($request->isMethod('POST') || $request->isMethod('PUT')) && empty($request->all())) {
             return response()->json(['errors' => ['message' => 'Request body cannot be empty']], 401);
         }
+
         return $next($request);
 
     }

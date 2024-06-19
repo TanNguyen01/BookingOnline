@@ -19,7 +19,7 @@ class CheckAdmim
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return $this->responseUnAuthenticated();
         }
         if (Auth::user()->role != 0) {

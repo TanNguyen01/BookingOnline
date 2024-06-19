@@ -5,22 +5,22 @@ namespace App\Http\Controllers\Api\Client;
 use App\Http\Controllers\Controller;
 use App\Models\booking;
 use App\Models\Schedule;
-use App\Models\Service;
 use App\Models\StoreInformation;
 use App\Models\User;
 use App\Services\ServiceService;
 use App\Services\StoreService;
-use Illuminate\Http\Request;
 use App\Traits\APIResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
     use APIResponse;
-    protected $storeService;
-    protected $serviceService;
 
+    protected $storeService;
+
+    protected $serviceService;
 
     public function __construct(StoreService $storeService, ServiceService $serviceService)
     {
@@ -38,14 +38,16 @@ class ClientController extends Controller
     public function listService()
     {
         $services = $this->serviceService->getAllService();
+
         return $this->responseSuccess(__('service.list'), ['data' => $services]);
     }
+
     public function getUsersByStoreInformation(Request $request)
     {
         $storeId = $request->input('storeId');
         // Kiểm tra xem cửa hàng có tồn tại không
         $store = StoreInformation::find($storeId);
-        if (!$store) {
+        if (! $store) {
             return $this->responseBadRequest('Không tìm thấy thông tin cửa hàng.');
         }
 
@@ -59,13 +61,12 @@ class ClientController extends Controller
         return $this->responseSuccess('Danh sách người dùng.', ['data' => $users]);
     }
 
-
     public function getWorkingHoursByUserAndStore(Request $request)
     {
         $userId = $request->input('userId');
         // Kiểm tra và lấy thông tin người dùng
         $user = User::find($userId);
-        if (!$user) {
+        if (! $user) {
             return $this->responseBadRequest('Không tìm thấy thông tin người dùng');
         }
 
@@ -73,7 +74,7 @@ class ClientController extends Controller
 
         // Kiểm tra và lấy thông tin cửa hàng dựa trên store_information_id từ người dùng
         $store = StoreInformation::find($storeId);
-        if (!$store) {
+        if (! $store) {
             return $this->responseBadRequest('Không tìm thấy thông tin cửa hàng');
         }
 
@@ -89,16 +90,11 @@ class ClientController extends Controller
         $responseData = [
             'store_id' => $storeId,
             'store_name' => $store->name,
-            'schedules' => $schedules
+            'schedules' => $schedules,
         ];
 
         return $this->responseSuccess('Danh sách lịch làm việc.', ['data' => $responseData]);
     }
-
-
-
-
-
 
     public function chooseTime(Request $request)
     {
@@ -106,7 +102,7 @@ class ClientController extends Controller
         $day = $request->day;
         $user = User::find($user_id);
 
-        if (!$user) {
+        if (! $user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
 
@@ -167,7 +163,7 @@ class ClientController extends Controller
                 if ($status != 'booked') {
                     $available_time_slots[] = [
                         'time' => $time_str,
-                        'status' => $status
+                        'status' => $status,
                     ];
                 }
 
@@ -187,9 +183,10 @@ class ClientController extends Controller
                 break;
             }
         }
-        if (!$is_valid_time) {
+        if (! $is_valid_time) {
             return $this->responseBadRequest('Không có giờ hẹn khả dụng trong khoảng thời gian làm việc.');
         }
+
         return $this->responseCreated('Ngày giờ hợp lệ.', [
             'existing_bookings' => $existing_bookings,
             'available_time_slots' => $available_time_slots,
