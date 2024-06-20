@@ -148,7 +148,7 @@ class ClientController extends Controller
                 }
 
                 // Tăng thời gian lên 30 phút (1800 giây)
-                $time += 1800;
+                $time += 900;
             }
         }
 
