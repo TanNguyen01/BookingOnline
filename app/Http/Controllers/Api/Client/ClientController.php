@@ -80,7 +80,7 @@ class ClientController extends Controller
 
         // Lấy lịch làm việc của người dùng dựa trên store_information_id và user_id
         $schedules = Schedule::where('user_id', $userId)
-        ->where('is_valid', 1)
+            ->where('is_valid', 1)
             ->get(['day', 'start_time', 'end_time', 'created_at']);
 
         if ($schedules->isEmpty()) {
@@ -110,37 +110,23 @@ class ClientController extends Controller
         $schedules = Schedule::where('user_id', $user_id)
             ->where('is_valid', 1)
             ->whereDate('day', '=', $day)
-            ->get();
+            ->get(['start_time', 'end_time']);
 
         if ($schedules->isEmpty()) {
             return $this->responseBadRequest('Nhân viên không làm việc vào ngày này.');
         }
 
         // Lấy danh sách các booking của user trong ngày đã chọn
-        $existing_bookings = booking::where('user_id', $user_id)
+        $existing_bookings = Booking::where('user_id', $user_id)
             ->whereDate('day', '=', $day)
-            ->get(['time'])
-            ->map(function ($booking) use ($schedules) {
-                $status = 'booked';
-                foreach ($schedules as $schedule) {
-                    $start_time = strtotime($schedule->start_time);
-                    $end_time = strtotime($schedule->end_time);
-                    $booking_time = strtotime($booking->time);
+            ->pluck('time')
+            ->toArray();
 
-                    if ($booking_time >= $start_time && $booking_time < $end_time) {
-                        $status = 'booked';
-                        break;
-                    }
-                }
-
-                return [
-                    'time' => $booking->time,
-                    'status' => $status,
-                ];
-            });
-
-        // Thu thập các khoảng thời gian làm việc và các giờ hẹn khả dụng
+        // Thu thập các khoảng thời gian làm việc, thời gian đã book và thời gian chưa book
+        $working_time_slots = [];
+        $booked_time_slots = [];
         $available_time_slots = [];
+
         foreach ($schedules as $schedule) {
             $start_time = strtotime($schedule->start_time);
             $end_time = strtotime($schedule->end_time);
@@ -149,47 +135,39 @@ class ClientController extends Controller
             $time = $start_time;
             while ($time < $end_time) {
                 $time_str = date('H:i:s', $time);
-                $status = 'available';
 
-                // Kiểm tra xem giờ hẹn này có trùng với các booking đã tồn tại không
-                foreach ($existing_bookings as $existing_booking) {
-                    if ($existing_booking['time'] === $time_str) {
-                        $status = 'booked';
-                        break;
-                    }
-                }
+                // Thêm thời gian vào mảng thời gian làm việc
+                $working_time_slots[] = $time_str;
 
-                // Chỉ thêm thời gian nếu không bị đánh dấu là 'booked'
-                if ($status != 'booked') {
-                    $available_time_slots[] = [
-                        'time' => $time_str,
-                        'status' => $status,
-                    ];
+                if (in_array($time_str, $existing_bookings)) {
+                    // Thêm thời gian vào mảng thời gian đã được book
+                    $booked_time_slots[] = $time_str;
+                } else {
+                    // Thêm thời gian vào mảng thời gian chưa được book
+                    $available_time_slots[] = $time_str;
                 }
 
                 // Tăng thời gian lên 30 phút (1800 giây)
-                $time += 1800;
+                $time += 900;
             }
         }
 
         // Debugging logs to check the generated slots
+        Log::info('Working Time Slots: ', $working_time_slots);
+        Log::info('Booked Time Slots: ', $booked_time_slots);
         Log::info('Available Time Slots: ', $available_time_slots);
 
         // Kiểm tra xem có giờ hẹn khả dụng hay không
-        $is_valid_time = false;
-        foreach ($available_time_slots as $slot) {
-            if ($slot['status'] === 'available') {
-                $is_valid_time = true;
-                break;
-            }
-        }
-        if (! $is_valid_time) {
+        if (empty($available_time_slots)) {
             return $this->responseBadRequest('Không có giờ hẹn khả dụng trong khoảng thời gian làm việc.');
         }
 
-        return $this->responseCreated('Ngày giờ hợp lệ.', [
-            'existing_bookings' => $existing_bookings,
-            'available_time_slots' => $available_time_slots,
+        return $this->responseSuccess('Lấy thành công thông tin làm việc trong ngày của user.', [
+            'data' => [
+                'working_time_slots' => $working_time_slots,
+                'booked_time_slots' => $booked_time_slots,
+                'available_time_slots' => $available_time_slots,
+            ],
         ]);
     }
 }

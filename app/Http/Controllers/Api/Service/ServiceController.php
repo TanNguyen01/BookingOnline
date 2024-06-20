@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Service;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\ServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Services\ServiceService;
@@ -22,6 +21,7 @@ class ServiceController extends Controller
     {
         $this->serviceService = $serviceService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -42,14 +42,15 @@ class ServiceController extends Controller
         try {
             $service = $this->serviceService->createService($request->all());
             DB::commit();
+
             return $this->responseCreated(__('service.created'), ['data' => $service]);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Lỗi khi thêm dịch vụ: ' . $e->getMessage());
+            Log::error('Lỗi khi thêm dịch vụ: '.$e->getMessage());
+
             return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
         }
     }
-
 
     /**
      * Display the specified resource.
@@ -57,7 +58,7 @@ class ServiceController extends Controller
     public function show(string $id)
     {
         $service = $this->serviceService->getServiceById($id);
-        if (!$service) {
+        if (! $service) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('service.not_found'));
         }
 
@@ -73,7 +74,7 @@ class ServiceController extends Controller
 
         try {
             $service = $this->serviceService->updateService($id, $request->all());
-            if (!$service) {
+            if (! $service) {
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('service.not_found'));
             }
 
@@ -82,12 +83,11 @@ class ServiceController extends Controller
             return $this->responseSuccess(__('service.updated'), ['data' => $service]);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Lỗi khi cập nhật dịch vụ: ' . $e->getMessage());
+            Log::error('Lỗi khi cập nhật dịch vụ: '.$e->getMessage());
 
             return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -98,7 +98,7 @@ class ServiceController extends Controller
 
         try {
             $service = $this->serviceService->deleteService($id);
-            if (!$service) {
+            if (! $service) {
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('service.not_found'));
             }
             $service->delete();
@@ -107,7 +107,7 @@ class ServiceController extends Controller
             return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Lỗi khi xóa dịch vụ: ' . $e->getMessage());
+            Log::error('Lỗi khi xóa dịch vụ: '.$e->getMessage());
 
             return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
         }
