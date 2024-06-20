@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class booking extends Model
+class Booking extends Model
 {
     use HasFactory;
 
@@ -22,7 +22,7 @@ class booking extends Model
 
     public function services()
     {
-        return $this->hasMany(ServiceBooking::class);
+        return $this->belongsToMany(Service::class, 'booking_service');
     }
 
     public function bases()

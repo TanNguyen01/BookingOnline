@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Base;
-use App\Models\booking;
+use App\Models\Booking;
 use App\Traits\APIResponse;
 
 class BookingService
@@ -24,7 +24,7 @@ class BookingService
 
     public function getBookingById($id)
     {
-        return booking::find($id);
+        return Booking::find($id);
 
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleRequest;
 use App\Http\Requests\StaffRequest;
-use App\Models\booking;
+use App\Models\Booking;
 use App\Models\OpeningHour;
 use App\Models\Schedule;
 use App\Models\StoreInformation;
@@ -144,7 +144,7 @@ class StaffController extends Controller
         $user = $this->staffService->staffService();
 
         // Lấy danh sách các booking của nhân viên dựa trên user_id và lấy thêm thông tin store_name
-        $bookings = booking::where('user_id', $user->id)
+        $bookings = Booking::where('user_id', $user->id)
             ->with(['user.storeInformation:id,name,address'])
             ->get()
             ->map(function ($booking) {

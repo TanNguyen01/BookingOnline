@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\categorie;
+use App\Models\Categorie;
 use App\Traits\APIResponse;
 
 class CategorieService
@@ -11,32 +11,32 @@ class CategorieService
 
     public function getAllCategorie()
     {
-        return categorie::query()->get();
+        return Categorie::query()->get();
 
     }
 
     public function getCategorieById($id)
     {
-        return categorie::find($id);
+        return Categorie::find($id);
 
     }
 
     public function createCategorie($data)
     {
 
-        return categorie::create($data);
+        return Categorie::create($data);
 
     }
 
     public function updateCategorie($id, $data)
     {
-        return categorie::find($id);
+        return Categorie::find($id);
 
     }
 
     public function deleteCategorie($id)
     {
-        return categorie::find($id);
+        return Categorie::find($id);
 
     }
 }
