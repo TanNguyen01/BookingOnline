@@ -61,6 +61,25 @@ class ClientController extends Controller
         return $this->responseSuccess('Danh sách người dùng.', ['data' => $users]);
     }
 
+    public function GetDateWorkingOfUser(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $user = User::find($user_id);
+
+        if (! $user) {
+            return response()->json(['error' => 'Người dùng không tồn tại.'], 400);
+        }
+
+        // Lấy danh sách tất cả các ngày làm việc của user
+        $working_days = Schedule::where('user_id', $user_id)
+            ->where('is_valid', 1)
+            ->distinct()
+            ->pluck('day')
+            ->toArray();
+
+        return response()->json(['working_days' => $working_days]);
+    }
+
     public function getWorkingHoursByUserAndStore(Request $request)
     {
         $userId = $request->input('userId');

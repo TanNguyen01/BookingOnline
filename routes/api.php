@@ -63,8 +63,9 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
 });
 
-Route::prefix('client')->group(function () {
+Route::prefix('client')->middleware('throttle')->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
+    Route::get('/get-date-working-of-user', [ClientController::class, 'GetDateWorkingOfUser']);
     Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
     Route::get('/list-user', [ClientController::class, 'getUsersByStoreInformation']);
     Route::get('/list-service', [ClientController::class, 'listService']);
