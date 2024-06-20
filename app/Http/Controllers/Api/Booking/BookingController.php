@@ -150,7 +150,7 @@ class BookingController extends Controller
             return $this->responseBadRequest('Nhân viên đang có lịch vào giờ này vui lòng chọn giờ khác');
         }
 
-        return $time_slots;
+        return response()->json(['time_slots' => $time_slots], 200);
     }
 
     public function store(BookingRequest $request)
@@ -162,7 +162,9 @@ class BookingController extends Controller
         $employeeData = $this->chooseEmployee($request);
         // Kiểm tra ngày và giờ
         $dateResponse = $this->chooseDate($request);
-
+        if ($dateResponse->getStatusCode() !== 200) {
+            return $dateResponse;
+        }
         // Kiểm tra dịch vụ
         $services = $this->chooseService($request);
 
