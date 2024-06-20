@@ -75,5 +75,7 @@ class Kernel extends HttpKernel
         'checkadmin' => \App\Http\Middleware\CheckAdmim::class,
         'checkuser' => \App\Http\Middleware\CheckUser::class,
         'language' => Localization::class,
+        'rate.limit' => \App\Http\Middleware\RateLimitMiddleware::class,
+
     ];
 }

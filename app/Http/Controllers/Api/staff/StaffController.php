@@ -29,23 +29,27 @@ class StaffController extends Controller
 
     public function updateProfile(StaffRequest $request)
     {
-        $validatedData = $request->all();
-        $user = $this->staffService->staffService();
+        DB::beginTransaction();
 
-        if (! Hash::check($validatedData['current_password'], $user->password)) {
-            return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('auth.failed')]);
+        try {
+            $validatedData = $request->all();
+            $user = $this->staffService->staffService();
+            if (!Hash::check($validatedData['current_password'], $user->password)) {
+                return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'mật khẩu hiện tại không đúng']);
+            }
+            unset($validatedData['current_password']);
+            if (isset($validatedData['new_password'])) {
+                $validatedData['password'] = bcrypt($validatedData['new_password']);
+                unset($validatedData['new_password']);
+            }
+            $this->staffService->uploadImageIfExists($validatedData, $user);
+            $user->update($validatedData);
+            DB::commit();
+            return $this->responseSuccess(__('user.updated'), ['data' => $user]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->responseBadRequest(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
-
-        unset($validatedData['current_password']);
-
-        if (isset($validatedData['new_password'])) {
-            $validatedData['password'] = bcrypt($validatedData['new_password']);
-            unset($validatedData['new_password']);
-        }
-        $this->staffService->uploadImageIfExists($validatedData, $user);
-        $user->update($validatedData);
-
-        return $this->responseSuccess(__('user.updated'), ['data' => $user]);
     }
 
     public function showProfile()
@@ -83,7 +87,7 @@ class StaffController extends Controller
                     ->where('day', $day)
                     ->first();
 
-                if (! $openingHours) {
+                if (!$openingHours) {
                     DB::rollBack();
 
                     return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở cửa, vui lòng đợi', $day]);
@@ -167,7 +171,7 @@ class StaffController extends Controller
             ->with(['user.storeInformation:id,name,address'])
             ->get()
             ->map(function ($schedule) {
-                $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi' : null;
+                $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi vui lòng đăng ký lại' : null;
 
                 return [
                     'id' => $schedule->id,
@@ -201,7 +205,7 @@ class StaffController extends Controller
 
         // Lấy thông tin cửa hàng
         $store = StoreInformation::find($user->store_id);
-        if (! $store) {
+        if (!$store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng không tồn tại');
         }
 

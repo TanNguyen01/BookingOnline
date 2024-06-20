@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Categorie\CategorieController;
 use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
 use App\Http\Controllers\Api\Service\ServiceController;
-use App\Http\Controllers\Api\staff\StaffController;
+use App\Http\Controllers\Api\Staff\StaffController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -31,59 +31,38 @@ Route::post('/set-locale/{locale}', function ($locale) {
 
 Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
-    Route::prefix('services')->group(function () {
-        Route::get('/list', [ServiceController::class, 'index'])->name('list.service');
-        Route::get('/{id}', [ServiceController::class, 'show'])->name('show.service');
-        Route::post('/post', [ServiceController::class, 'store'])->name('store.service');
-        Route::put('/update/{id}', [ServiceController::class, 'update'])->name('update.service');
-        Route::delete('delete/{id}', [ServiceController::class, 'destroy'])->name('destroy.service');
-    });
+    Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('rate.limit');
+    Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
 
     // Categories
-    Route::prefix('categories')->group(function () {
-        Route::get('/list', [CategorieController::class, 'index'])->name('list.categorie');
-        Route::get('/{id}', [CategorieController::class, 'show'])->name('show.categorie');
-        Route::post('/post', [CategorieController::class, 'store'])->name('store.categorie');
-        Route::put('/update/{id}', [CategorieController::class, 'update'])->name('update.categorie');
-        Route::delete('/delete/{id}', [CategorieController::class, 'destroy'])->name('destroy.categorie');
-    });
+    Route::apiResource('categories', CategorieController::class)->only(['update', 'destroy'])->middleware('rate.limit');
+    Route::apiResource('categories', CategorieController::class)->except(['update', 'destroy']);
 
     // User Admin
-    Route::prefix('admin_users')->group(function () {
-        Route::get('/list', [UserController::class, 'index'])->name('list.users');
-        Route::get('/show/{id}', [UserController::class, 'show'])->name('show.users');
-        Route::post('/post', [UserController::class, 'store'])->name('store.user');
-        Route::put('/update/{id}', [UserController::class, 'update'])->name('update.user');
-        Route::delete('delete/{id}', [UserController::class, 'destroy'])->name('destroy.user');
-    });
+    Route::apiResource('admin_users', UserController::class)->only(['update', 'destroy'])->middleware('rate.limit');
+    Route::apiResource('admin_users', UserController::class)->except(['update', 'destroy']);
 
     // Store Informations
-    Route::prefix('stores')->group(function () {
-        Route::get('/list', [StoreInformationController::class, 'index']);
-        Route::get('/show/{id}', [StoreInformationController::class, 'show'])->name('show.store');
-        Route::post('/post', [StoreInformationController::class, 'store'])->name('add.store');
-        Route::put('/update/{id}', [StoreInformationController::class, 'update'])->name('update.store');
-        Route::delete('/delete/{id}', [StoreInformationController::class, 'destroy'])->name('destroy.store');
-    });
+    Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('rate.limit');
+    Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
 
     // Opening Hours
     Route::prefix('opening-hours')->group(function () {
-        Route::get('/list', [OpeningHourController::class, 'index'])->name('list.opening');
-        Route::get('/{storeid}', [OpeningHourController::class, 'show'])->name('show.opening');
-        Route::post('/post/{storeId}', [OpeningHourController::class, 'store'])->name('store.opening');
-        Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->name('opening_hours.update');
-        Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->name('opening_hours.destroy');
+        Route::get('/list', [OpeningHourController::class, 'index']);
+        Route::get('/{storeid}', [OpeningHourController::class, 'show']);
+        Route::post('/post/{storeId}', [OpeningHourController::class, 'store']);
+        Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->middleware('rate.limit');
+        Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->middleware('rate.limit');
+         //xóa nhanh những ngày đã qua
+        Route::delete('quick_delete/{storeId}', [OpeningHourController::class, 'quickDestroy']);
         // thêm 5 ngày mở cửa liên tiếp
         Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
     });
     // Booking Management
-    Route::prefix('bookings')->group(function () {
-        Route::get('/list', [BookingController::class, 'index']);
-        Route::get('/{id}', [BookingController::class, 'show']);
-        Route::post('/update/{id}', [BookingController::class, 'update']);
-        Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
-    });
+    Route::apiResource('bookings', BookingController::class)->only(['update', 'destroy'])->middleware('rate.limit');
+    Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
 });
+
 Route::prefix('client')->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
     Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);

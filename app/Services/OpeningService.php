@@ -32,9 +32,9 @@ class OpeningService
 
     }
 
-    public function deleteOpeningHour($id)
+    public function deleteOpeningHour($storeid)
     {
-        return StoreInformation::find($id);
+        return StoreInformation::find($storeid);
 
     }
 }

@@ -230,4 +230,5 @@ class Handler extends ExceptionHandler
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
+    
 }
