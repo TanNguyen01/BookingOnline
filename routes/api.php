@@ -93,3 +93,4 @@ Route::middleware('language')->prefix('auth')->group(function () {
 });
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
+Route::get('test-mail', [\App\Http\Controllers\TestController::class, 'testMail']);

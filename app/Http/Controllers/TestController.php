@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TestController extends Controller
 {
@@ -19,5 +20,13 @@ class TestController extends Controller
                 'data' => $data,
                 'entry' => $entry,
             ]);
+    }
+
+    public function testMail(){
+
+        $name = ' Pham Manh';
+        Mail::send('emails.test',compact(('name'),function($email){
+            $email->to('manhpkph30134@gmail.com','aaaaaaa');
+        }));
     }
 }
