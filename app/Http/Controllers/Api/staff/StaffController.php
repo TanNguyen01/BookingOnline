@@ -35,7 +35,7 @@ class StaffController extends Controller
             $validatedData = $request->all();
             $user = $this->staffService->staffService();
             if (!Hash::check($validatedData['current_password'], $user->password)) {
-                return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'mật khẩu hiện tại không đúng']);
+                return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('auth.failed')]);
             }
             unset($validatedData['current_password']);
             if (isset($validatedData['new_password'])) {
@@ -90,7 +90,7 @@ class StaffController extends Controller
                 if (!$openingHours) {
                     DB::rollBack();
 
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở cửa, vui lòng đợi', $day]);
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.not_found'), $day]);
                 }
 
                 $storeOpeningTime = Carbon::createFromFormat('H:i:s', $openingHours->opening_time);
@@ -99,7 +99,7 @@ class StaffController extends Controller
                 if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
                     DB::rollBack();
 
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa', $day]);
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.opening_hours_start_in_time'), $day]);
                 }
 
                 // Kiểm tra xem đã tồn tại lịch làm việc cho ngày này chưa
@@ -129,11 +129,11 @@ class StaffController extends Controller
             }
             DB::commit();
 
-            return $this->responseCreated('Đăng ký hoặc cập nhật giờ làm thành công', ['data' => $schedules]);
+            return $this->responseCreated(__('staff.register_success'), ['data' => $schedules]);
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return $this->responseNotFound([Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi trong quá trình đăng ký hoặc cập nhật giờ làm', $e->getMessage()]);
+            return $this->responseNotFound([Response::HTTP_INTERNAL_SERVER_ERROR, __('staff.error'), $e->getMessage()]);
         }
     }
 
@@ -158,9 +158,9 @@ class StaffController extends Controller
             });
 
         if ($bookings->isEmpty()) {
-            return $this->responseNotFound('Hiện bạn không có booking nào', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(__('booking.not_found'), Response::HTTP_NOT_FOUND);
         } else {
-            return $this->responseSuccess('Xem booking thành công', ['data' => $bookings]);
+            return $this->responseSuccess(__('booking.show'), ['data' => $bookings]);
         }
     }
 
@@ -188,13 +188,13 @@ class StaffController extends Controller
             });
 
         if ($schedules->isEmpty()) {
-            return $this->responseNotFound('Hiện bạn không có lịch làm nào', Response::HTTP_NOT_FOUND);
+            return $this->responseNotFound(__('staff.not_found_schedule'), Response::HTTP_NOT_FOUND);
         } else {
             $schedules->contains(function ($schedule) {
                 return $schedule['is_valid'] == 0;
             });
 
-            return $this->responseSuccess('Xem lịch làm thành công', ['data' => $schedules]);
+            return $this->responseSuccess(__('staff.show_schedule'), ['data' => $schedules]);
         }
     }
 
@@ -206,13 +206,13 @@ class StaffController extends Controller
         // Lấy thông tin cửa hàng
         $store = StoreInformation::find($user->store_id);
         if (!$store) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng không tồn tại');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
 
         // Lấy giờ mở cửa của cửa hàng
         $openingHours = OpeningHour::where('store_id', $store->id)->get();
         if ($openingHours->isEmpty()) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng chưa cập nhật giờ mở cửa');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('openingHours.not_found'));
         }
 
         // Định dạng giờ mở cửa
@@ -225,7 +225,7 @@ class StaffController extends Controller
         });
 
         // Bao gồm thông tin cửa hàng trong phản hồi
-        return $this->responseSuccess('Giờ mở cửa của cửa hàng', [
+        return $this->responseSuccess(__('openingHours.show'), [
             'store_id' => $store->id,
             'store_name' => $store->name,
             'data' => $formattedHours,

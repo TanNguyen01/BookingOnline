@@ -48,17 +48,17 @@ class ClientController extends Controller
         // Kiểm tra xem cửa hàng có tồn tại không
         $store = StoreInformation::find($storeId);
         if (! $store) {
-            return $this->responseBadRequest('Không tìm thấy thông tin cửa hàng.');
+            return $this->responseBadRequest(__('store.not_found'));
         }
 
         // Lấy tất cả người dùng có store_information_id khớp với storeId
         $users = User::where('store_id', $storeId)->get();
 
         if ($users->isEmpty()) {
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Không tìm thấy người dùng nào.');
+            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
-        return $this->responseSuccess('Danh sách người dùng.', ['data' => $users]);
+        return $this->responseSuccess(__('user.list'), ['data' => $users]);
     }
 
     public function getWorkingHoursByUserAndStore(Request $request)
@@ -67,7 +67,7 @@ class ClientController extends Controller
         // Kiểm tra và lấy thông tin người dùng
         $user = User::find($userId);
         if (! $user) {
-            return $this->responseBadRequest('Không tìm thấy thông tin người dùng');
+            return $this->responseBadRequest(__('user.not_found'));
         }
 
         $storeId = $user->store_id;
@@ -75,25 +75,25 @@ class ClientController extends Controller
         // Kiểm tra và lấy thông tin cửa hàng dựa trên store_information_id từ người dùng
         $store = StoreInformation::find($storeId);
         if (! $store) {
-            return $this->responseBadRequest('Không tìm thấy thông tin cửa hàng');
+            return $this->responseBadRequest(__('store.not_found'));
         }
 
         // Lấy lịch làm việc của người dùng dựa trên store_information_id và user_id
         $schedules = Schedule::where('user_id', $userId)
+        ->where('is_valid', 1)
             ->get(['day', 'start_time', 'end_time', 'created_at']);
 
         if ($schedules->isEmpty()) {
-            return $this->responseBadRequest('Không có lịch làm việc nào');
+            return $this->responseBadRequest(__('staff.not_found_schedule'));
         }
 
-        // Chuẩn bị dữ liệu trả về, bao gồm store_information_id, store_name và danh sách lịch làm việc
         $responseData = [
             'store_id' => $storeId,
             'store_name' => $store->name,
             'schedules' => $schedules,
         ];
 
-        return $this->responseSuccess('Danh sách lịch làm việc.', ['data' => $responseData]);
+        return $this->responseSuccess(__('staff.list_schedule'), ['data' => $responseData]);
     }
 
     public function chooseTime(Request $request)
@@ -103,7 +103,7 @@ class ClientController extends Controller
         $user = User::find($user_id);
 
         if (! $user) {
-            return $this->responseBadRequest('Người dùng không tồn tại.');
+            return $this->responseBadRequest(__('user.not_found'));
         }
 
         // Lấy lịch làm việc hợp lệ của người dùng trong ngày đã chọn
@@ -113,7 +113,7 @@ class ClientController extends Controller
             ->get();
 
         if ($schedules->isEmpty()) {
-            return $this->responseBadRequest('Nhân viên không làm việc vào ngày này.');
+            return $this->responseBadRequest(__('staff.not_found_schedule'));
         }
 
         // Lấy danh sách các booking của user trong ngày đã chọn
