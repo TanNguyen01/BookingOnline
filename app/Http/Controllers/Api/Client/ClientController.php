@@ -80,13 +80,13 @@ class ClientController extends Controller
 
         // Lấy lịch làm việc của người dùng dựa trên store_information_id và user_id
         $schedules = Schedule::where('user_id', $userId)
+        ->where('is_valid', 1)
             ->get(['day', 'start_time', 'end_time', 'created_at']);
 
         if ($schedules->isEmpty()) {
             return $this->responseBadRequest('Không có lịch làm việc nào');
         }
 
-        // Chuẩn bị dữ liệu trả về, bao gồm store_information_id, store_name và danh sách lịch làm việc
         $responseData = [
             'store_id' => $storeId,
             'store_name' => $store->name,
