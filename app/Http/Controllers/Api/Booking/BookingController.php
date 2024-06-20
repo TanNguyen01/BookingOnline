@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -37,14 +38,11 @@ class BookingController extends Controller
         if (! $user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
-
         $store_id = $user->store_id;
         $store = StoreInformation::find($store_id);
-
         if (! $store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
-
         return $this->responseSuccess('Lấy thông tin cửa hàng thành công', ['data' => $store]);
     }
 
@@ -136,13 +134,12 @@ class BookingController extends Controller
             ];
         });
 
-        // Kiểm tra xem giờ hẹn mới có cách nhau ít nhất 30 phut so với các giờ hẹn đã đặt
         $is_valid_time_slot = true;
         foreach ($existing_bookings as $existing_booking) {
             $existing_timestamp = strtotime($existing_booking);
             $appointment_timestamp = strtotime($appointment_time);
 
-            if (abs($existing_timestamp - $appointment_timestamp) < 1800) { // 3600 giây = 1 tiếng
+            if (abs($existing_timestamp - $appointment_timestamp) < 900) {
                 $is_valid_time_slot = false;
                 break;
             }
@@ -247,8 +244,12 @@ class BookingController extends Controller
                 'customer_note' => $base->note,
                 'customer_email' => $customerEmail,
             ];
-
+            Mail::send('emails.test', ['output' => $output], function($email) use ($customerEmail, $customerName) {
+                $email->subject('Thông tin đặt chỗ');
+                $email->to($customerEmail, $customerName);
+            });
             return $this->responseCreated('Thêm thành công', ['data' => $output]);
+
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();

@@ -22,11 +22,13 @@ class TestController extends Controller
             ]);
     }
 
-    public function testMail(){
+    // public function testMail()
+    // {
 
-        $name = ' Pham Manh';
-        Mail::send('emails.test',compact(('name'),function($email){
-            $email->to('manhpkph30134@gmail.com','aaaaaaa');
-        }));
-    }
+    //     $name = 'Pham Manh';
+    //     Mail::send('emails.test', compact('name'), function($email) use ($name) {
+    //         $email->subject('test');
+    //         $email->to('manhpkph30134@fpt.edu.vn', $name);
+    //     });
+    // }
 }
