@@ -45,7 +45,7 @@ class BookingController extends Controller
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
 
-        return $this->responseSuccess('Lấy thông tin cửa hàng thành công', ['data' => $store]);
+        return $store;
     }
 
     public function chooseEmployee(Request $request)
@@ -71,7 +71,7 @@ class BookingController extends Controller
             return $this->responseBadRequest('Người dùng không được gán cho cửa hàng này.');
         }
 
-        return $this->responseSuccess('Người dùng hợp lệ là nhân viên của cửa hàng.', ['data' => $employee]);
+        return $employee;
     }
 
     public function chooseService(Request $request)
@@ -82,7 +82,7 @@ class BookingController extends Controller
             return $this->responseBadRequest('Một số dịch vụ không tồn tại.');
         }
 
-        return $this->responseSuccess('Các dịch vụ hợp lệ.', ['services' => $services]);
+        return $services;
     }
 
     public function chooseDate(Request $request)
@@ -142,7 +142,7 @@ class BookingController extends Controller
             $existing_timestamp = strtotime($existing_booking);
             $appointment_timestamp = strtotime($appointment_time);
 
-            if (abs($existing_timestamp - $appointment_timestamp) < 1800) { // 3600 giây = 1 tiếng
+            if (abs($existing_timestamp - $appointment_timestamp) < 900) { // 3600 giây = 1 tiếng
                 $is_valid_time_slot = false;
                 break;
             }
@@ -152,41 +152,21 @@ class BookingController extends Controller
             return $this->responseBadRequest('Nhân viên đang có lịch vào giờ này vui lòng chọn giờ khác');
         }
 
-        return $this->responseCreated('Ngày giờ hợp lệ.', ['time_slots' => $time_slots]);
+        return $time_slots;
     }
 
     public function store(BookingRequest $request)
     {
         $user_id = $request->user_id;
-
         // Kiểm tra cửa hàng
-        $storeResponse = $this->chooseStore($request);
-        if ($storeResponse->getStatusCode() !== 200) {
-            return $storeResponse;
-        }
-        $storeData = $storeResponse->getData()->data;
-        //  dd($storeData);
-
+        $storeData = $this->chooseStore($request);
         // Kiểm tra nhân viên
-        $employeeResponse = $this->chooseEmployee($request);
-        if ($employeeResponse->getStatusCode() !== 200) {
-            return $employeeResponse;
-        }
-        $employeeData = $employeeResponse->getData()->data;
-        // dd( $storeData);
-
+        $employeeData = $this->chooseEmployee($request);
         // Kiểm tra ngày và giờ
         $dateResponse = $this->chooseDate($request);
-        if ($dateResponse->getStatusCode() !== 201) {
-            return $dateResponse;
-        }
 
         // Kiểm tra dịch vụ
-        $serviceResponse = $this->chooseService($request);
-        if ($serviceResponse->getStatusCode() !== 200) {
-            return $serviceResponse;
-        }
-        $services = $serviceResponse->getData()->data->services;
+        $services = $this->chooseService($request);
 
         // Lấy thông tin khách hàng từ $request
         $customerName = $request->customer_name;
@@ -195,47 +175,39 @@ class BookingController extends Controller
         $customerNote = $request->customer_note;
         $customerEmail = $request->customer_email;
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            $booking = booking::create([
+            $booking = Booking::create([
                 'user_id' => $user_id,
                 'day' => $request->day,
                 'time' => $request->time,
                 'status' => 'pending',
-                'created_at' => now(),
             ]);
-
-            // Lưu dịch vụ vào bảng ServiceBooking
             foreach ($services as $service) {
-                ServiceBooking::create([
+                $booking->services()->create([
                     'service_id' => $service->id,
-                    'booking_id' => $booking->id,
-                    'created_at' => now(),
                 ]);
             }
-            // dd($storeData->data->name);
-            // Lưu thông tin khách hàng vào bảng Base
-            $base = Base::create([
-                'booking_id' => $booking->id,
-                'store_name' => $storeData->data->name,
-                'staff_name' => $employeeData->data->name,
+            $base = $booking->base()->create([
+                'store_name' => $storeData->name,
+                'staff_name' => $employeeData->name,
                 'email' => $customerEmail,
                 'name' => $customerName,
                 'date' => $customerDate,
                 'phone' => $customerPhone,
                 'status' => 'pending',
                 'note' => $customerNote,
-                'created_at' => now(),
             ]);
+
             DB::commit();
             $output = [
-                'store_name' => $storeData->data->name,
-                'store_address' => $storeData->data->address,
-                'staff_name' => $employeeData->data->name,
-                'staff_id' => $employeeData->data->id,
-                'staff_phone' => $employeeData->data->phone,
-                'staff_email' => $employeeData->data->email,
-                'staff_address' => $employeeData->data->address,
+                'store_name' => $storeData->name,
+                'store_address' => $storeData->address,
+                'staff_name' => $employeeData->name,
+                'staff_id' => $employeeData->id,
+                'staff_phone' => $employeeData->phone,
+                'staff_email' => $employeeData->email,
+                'staff_address' => $employeeData->address,
                 'service_name' => array_map(function ($service) {
                     return $service->name;
                 }, $services),

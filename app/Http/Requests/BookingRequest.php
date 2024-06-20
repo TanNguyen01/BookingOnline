@@ -26,7 +26,10 @@ class BookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => ['required', 'exists:users,id',
+                function ($attribute, $value, $fail) {
+
+                }],
             'day' => 'required|date|after_or_equal:today',
             'time' => 'required',
             // 'service_id' => 'required|exists:services,id',
