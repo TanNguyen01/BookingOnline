@@ -66,7 +66,7 @@ class ClientController extends Controller
         $user_id = $request->input('user_id');
         $user = User::find($user_id);
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'Người dùng không tồn tại.'], 400);
         }
 
@@ -79,6 +79,7 @@ class ClientController extends Controller
 
         return response()->json(['working_days' => $working_days]);
     }
+
     public function getWorkingHoursByUserAndStore(Request $request)
     {
         $userId = $request->input('userId');

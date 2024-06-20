@@ -8,7 +8,6 @@ use App\Models\Base;
 use App\Models\booking;
 use App\Models\Schedule;
 use App\Models\Service;
-use App\Models\ServiceBooking;
 use App\Models\StoreInformation;
 use App\Models\User;
 use App\Services\BookingService;
