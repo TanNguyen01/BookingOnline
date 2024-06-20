@@ -34,7 +34,7 @@ class StaffController extends Controller
         try {
             $validatedData = $request->all();
             $user = $this->staffService->staffService();
-            if (!Hash::check($validatedData['current_password'], $user->password)) {
+            if (! Hash::check($validatedData['current_password'], $user->password)) {
                 return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'mật khẩu hiện tại không đúng']);
             }
             unset($validatedData['current_password']);
@@ -45,9 +45,11 @@ class StaffController extends Controller
             $this->staffService->uploadImageIfExists($validatedData, $user);
             $user->update($validatedData);
             DB::commit();
+
             return $this->responseSuccess(__('user.updated'), ['data' => $user]);
         } catch (\Exception $e) {
             DB::rollback();
+
             return $this->responseBadRequest(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
     }
@@ -87,7 +89,7 @@ class StaffController extends Controller
                     ->where('day', $day)
                     ->first();
 
-                if (!$openingHours) {
+                if (! $openingHours) {
                     DB::rollBack();
 
                     return $this->responseNotFound([Response::HTTP_NOT_FOUND, 'Ngày này cửa hàng chưa cập nhật giờ mở cửa, vui lòng đợi', $day]);
@@ -205,7 +207,7 @@ class StaffController extends Controller
 
         // Lấy thông tin cửa hàng
         $store = StoreInformation::find($user->store_id);
-        if (!$store) {
+        if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, 'Cửa hàng không tồn tại');
         }
 

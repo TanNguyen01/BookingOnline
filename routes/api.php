@@ -53,7 +53,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
         Route::post('/post/{storeId}', [OpeningHourController::class, 'store']);
         Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->middleware('rate.limit');
         Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->middleware('rate.limit');
-         //xóa nhanh những ngày đã qua
+        //xóa nhanh những ngày đã qua
         Route::delete('quick_delete/{storeId}', [OpeningHourController::class, 'quickDestroy']);
         // thêm 5 ngày mở cửa liên tiếp
         Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);

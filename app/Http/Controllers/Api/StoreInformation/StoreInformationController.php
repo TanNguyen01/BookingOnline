@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\StoreInformation;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreInformationRequest;
 use App\Http\Requests\UpdateStroreInformationRequest;
 use App\Services\StoreService;
@@ -21,6 +20,7 @@ class StoreInformationController extends Controller
     {
         $this->storeService = $storeService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -42,9 +42,11 @@ class StoreInformationController extends Controller
             $store = $this->storeService->createStore($request->all());
 
             DB::commit();
+
             return $this->responseCreated(__('store.created'), ['data' => $store]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
@@ -55,7 +57,7 @@ class StoreInformationController extends Controller
     public function show(string $id)
     {
         $store = $this->storeService->getStoreById($id);
-        if (!$store) {
+        if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         } else {
             return $this->responseSuccess(__('store.show'), ['data' => $store]);
@@ -69,19 +71,22 @@ class StoreInformationController extends Controller
     {
         DB::beginTransaction();
 
-    try {
-        $store = $this->storeService->updateStore($id, $request->all());
-        if (!$store) {
-            DB::rollBack();
-            return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
-        }
+        try {
+            $store = $this->storeService->updateStore($id, $request->all());
+            if (! $store) {
+                DB::rollBack();
 
-        DB::commit();
-        return $this->responseSuccess(__('store.updated'), ['data' => $store]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
-    }
+                return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+            }
+
+            DB::commit();
+
+            return $this->responseSuccess(__('store.updated'), ['data' => $store]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -93,15 +98,18 @@ class StoreInformationController extends Controller
 
         try {
             $store = $this->storeService->deleteStore($id);
-            if (!$store) {
+            if (! $store) {
                 DB::rollBack();
+
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
             }
             $store->delete();
             DB::commit();
+
             return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
