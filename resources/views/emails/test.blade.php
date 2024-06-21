@@ -156,7 +156,7 @@
     </div>
     <hr class="separator" />
 
-    <div class="closing-note">Xin chân thành cảm ơn quý khách đã sử dụng dịch vụ của IMATECH!</div>
+    <div class="closing-note">Xin chân thành cảm ơn quý khách đã sử dụng dịch vụ của IMTATECH!</div>
     <div style="margin-top: 28px; margin-left: 28px" class="contact-info">
       <span style="font-size: 14px; font-weight: bold">Mọi thắc mắc xin liên hệ:</span>
       <div style="margin-top: 8px; margin-left: 4px">

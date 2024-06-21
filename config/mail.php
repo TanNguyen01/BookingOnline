@@ -37,11 +37,11 @@ return [
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),
-            'host' => 'smtp.gmail.com',
-            'port' => 587,
-            'encryption' => 'tls',
-            'username' => 'oke.anhlathangbech@gmail.com',
-            'password' => 'cgeu qsyt gkwn ckcp',
+            'host' => 'smtp.hostinger.com',
+            'port' => 465,
+            'encryption' => 'ssl',
+            'username' => 'imtalabs@imtatech.com',
+            'password' => 'LAB@imtatech2023',
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
@@ -108,8 +108,8 @@ return [
     */
 
     'from' => [
-        'address' => 'manhpkph30134@gmail.com',
-        'name' => 'Booking',
+        'address' => 'imtalabs@imtatech.com',
+        'name' => 'IMTAlabs',
     ],
 
     /*
