@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\StoreInformation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInformationRequest;
 use App\Http\Requests\UpdateStroreInformationRequest;
+use App\Models\User;
 use App\Services\StoreService;
 use App\Traits\APIResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class StoreInformationController extends Controller
 {
@@ -57,7 +59,7 @@ class StoreInformationController extends Controller
     public function show(string $id)
     {
         $store = $this->storeService->getStoreById($id);
-        if (! $store) {
+        if (!$store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         } else {
             return $this->responseSuccess(__('store.show'), ['data' => $store]);
@@ -73,7 +75,7 @@ class StoreInformationController extends Controller
 
         try {
             $store = $this->storeService->updateStore($id, $request->all());
-            if (! $store) {
+            if (!$store) {
                 DB::rollBack();
 
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
@@ -88,7 +90,6 @@ class StoreInformationController extends Controller
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -98,7 +99,7 @@ class StoreInformationController extends Controller
 
         try {
             $store = $this->storeService->deleteStore($id);
-            if (! $store) {
+            if (!$store) {
                 DB::rollBack();
 
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));

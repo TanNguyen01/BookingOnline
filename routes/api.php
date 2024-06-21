@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Session;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::put('/update2/{id}', [StoreInformationController::class, 'update2']);
 
 Route::post('/set-locale/{locale}', function ($locale) {
     Session::put('locale', $locale);
@@ -45,6 +46,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     // Store Informations
     Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('rate.limit');
     Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
+
 
     // Opening Hours
     Route::prefix('opening-hours')->group(function () {
