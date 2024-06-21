@@ -67,7 +67,7 @@ class ClientController extends Controller
         $user = User::find($user_id);
 
         if (! $user) {
-            return response()->json(['error' =>__('user.not_found')], 400);
+            return response()->json(['error' => __('user.not_found')], 400);
         }
 
         // Lấy danh sách tất cả các ngày làm việc của user

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Staff;
 
 use App\Http\Controllers\Controller;
