@@ -95,3 +95,7 @@ Route::middleware('language')->prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
+Route::get('/list-staff', [StoreInformationController::class, 'listStaff']);
+Route::put('/update2/{id}', [StoreInformationController::class, 'update2']);
+
+

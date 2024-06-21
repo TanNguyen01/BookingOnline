@@ -90,6 +90,71 @@ class StoreInformationController extends Controller
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
+
+    // update cu hang tthêm nhân viên vào cửa  hàng
+    public function listStaff(){
+        $users =  User::where('role' , 1 )->get();
+        return $this->responseSuccess(__('user.list'), ['data' => $users]);
+
+    }
+    public function update2(UpdateStroreInformationRequest $request, string $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $store = $this->storeService->updateStore($id, $request->all());
+            if (!$store) {
+                DB::rollBack();
+                return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+            }
+
+            if ($request->has('user_ids')) {
+                $userIds = $request->input('user_ids');
+
+                // Kiểm tra nếu $userIds là chuỗi, chuyển thành mảng các ID người dùng
+                if (!is_array($userIds)) {
+                    $userIds = explode(',', $userIds);
+                }
+
+                // Kiểm tra xem các user_id đã đăng ký lịch làm hay có booking chưa
+                $hasSchedules = DB::table('schedules')
+                    ->whereIn('user_id', $userIds)
+                    ->where('is_valid', '1')
+                    ->exists();
+
+                $hasBookings = DB::table('bookings')
+                    ->whereIn('user_id', $userIds)
+                    ->exists();
+
+                if ($hasSchedules || $hasBookings) {
+                    DB::rollBack();
+                    return $this->responseBadRequest('Nhân viên đang có lịch làm và booking nên không thể đổi cửa hàng');
+                }
+
+                // Cập nhật store_id cho nhân viên có role = 1 và không có lịch làm hoặc booking
+                DB::table('users')
+                    ->whereIn('id', $userIds)
+                    ->where('role', 1)
+                    ->update(['store_id' => $id]);
+                $userUpdate  = DB::table('users')
+                    ->whereIn('id', $userIds)
+                    ->select('name', 'email', 'store_id')
+                    ->get();
+            }
+
+            DB::commit();
+
+            return $this->responseSuccess(__('store.updated'), [
+                'data' => $store,
+                'updated_users' => $userUpdate
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
+        }
+    }
+    // end+++++++++++++++++++++++++++++++++++++++++++
+
     /**
      * Remove the specified resource from storage.
      */
