@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\userRequest;
 use App\Services\UserService;
 use App\Traits\APIResponse;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -21,6 +20,7 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -43,6 +43,7 @@ class UserController extends Controller
             $data['role'] = 1;
             $user = $this->userService->createUser($data);
             DB::commit();
+
             return $this->responseCreated(
                 __('user.created'),
                 [
@@ -51,6 +52,7 @@ class UserController extends Controller
             );
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->responseError(
                 __('user.creation_failed'),
                 [
@@ -66,7 +68,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = $this->userService->getUserById($id);
-        if (!$user) {
+        if (! $user) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 
@@ -81,14 +83,17 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
             $user = $this->userService->updateUser($id, $request->all());
-            if (!$user) {
+            if (! $user) {
                 DB::rollBack();
+
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
             }
             DB::commit();
+
             return $this->responseSuccess(__('user.updated'), ['data' => $user]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->responseError(
                 __('user.update_failed'),
                 [
@@ -104,7 +109,7 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = $this->userService->deleteUser($id);
-        if (!$user) {
+        if (! $user) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('user.not_found'));
         }
 

@@ -21,11 +21,11 @@ class Service extends Model
 
     public function category()
     {
-        return $this->belongsTo(categorie::class);
+        return $this->belongsTo(Categorie::class);
     }
 
     public function bookings()
     {
-        return $this->belongsToMany(booking::class, 'booking_service');
+        return $this->belongsToMany(Booking::class, 'booking_service');
     }
 }

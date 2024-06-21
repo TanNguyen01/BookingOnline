@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Booking;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
 use App\Models\Base;
-use App\Models\booking;
+use App\Models\Booking;
 use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\ServiceBooking;
@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -34,18 +35,16 @@ class BookingController extends Controller
         $user_id = $request->user_id;
         $user = User::find($user_id);
 
-        if (!$user) {
+        if (! $user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
-
         $store_id = $user->store_id;
         $store = StoreInformation::find($store_id);
-
-        if (!$store) {
+        if (! $store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
 
-        return $this->responseSuccess('Lấy thông tin cửa hàng thành công', ['data' => $store]);
+        return $store;
     }
 
     public function chooseEmployee(Request $request)
@@ -53,25 +52,25 @@ class BookingController extends Controller
         $user_id = $request->user_id;
         $employee = User::where('id', $user_id)->where('role', 1)->first();
 
-        if (!$employee) {
+        if (! $employee) {
             return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
         }
 
         $store_id = $employee->store_id;
         $store = StoreInformation::find($store_id);
 
-        if (!$store) {
+        if (! $store) {
             return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
         }
 
         // Kiểm tra xem nhân viên có được gán cho cửa hàng này hay không
         $isEmployeeOfStore = $employee->store_id;
 
-        if (!$isEmployeeOfStore) {
+        if (! $isEmployeeOfStore) {
             return $this->responseBadRequest('Người dùng không được gán cho cửa hàng này.');
         }
 
-        return $this->responseSuccess('Người dùng hợp lệ là nhân viên của cửa hàng.', ['data' => $employee]);
+        return $employee;
     }
 
     public function chooseService(Request $request)
@@ -82,7 +81,7 @@ class BookingController extends Controller
             return $this->responseBadRequest('Một số dịch vụ không tồn tại.');
         }
 
-        return $this->responseSuccess('Các dịch vụ hợp lệ.', ['services' => $services]);
+        return $services;
     }
 
     public function chooseDate(Request $request)
@@ -91,7 +90,7 @@ class BookingController extends Controller
         $day = $request->day;
         $appointment_time = $request->time;
         $user = User::find($user_id);
-        if (!$user) {
+        if (! $user) {
             return $this->responseBadRequest('Người dùng không tồn tại.');
         }
         // Lấy thông tin cửa hàng của người dùng
@@ -107,7 +106,7 @@ class BookingController extends Controller
         }
 
         // Lấy danh sách các booking của user trong ngày đã chọn
-        $existing_bookings = booking::where('user_id', $user_id)
+        $existing_bookings = Booking::where('user_id', $user_id)
             ->whereDate('day', '=', $day)
             ->pluck('time')
             ->toArray();
@@ -122,7 +121,7 @@ class BookingController extends Controller
             return $appointment_time >= $schedule->start_time && $appointment_time <= $schedule->end_time;
         });
 
-        if (!$valid_schedule) {
+        if (! $valid_schedule) {
             return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
         }
 
@@ -136,57 +135,38 @@ class BookingController extends Controller
             ];
         });
 
-        // Kiểm tra xem giờ hẹn mới có cách nhau ít nhất 30 phut so với các giờ hẹn đã đặt
         $is_valid_time_slot = true;
         foreach ($existing_bookings as $existing_booking) {
             $existing_timestamp = strtotime($existing_booking);
             $appointment_timestamp = strtotime($appointment_time);
 
-            if (abs($existing_timestamp - $appointment_timestamp) < 1800) { // 3600 giây = 1 tiếng
+            if (abs($existing_timestamp - $appointment_timestamp) < 900) { // 3600 giây = 1 tiếng
                 $is_valid_time_slot = false;
                 break;
             }
         }
 
-        if (!$is_valid_time_slot) {
+        if (! $is_valid_time_slot) {
             return $this->responseBadRequest('Nhân viên đang có lịch vào giờ này vui lòng chọn giờ khác');
         }
 
-        return $this->responseCreated('Ngày giờ hợp lệ.', ['time_slots' => $time_slots]);
+        return response()->json(['time_slots' => $time_slots], 200);
     }
 
     public function store(BookingRequest $request)
     {
         $user_id = $request->user_id;
-
         // Kiểm tra cửa hàng
-        $storeResponse = $this->chooseStore($request);
-        if ($storeResponse->getStatusCode() !== 200) {
-            return $storeResponse;
-        }
-        $storeData = $storeResponse->getData()->data;
-        //  dd($storeData);
-
+        $storeData = $this->chooseStore($request);
         // Kiểm tra nhân viên
-        $employeeResponse = $this->chooseEmployee($request);
-        if ($employeeResponse->getStatusCode() !== 200) {
-            return $employeeResponse;
-        }
-        $employeeData = $employeeResponse->getData()->data;
-        // dd( $storeData);
-
+        $employeeData = $this->chooseEmployee($request);
         // Kiểm tra ngày và giờ
         $dateResponse = $this->chooseDate($request);
-        if ($dateResponse->getStatusCode() !== 201) {
+        if ($dateResponse->getStatusCode() !== 200) {
             return $dateResponse;
         }
-
         // Kiểm tra dịch vụ
-        $serviceResponse = $this->chooseService($request);
-        if ($serviceResponse->getStatusCode() !== 200) {
-            return $serviceResponse;
-        }
-        $services = $serviceResponse->getData()->data->services;
+        $services = $this->chooseService($request);
 
         // Lấy thông tin khách hàng từ $request
         $customerName = $request->customer_name;
@@ -195,17 +175,14 @@ class BookingController extends Controller
         $customerNote = $request->customer_note;
         $customerEmail = $request->customer_email;
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            $booking = booking::create([
+            $booking = Booking::create([
                 'user_id' => $user_id,
                 'day' => $request->day,
                 'time' => $request->time,
                 'status' => 'pending',
-                'created_at' => now(),
             ]);
-
-            // Lưu dịch vụ vào bảng ServiceBooking
             foreach ($services as $service) {
                 ServiceBooking::create([
                     'service_id' => $service->id,
@@ -213,32 +190,29 @@ class BookingController extends Controller
                     'created_at' => now(),
                 ]);
             }
-            // dd($storeData->data->name);
-            // Lưu thông tin khách hàng vào bảng Base
-            $base = Base::create([
-                'booking_id' => $booking->id,
-                'store_name' => $storeData->data->name,
-                'staff_name' => $employeeData->data->name,
+            $base = $booking->bases()->create([
+                'store_name' => $storeData->name,
+                'staff_name' => $employeeData->name,
                 'email' => $customerEmail,
                 'name' => $customerName,
                 'date' => $customerDate,
                 'phone' => $customerPhone,
                 'status' => 'pending',
                 'note' => $customerNote,
-                'created_at' => now(),
             ]);
+
             DB::commit();
             $output = [
-                'store_name' => $storeData->data->name,
-                'store_address' => $storeData->data->address,
-                'staff_name' => $employeeData->data->name,
-                'staff_id' => $employeeData->data->id,
-                'staff_phone' => $employeeData->data->phone,
-                'staff_email' => $employeeData->data->email,
-                'staff_address' => $employeeData->data->address,
-                'service_name' => array_map(function ($service) {
+                'store_name' => $storeData->name,
+                'store_address' => $storeData->address,
+                'staff_name' => $employeeData->name,
+                'staff_id' => $employeeData->id,
+                'staff_phone' => $employeeData->phone,
+                'staff_email' => $employeeData->email,
+                'staff_address' => $employeeData->address,
+                'service_name' => $services->map(function ($service) {
                     return $service->name;
-                }, $services),
+                }),
                 'time_order' => $booking->time,
                 'date_order' => $booking->day,
                 'customer_name' => $base->name,
@@ -247,12 +221,16 @@ class BookingController extends Controller
                 'customer_note' => $base->note,
                 'customer_email' => $customerEmail,
             ];
+            Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
+                $email->subject('Thông tin đặt chỗ');
+                $email->to($customerEmail, $customerName);
+            });
 
             return $this->responseCreated('Thêm thành công', ['data' => $output]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
-            Log::error('Lỗi : ' . $e->getMessage());
+            Log::error('Lỗi : '.$e->getMessage());
 
             return $this->responseBadRequest('Đã xảy ra lỗi. Vui lòng thử lại sau');
         }
@@ -289,7 +267,7 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             // Xử lý ngoại lệ khác
             DB::rollBack();
-            Log::error(__('booking.error_update') . $e->getMessage());
+            Log::error(__('booking.error_update').$e->getMessage());
 
             return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('booking.error'));
         }
@@ -305,7 +283,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $Base = $this->bookingService->getBaseByID($id);
-        if (!$Base) {
+        if (! $Base) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
 
@@ -317,16 +295,19 @@ class BookingController extends Controller
         DB::beginTransaction();
         try {
             $Base = $this->bookingService->getBaseByID($id);
-            if (!$Base) {
+            if (! $Base) {
                 DB::rollBack();
+
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
             }
             $Base->delete();
             DB::commit();
+
             return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
             // Nếu có lỗi xảy ra, hoàn tác giao dịch và trả về phản hồi lỗi
             DB::rollBack();
+
             return $this->responseError(Response::HTTP_INTERNAL_SERVER_ERROR, __('An error occurred while deleting the booking.'));
         }
     }
