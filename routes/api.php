@@ -65,7 +65,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
 });
 
-Route::prefix('client')->middleware('throttle')->group(function () {
+Route::prefix('client')->middleware(['throttle', 'language'])->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
     Route::get('/get-date-working-of-user', [ClientController::class, 'GetDateWorkingOfUser']);
     Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
@@ -75,7 +75,7 @@ Route::prefix('client')->middleware('throttle')->group(function () {
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'language'])->group(function () {
     Route::get('/showprofile', [StaffController::class, 'showProfile']);
     Route::post('/profile/update', [StaffController::class, 'updateProfile']);
 });

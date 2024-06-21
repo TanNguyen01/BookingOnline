@@ -8,6 +8,7 @@ return [
     'update' => 'cap nhat trang thai booking thanh cong',
     'not_found' => 'khong tim thay booking',
     'error' => 'Đã xảy ra lỗi. Vui lòng thử lại sau',
+    'exist'=> 'Giờ hẹn đã được đặt. Vui lòng chọn lại.',
 
     'error_create' => 'Da xay ra loi khi tao booking',
     'error_update' => 'Da xay ra loi khi cap nhat trang thai booking',

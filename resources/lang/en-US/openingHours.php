@@ -3,10 +3,12 @@
 return [
 
     'list' => 'See list of successful opening hours ',
-    'show' => 'See detail of successful opening hours',
+    'show' => "Store opening hours.",
     'exists' => 'Opening hours is already exists',
     'create' => 'Opening hours is added successfully',
     'update' => 'Opening hours is updated successfully',
+     'error'=> "An error occurred. Please try again later.",
+    'not_found' => 'No opening hours available, please wait.',
 
     /**validate */
 
@@ -17,4 +19,6 @@ return [
     'opening_hours_opening_time_date_format' => 'Opening hours must be type hour: minute : second: ',
     'closing_time_required' => 'closing_time is required',
     'opening_hours_opening_time_after' => 'closing time must be after opening time',
+
+    'opening_hours_start_in_time'=>'The start time must be within the opening and closing hours.'
 ];

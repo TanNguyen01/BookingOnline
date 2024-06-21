@@ -72,7 +72,7 @@ class OpeningHourController extends Controller
             if (! empty($existingDays)) {
                 DB::rollBack();
 
-                return $this->responseBadRequest(['Ngày này đã có giờ mở cửa vui lòng kiểm tra lại', $existingDays]);
+                return $this->responseBadRequest([__('openingHours.exist'), $existingDays]);
             }
 
             foreach ($openingHoursData as $data) {
@@ -182,7 +182,7 @@ class OpeningHourController extends Controller
             DB::rollback();
             Log::error('Lỗi: '.$e->getMessage());
 
-            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, __('openingHours.error'));
         }
     }
 
