@@ -7,7 +7,7 @@ return [
     'exists' => 'Opening hours is already exists',
     'create' => 'Opening hours is added successfully',
     'update' => 'Opening hours is updated successfully',
-
+     'error'=> "An error occurred. Please try again later.",
     'not_found' => 'No opening hours available, please wait.',
 
     /**validate */

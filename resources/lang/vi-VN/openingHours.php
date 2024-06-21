@@ -7,7 +7,7 @@ return [
     'exists' => 'Gio mo cua da ton tai',
     'create' => 'Gio mo cua duoc them thanh cong',
     'update' => 'Cap nhat gio mo cua thanh cong',
-
+     'error'=> 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
     'not_found'=>'Khong co gio mo cua,vui long doi',
 
     /** validate */

@@ -36,12 +36,12 @@ class BookingController extends Controller
         $user = User::find($user_id);
 
         if (! $user) {
-            return $this->responseBadRequest('Người dùng không tồn tại.');
+            return $this->responseBadRequest(__('user.not_found'));
         }
         $store_id = $user->store_id;
         $store = StoreInformation::find($store_id);
         if (! $store) {
-            return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
+            return $this->responseBadRequest(__('store.not_found'));
         }
 
         return $store;
@@ -53,21 +53,21 @@ class BookingController extends Controller
         $employee = User::where('id', $user_id)->where('role', 1)->first();
 
         if (! $employee) {
-            return $this->responseBadRequest('Người dùng không hợp lệ hoặc không phải là nhân viên.');
+            return $this->responseBadRequest(__('user.invalid_accept'));
         }
 
         $store_id = $employee->store_id;
         $store = StoreInformation::find($store_id);
 
         if (! $store) {
-            return $this->responseBadRequest('Thông tin cửa hàng không tồn tại.');
+            return $this->responseBadRequest(__('store.not_found'));
         }
 
         // Kiểm tra xem nhân viên có được gán cho cửa hàng này hay không
         $isEmployeeOfStore = $employee->store_id;
 
         if (! $isEmployeeOfStore) {
-            return $this->responseBadRequest('Người dùng không được gán cho cửa hàng này.');
+            return $this->responseBadRequest(__('user.not_found'));
         }
 
         return $employee;
@@ -78,7 +78,7 @@ class BookingController extends Controller
         $service_ids = $request->service_ids;
         $services = Service::whereIn('id', $service_ids)->get();
         if (count($services) != count($service_ids)) {
-            return $this->responseBadRequest('Một số dịch vụ không tồn tại.');
+            return $this->responseBadRequest(__('service.not_found'));
         }
 
         return $services;
@@ -91,7 +91,7 @@ class BookingController extends Controller
         $appointment_time = $request->time;
         $user = User::find($user_id);
         if (! $user) {
-            return $this->responseBadRequest('Người dùng không tồn tại.');
+            return $this->responseBadRequest(__('user.not_found'));
         }
         // Lấy thông tin cửa hàng của người dùng
         $store_id = $user->store_id;
@@ -102,7 +102,7 @@ class BookingController extends Controller
             ->get();
 
         if ($schedules->isEmpty()) {
-            return $this->responseBadRequest('Nhân viên không làm việc vào ngày này.');
+            return $this->responseBadRequest(__('staff.not_found_schedule'));
         }
 
         // Lấy danh sách các booking của user trong ngày đã chọn
@@ -113,7 +113,7 @@ class BookingController extends Controller
 
         // Kiểm tra xem giờ hẹn mới có trùng với các booking đã tồn tại không
         if (in_array($appointment_time, $existing_bookings)) {
-            return $this->responseBadRequest('Giờ hẹn đã được đặt. Vui lòng chọn lại.');
+            return $this->responseBadRequest(__('booking.exist'));
         }
 
         // Kiểm tra xem giờ hẹn mới có nằm trong khoảng thời gian làm việc nào không
@@ -226,13 +226,13 @@ class BookingController extends Controller
                 $email->to($customerEmail, $customerName);
             });
 
-            return $this->responseCreated('Thêm thành công', ['data' => $output]);
+            return $this->responseCreated(__('booking.created'), ['data' => $output]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
             Log::error('Lỗi : '.$e->getMessage());
 
-            return $this->responseBadRequest('Đã xảy ra lỗi. Vui lòng thử lại sau');
+            return $this->responseBadRequest(__('booking.error'));
         }
     }
 
@@ -245,7 +245,7 @@ class BookingController extends Controller
             if (($status === 'pending' || $status === 'confirmed' || $status === 'canceled') &&
                 ($base->status === 'doing' || $base->status === 'done')
             ) {
-                return $this->responseBadRequest(__('Không thể cập nhật trạng thái'));
+                return $this->responseBadRequest(__(__('booking.error')));
             }
             $base->status = $status;
             $base->save();
@@ -308,7 +308,7 @@ class BookingController extends Controller
             // Nếu có lỗi xảy ra, hoàn tác giao dịch và trả về phản hồi lỗi
             DB::rollBack();
 
-            return $this->responseError(Response::HTTP_INTERNAL_SERVER_ERROR, __('An error occurred while deleting the booking.'));
+            return $this->responseError(Response::HTTP_INTERNAL_SERVER_ERROR, __('booking.error'));
         }
     }
 }
