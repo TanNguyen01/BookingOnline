@@ -47,7 +47,6 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('rate.limit');
     Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
 
-
     // Opening Hours
     Route::prefix('opening-hours')->group(function () {
         Route::get('/list', [OpeningHourController::class, 'index']);
