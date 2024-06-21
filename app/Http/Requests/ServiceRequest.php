@@ -30,6 +30,7 @@ class ServiceRequest extends FormRequest
             'name' => 'required|string|unique:services',
             'categorie_id' => 'required|integer|exists:categories,id',
             'describe' => 'required|string|max:360',
+            'time' =>'required|integer',
             'price' => ['required', 'regex:/^\d{1,9}(,\d{3})*(\.\d{1,2})?$/'],
         ];
 
@@ -39,6 +40,7 @@ class ServiceRequest extends FormRequest
     {
 
         return [
+            'time.required'=>'Nhập thời gian của dịch vụ',
             'name.unique' => __('service.name_unique'),
             'name.required' => __('service.name_required'),
             'categorie_id.required' => __('service.category_id_required'),
