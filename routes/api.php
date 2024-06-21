@@ -94,5 +94,4 @@ Route::middleware('language')->prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
-
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);

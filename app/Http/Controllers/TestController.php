@@ -22,13 +22,8 @@ class TestController extends Controller
             ]);
     }
 
-    // public function testMail()
-    // {
-
-    //     $name = 'Pham Manh';
-    //     Mail::send('emails.test', compact('name'), function($email) use ($name) {
-    //         $email->subject('test');
-    //         $email->to('manhpkph30134@fpt.edu.vn', $name);
-    //     });
-    // }
+    public function testMail()
+    {
+        return view('emails.test2');
+    }
 }
