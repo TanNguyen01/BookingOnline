@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\Staff\StaffController;
-
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
