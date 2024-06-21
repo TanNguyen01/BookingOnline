@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class TestController extends Controller
 {
