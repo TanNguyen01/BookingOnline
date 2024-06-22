@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     // Opening Hours
     Route::prefix('opening-hours')->group(function () {
         Route::get('/list', [OpeningHourController::class, 'index']);
-        Route::get('/{storeid}', [OpeningHourController::class, 'show']);
+        Route::get('/{storeId}', [OpeningHourController::class, 'show']);
         Route::post('/post/{storeId}', [OpeningHourController::class, 'store']);
         Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->middleware('rate.limit');
         Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->middleware('rate.limit');
@@ -73,10 +73,11 @@ Route::prefix('client')->middleware(['throttle', 'language'])->group(function ()
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
-Route::middleware(['auth:sanctum', 'language'])->group(function () {
+Route::middleware( 'language')->group(function () {
     Route::get('/showprofile', [StaffController::class, 'showProfile']);
     Route::post('/profile/update', [StaffController::class, 'updateProfile']);
 });
+
 Route::middleware('auth:sanctum', 'checkuser')->prefix('user')->group(function () {
     // xem lịch làm
     Route::get('/see-schedule', [StaffController::class, 'seeSchedule']);
