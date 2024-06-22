@@ -30,7 +30,7 @@ Route::post('/set-locale/{locale}', function ($locale) {
     return response()->json(['message' => 'Locale set to '.$locale]);
 });
 
-Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+// Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
     Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('rate.limit');
     Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
@@ -46,6 +46,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     // Store Informations
     Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('rate.limit');
     Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
+    Route::put('store-information/{id}/location', [StoreInformationController::class, 'storeLocation']);
 
     // Opening Hours
     Route::prefix('opening-hours')->group(function () {
@@ -62,7 +63,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     // Booking Management
     Route::apiResource('bookings', BookingController::class)->only(['update', 'destroy'])->middleware('rate.limit');
     Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
-});
+// });
 
 Route::prefix('client')->middleware(['throttle', 'language'])->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
@@ -95,7 +96,5 @@ Route::middleware('language')->prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
-Route::get('/list-staff', [StoreInformationController::class, 'listStaff']);
-Route::put('/update2/{id}', [StoreInformationController::class, 'update2']);
 
 

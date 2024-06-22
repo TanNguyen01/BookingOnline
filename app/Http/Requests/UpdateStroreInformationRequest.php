@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class UpdateStroreInformationRequest extends FormRequest
@@ -21,12 +22,17 @@ class UpdateStroreInformationRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
     public function rules(): array
     {
+        $storeId = $this->route('store');
         return [
-            'name' => 'required|string|nullable',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('store_information')->ignore($storeId),
+            ],
             'address' => 'required|string|nullable',
             'phone' => 'required|string|nullable',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
@@ -36,13 +42,14 @@ class UpdateStroreInformationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'address.string' => 'phone là kiểu chuỗi',
-            'address.required' => 'Vui lòng nhâp address',
-            'phone.string' => 'phone là kiểu chuỗi',
-            'phone.required' => 'Vui lòng nhâp phone',
-            'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' name là kiểu chuỗi',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
+            'address.string' => 'Address phải là kiểu chuỗi.',
+            'address.required' => 'Vui lòng nhập địa chỉ.',
+            'phone.string' => 'Phone phải là kiểu chuỗi.',
+            'phone.required' => 'Vui lòng nhập số điện thoại.',
+            'name.required' => 'Vui lòng nhập tên.',
+            'name.string' => 'Tên phải là kiểu chuỗi.',
+            'name.unique' => 'Tên đã tồn tại trong hệ thống.', // Custom message for unique rule
+            'image.mimes' => 'Hình ảnh phải có đuôi là jpg, png, jpeg.',
         ];
     }
 
@@ -51,7 +58,7 @@ class UpdateStroreInformationRequest extends FormRequest
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(response()->json(
             [
-                'error' => $errors,
+                'errors' => $errors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ],
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY

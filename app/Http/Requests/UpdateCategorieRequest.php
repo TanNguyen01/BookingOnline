@@ -26,7 +26,7 @@ class UpdateCategorieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:categories',
         ];
     }
 
@@ -35,6 +35,7 @@ class UpdateCategorieRequest extends FormRequest
 
         return [
             'name.required' => 'Vui lòng nhâp name',
+            'name.unique' => 'Tên đã tồn tại',
 
         ];
     }

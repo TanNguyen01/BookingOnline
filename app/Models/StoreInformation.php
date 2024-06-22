@@ -16,6 +16,10 @@ class StoreInformation extends Model
         'image',
         'address',
         'phone',
+        'location',
+    ];
+    protected $casts = [
+        'location' => 'array',
     ];
 
     // public $timestamps = false;

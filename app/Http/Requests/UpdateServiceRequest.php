@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class UpdateServiceRequest extends FormRequest
@@ -25,9 +26,13 @@ class UpdateServiceRequest extends FormRequest
      */
     public function rules(): array
     {
-
+        $serviceId = $this->route('service');
         return [
-            'name' => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('services')->ignore($serviceId),
+            ],
             'categorie_id' => 'required|integer|exists:categories,id',
             'describe' => 'required|string|max:360',
             'price' => ['required', 'regex:/^\d{1,9}$/'],
@@ -38,6 +43,7 @@ class UpdateServiceRequest extends FormRequest
     {
 
         return [
+            'name.unique' =>'Tên đã tồn tại',
             'name.required' => 'Vui lòng nhâp name',
             'email.email' => 'Nhập đúng định dạng email!',
             'categorie_id.required' => 'nhập id category',

@@ -144,12 +144,7 @@ class OpeningHourController extends Controller
                         'closing_time' => $data['closing_time'],
                     ]);
                 } else {
-                    OpeningHour::create([
-                        'store_id' => $storeId,
-                        'day' => $data['day'],
-                        'opening_time' => $data['opening_time'],
-                        'closing_time' => $data['closing_time'],
-                    ]);
+                    return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'Kiểm tra lại có ngày chưa cập nhật giờ mở cửa']);
                 }
                 $schedules = Schedule::whereHas('user', function ($query) use ($storeId) {
                     $query->where('store_id', $storeId);
