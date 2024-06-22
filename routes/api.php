@@ -74,7 +74,7 @@ Route::prefix('client')->middleware(['throttle', 'language'])->group(function ()
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
-Route::middleware( 'language')->group(function () {
+Route::middleware([ 'auth:sanctum','language'])->group(function () {
     Route::get('/showprofile', [StaffController::class, 'showProfile']);
     Route::post('/profile/update', [StaffController::class, 'updateProfile']);
 });
