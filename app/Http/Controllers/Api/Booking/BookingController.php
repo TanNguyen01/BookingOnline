@@ -35,12 +35,12 @@ class BookingController extends Controller
         $user_id = $request->user_id;
         $user = User::find($user_id);
 
-        if (! $user) {
+        if (!$user) {
             return $this->responseBadRequest(__('user.not_found'));
         }
         $store_id = $user->store_id;
         $store = StoreInformation::find($store_id);
-        if (! $store) {
+        if (!$store) {
             return $this->responseBadRequest(__('store.not_found'));
         }
 
@@ -52,21 +52,21 @@ class BookingController extends Controller
         $user_id = $request->user_id;
         $employee = User::where('id', $user_id)->where('role', 1)->first();
 
-        if (! $employee) {
+        if (!$employee) {
             return $this->responseBadRequest(__('user.invalid_accept'));
         }
 
         $store_id = $employee->store_id;
         $store = StoreInformation::find($store_id);
 
-        if (! $store) {
+        if (!$store) {
             return $this->responseBadRequest(__('store.not_found'));
         }
 
         // Kiểm tra xem nhân viên có được gán cho cửa hàng này hay không
         $isEmployeeOfStore = $employee->store_id;
 
-        if (! $isEmployeeOfStore) {
+        if (!$isEmployeeOfStore) {
             return $this->responseBadRequest(__('user.not_found'));
         }
 
@@ -77,12 +77,35 @@ class BookingController extends Controller
     {
         $service_ids = $request->service_ids;
         $services = Service::whereIn('id', $service_ids)->get();
+
         if (count($services) != count($service_ids)) {
             return $this->responseBadRequest(__('service.not_found'));
         }
+        $total_price = 0;
+        $total_time = 0;
+        $services_with_price = $services->map(function ($service) use (&$total_price, &$total_time) {
+            $total_price += $service->price;
+            $total_time += $service->time;
 
-        return $services;
+            return [
+                'id' => $service->id,
+                'name' => $service->name,
+                'price' => $service->price,
+                'time' => $service->time
+            ];
+        });
+
+        $result = [
+            'services' => $services_with_price,
+            'total_price' => $total_price,
+            'total_time' => $total_time
+        ];
+        return $result;
     }
+
+
+
+
 
     public function chooseDate(Request $request)
     {
@@ -90,7 +113,7 @@ class BookingController extends Controller
         $day = $request->day;
         $appointment_time = $request->time;
         $user = User::find($user_id);
-        if (! $user) {
+        if (!$user) {
             return $this->responseBadRequest(__('user.not_found'));
         }
         // Lấy thông tin cửa hàng của người dùng
@@ -121,7 +144,7 @@ class BookingController extends Controller
             return $appointment_time >= $schedule->start_time && $appointment_time <= $schedule->end_time;
         });
 
-        if (! $valid_schedule) {
+        if (!$valid_schedule) {
             return $this->responseBadRequest('Giờ hẹn không nằm trong khoảng thời gian làm việc.');
         }
 
@@ -146,7 +169,7 @@ class BookingController extends Controller
             }
         }
 
-        if (! $is_valid_time_slot) {
+        if (!$is_valid_time_slot) {
             return $this->responseBadRequest('Nhân viên đang có lịch vào giờ này vui lòng chọn giờ khác');
         }
 
@@ -167,6 +190,9 @@ class BookingController extends Controller
         }
         // Kiểm tra dịch vụ
         $services = $this->chooseService($request);
+        $total_price = $services['total_price'];
+        $total_time = $services['total_time'];
+
 
         // Lấy thông tin khách hàng từ $request
         $customerName = $request->customer_name;
@@ -182,10 +208,11 @@ class BookingController extends Controller
                 'day' => $request->day,
                 'time' => $request->time,
                 'status' => 'pending',
+
             ]);
-            foreach ($services as $service) {
+            foreach ($services['services'] as $service) {
                 ServiceBooking::create([
-                    'service_id' => $service->id,
+                    'service_id' => $service['id'],
                     'booking_id' => $booking->id,
                     'created_at' => now(),
                 ]);
@@ -197,6 +224,7 @@ class BookingController extends Controller
                 'name' => $customerName,
                 'date' => $customerDate,
                 'phone' => $customerPhone,
+                'total_price' => $total_price,
                 'status' => 'pending',
                 'note' => $customerNote,
             ]);
@@ -210,9 +238,9 @@ class BookingController extends Controller
                 'staff_phone' => $employeeData->phone,
                 'staff_email' => $employeeData->email,
                 'staff_address' => $employeeData->address,
-                'service_name' => $services->map(function ($service) {
-                    return $service->name;
-                }),
+                'services' => $services['services']->toArray(),
+                'total_time' => $total_time,
+                'total_price' => $base->total_price,
                 'time_order' => $booking->time,
                 'date_order' => $booking->day,
                 'customer_name' => $base->name,
@@ -221,16 +249,16 @@ class BookingController extends Controller
                 'customer_note' => $base->note,
                 'customer_email' => $customerEmail,
             ];
+
             Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
                 $email->subject('Thông tin đặt chỗ');
                 $email->to($customerEmail, $customerName);
             });
-
             return $this->responseCreated(__('booking.created'), ['data' => $output]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
-            Log::error('Lỗi : '.$e->getMessage());
+            Log::error('Lỗi : ' . $e->getMessage());
 
             return $this->responseBadRequest(__('booking.error'));
         }
@@ -267,7 +295,7 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             // Xử lý ngoại lệ khác
             DB::rollBack();
-            Log::error(__('booking.error_update').$e->getMessage());
+            Log::error(__('booking.error_update') . $e->getMessage());
 
             return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('booking.error'));
         }
@@ -283,7 +311,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $Base = $this->bookingService->getBaseByID($id);
-        if (! $Base) {
+        if (!$Base) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));
         }
 
@@ -295,7 +323,7 @@ class BookingController extends Controller
         DB::beginTransaction();
         try {
             $Base = $this->bookingService->getBaseByID($id);
-            if (! $Base) {
+            if (!$Base) {
                 DB::rollBack();
 
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('booking.not_found'));

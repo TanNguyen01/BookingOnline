@@ -7,8 +7,8 @@ return [
     'exists' => 'Gio mo cua da ton tai',
     'create' => 'Gio mo cua duoc them thanh cong',
     'update' => 'Cap nhat gio mo cua thanh cong',
-     'error'=> 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
-    'not_found'=>'Khong co gio mo cua,vui long doi',
+    'error' => 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+    'not_found' => 'Khong co gio mo cua,vui long doi',
 
     /** validate */
     'store_information_id_required' => 'Vui lòng nhâp id store',
@@ -19,6 +19,6 @@ return [
     'closing_time_required' => 'Vui long nhap giờ đóng cửa',
     'opening_hours_opening_time_after' => 'Giờ đóng của phải sau giờ mở cửa',
 
-    'opening_hours_start_in_time'=>'Giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa'
+    'opening_hours_start_in_time' => 'Giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa',
 
 ];

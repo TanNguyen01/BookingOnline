@@ -32,7 +32,7 @@ class BookingRequest extends FormRequest
                 }],
             'day' => 'required|date|after_or_equal:today',
             'time' => 'required',
-            // 'service_id' => 'required|exists:services,id',
+            'service_ids' => 'required|exists:services,id',
         ];
     }
 
@@ -45,8 +45,8 @@ class BookingRequest extends FormRequest
             'day.required' => __('booking.day_required'),
             'day.after_or_equal' => __('booking.day_after_or_equal'),
             'time.required' => __('booking.time_required'),
-            'service_id.required' => __('booking.service_id_required'),
-            'service_id.exists' => __('booking.service_id_exists'),
+            'service_ids.required' => __('booking.service_id_required'),
+            'service_ids.exists' => __('booking.service_id_exists'),
 
         ];
     }

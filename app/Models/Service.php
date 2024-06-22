@@ -14,6 +14,7 @@ class Service extends Model
         'describe',
         'name',
         'categorie_id',
+        'time',
 
     ];
 

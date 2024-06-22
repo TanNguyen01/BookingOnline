@@ -8,8 +8,6 @@ return [
     'deleted' => 'Cua hang đã được xóa thành công.',
     'not_found' => 'Không tìm thấy cua hang.',
 
-
-
     /** Validate */
     'name_unique' => 'ten cua hang da ton tai',
     'name_required' => 'Vui lòng nhâp ten cua hang',

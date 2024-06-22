@@ -7,7 +7,7 @@ return [
     'updated' => 'User updated successfully.',
     'deleted' => 'User deleted successfully.',
     'not_found' => 'User not found.',
-    'invalid_accept'=> "Invalid user or not an employee.",
+    'invalid_accept' => 'Invalid user or not an employee.',
     'accept' => 'User accept',
 
     /** validate */

@@ -8,7 +8,7 @@ return [
     'update' => 'update booking successfully',
     'not_found' => 'booking is not found',
     'error' => 'something was wrong, please try again ',
-    'exist'=> 'Booking already exist, please try again.',
+    'exist' => 'Booking already exist, please try again.',
     'error_create' => 'Something wrong when create booking',
     'error_update' => 'Something wrong when update booking',
 

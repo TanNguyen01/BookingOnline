@@ -8,7 +8,7 @@ return [
     'deleted' => 'Nguoi dung đã được xóa thành công.',
     'not_found' => 'Không tìm thấy nguoi dung hoac nhan vien nay.',
 
-    'invalid_accept'=> 'Người dùng không hợp lệ hoặc không phải là nhân viên.',
+    'invalid_accept' => 'Người dùng không hợp lệ hoặc không phải là nhân viên.',
     'accept' => 'nhan vien hop le',
 
     /** Validate */
