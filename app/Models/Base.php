@@ -19,6 +19,7 @@ class Base extends Model
         'name',
         'staff_name',
         'store_name',
+        'total_price'
     ];
 
     public function booking()

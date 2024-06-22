@@ -81,12 +81,8 @@ class BookingController extends Controller
         if (count($services) != count($service_ids)) {
             return $this->responseBadRequest(__('service.not_found'));
         }
-
-        // Tính tổng giá và tổng thời gian của các dịch vụ
         $total_price = 0;
         $total_time = 0;
-
-        // Không cần thay đổi dữ liệu trả về từ map()
         $services_with_price = $services->map(function ($service) use (&$total_price, &$total_time) {
             $total_price += $service->price;
             $total_time += $service->time;
@@ -104,9 +100,6 @@ class BookingController extends Controller
             'total_price' => $total_price,
             'total_time' => $total_time
         ];
-
-        // dd($result); // Debug dữ liệu trả về từ phương thức
-
         return $result;
     }
 
@@ -197,13 +190,8 @@ class BookingController extends Controller
         }
         // Kiểm tra dịch vụ
         $services = $this->chooseService($request);
-
-    if (isset($services['services']) && $services['services']->isEmpty()) {
-        return $this->responseBadRequest(__('service.not_found'));
-    }
-
-    $total_price = $services['total_price'];
-    $total_time = $services['total_time'];
+        $total_price = $services['total_price'];
+        $total_time = $services['total_time'];
 
 
         // Lấy thông tin khách hàng từ $request
@@ -220,11 +208,11 @@ class BookingController extends Controller
                 'day' => $request->day,
                 'time' => $request->time,
                 'status' => 'pending',
-                'total_price' => $total_price,
+
             ]);
             foreach ($services['services'] as $service) {
                 ServiceBooking::create([
-                    'service_id' => $service['id'], // Lỗi xuất hiện ở đây
+                    'service_id' => $service['id'],
                     'booking_id' => $booking->id,
                     'created_at' => now(),
                 ]);
@@ -236,6 +224,7 @@ class BookingController extends Controller
                 'name' => $customerName,
                 'date' => $customerDate,
                 'phone' => $customerPhone,
+                'total_price' => $total_price,
                 'status' => 'pending',
                 'note' => $customerNote,
             ]);
@@ -251,7 +240,7 @@ class BookingController extends Controller
                 'staff_address' => $employeeData->address,
                 'services' => $services['services']->toArray(),
                 'total_time' => $total_time,
-                'total_price' => $booking->total_price,
+                'total_price' => $base->total_price,
                 'time_order' => $booking->time,
                 'date_order' => $booking->day,
                 'customer_name' => $base->name,

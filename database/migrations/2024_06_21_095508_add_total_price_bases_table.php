@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('bookings', function (Blueprint $table) {
+        Schema::table('bases', function (Blueprint $table) {
             $table->decimal('total_price', 15, 2);
-
         });
     }
 
@@ -22,8 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('bookings', function (Blueprint $table) {
-            //
+        Schema::table('bases', function (Blueprint $table) {
             $table->dropColumn('total_price');
         });
     }

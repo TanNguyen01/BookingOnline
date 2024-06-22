@@ -1,110 +1,151 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Booking Confirmation</title>
-    @vite('resources/css/app.css')
+    <title>Thông tin lịch booking</title>
     <style>
-        .title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #497ffc;
-            margin-bottom: 20px;
+        th,
+        td {
+            border: 0;
         }
     </style>
 </head>
 
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-
-    <div class="bg-white p-10 w-11/12 max-w-lg rounded-lg shadow-lg text-center">
-        <h3 class="title">Kính gửi quý khách thông tin lịch Booking</h3>
-        <div class="booking-info text-left mb-8">
-            <table class="w-full border-collapse">
+<body style="font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4">
+    <div style="
+                width: 80%;
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            ">
+        <h1 style="text-align: center; font-size: 24px; color: #248df7">
+            Kính gửi quý khách thông tin lịch Booking
+        </h1>
+        <table style="width: 100%; border-collapse: separate; margin-top: 20px" class="info-table">
+            <tr>
+                <th style="padding: 10px; text-align: left">Tên khách hàng:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['customer_name'] }}</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align: left">Ngày Hẹn:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['date_order'] }}</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align: left">Giờ hẹn:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['time_order'] }}</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align: left">Tên cửa hàng:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['store_name'] }}</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align: left">Địa chỉ cửa hàng:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['store_address'] }}</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align: left">Nhân Viên:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['staff_name'] }}</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align: left">Ghi Chú:</th>
+                <td style="padding: 10px; text-align: left">{{ $output['customer_note'] }}</td>
+            </tr>
+        </table>
+        <h4 style="margin-top: 5px;font-weight: bold; ">Dịch vụ đã chọn:</h4>
+        <table border="0" style="width: 100%; border-spacing: 0; border-collapse: collapse" class="services-table">
+            <thead style="border: 1px solid #ddd; border-bottom: 0px solid transparent">
                 <tr>
-                    <td class="font-bold w-2/5 py-2">Tên khách hàng :</td>
-                    <td class="py-2">{{ $output['customer_name'] }}.</td>
+                    <th style="padding: 10px;
+                                text-align: center;
+                                background-color: #f0f0f0;
+                                border-bottom: 2px solid #ddd;
+                                font-weight: bold">
+                        STT
+                    </th>
+                    <th style="
+                                padding: 10px;
+                                text-align: center;
+                                background-color: #f0f0f0;
+                                border-bottom: 2px solid #ddd;
+                                font-weight: bold">
+                        Dịch vụ
+                    </th>
+                    <th style="
+                                padding: 10px;
+                                text-align: center;
+                                background-color: #f0f0f0;
+                                border-bottom: 2px solid #ddd;
+                                font-weight: bold">
+                        Giá tiền
+                    </th>
+                    <th style="
+                                padding: 10px;
+                                text-align: center;
+                                background-color: #f0f0f0;
+                                border-bottom: 2px solid #ddd;">
+                        Thời gian
+                    </th>
                 </tr>
+            </thead>
+            <tbody style="border: 1px solid #ddd">
+                @foreach ($output['services'] as $index => $service)
                 <tr>
-                    <td class="font-bold w-2/5 py-2">Ngày Hẹn :</td>
-                    <td class="py-2">{{ $output['date_order'] }}.</td>
+                    <td style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd">{{ $index + 1 }}</td>
+                    <td style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd">
+                        {{ $service['name'] }}
+                    </td>
+                    <td style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd">
+                        {{ $service['price'] }}VND
+                    </td>
+                    <td style="padding: 10px; text-align: center; border-bottom: 1px solid #ddd">
+                        {{ $service['time'] }}p
+                    </td>
                 </tr>
-                <tr>
-                    <td class="font-bold w-2/5 py-2">Giờ hẹn:</td>
-                    <td class="py-2">{{ $output['time_order'] }}.</td>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr class="a">
+                    <td colspan="2" style="
+                                padding: 10px;
+                                text-align: right;
+                                font-weight: bold;
+                                border-left: none !important;
+                                border-right: none !important;
+                                border-bottom: none !important;">
+                        Tổng:
+                    </td>
+                    <td style="
+                                padding: 10px;
+                                text-align: center;
+                                border-left: none !important;
+                                border-right: none !important;
+                                border-bottom: none !important;">
+                        {{ $output['total_price'] }}.00VND
+                    </td>
+                    <td style="
+                                padding: 10px;
+                                text-align: center;
+                                border-left: none !important;
+                                border-right: none !important;
+                                border-bottom: none !important;">
+                        {{ $output['total_time'] }}p
+                    </td>
                 </tr>
-                <tr>
-                    <td class="font-bold w-2/5 py-2">Tên cửa hàng:</td>
-                    <td class="py-2">{{ $output['store_name'] }}.</td>
-                </tr>
-                <tr>
-                    <td class="font-bold w-2/5 py-2">Địa chỉ cửa hàng:</td>
-                    <td class="py-2">{{ $output['store_address'] }}.</td>
-                </tr>
-                <tr>
-                    <td class="font-bold w-2/5 py-2">Nhân Viên:</td>
-                    <td class="py-2">{{ $output['staff_name'] }}.</td>
-                </tr>
-                <tr>
-                    <td class="font-bold w-2/5 py-2">Ghi Chú:</td>
-                    <td class="py-2">{{ $output['customer_note'] }}</td>
-                </tr>
-            </table>
-        </div>
-        <div class="services text-left mb-8">
-            <h4 class="font-bold mb-2">Dịch vụ đã chọn:</h4>
-            <table class="w-full border border-gray-300">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="py-2 border-b border-gray-300 text-center" style="width: 10%">STT</th>
-                        <th class="py-2 border-b border-gray-300 text-center" style="width: 40%">Dịch vụ</th>
-                        <th class="py-2 border-b border-gray-300 text-center">Giá tiền</th>
-                        <th class="py-2 border-b border-gray-300 text-center">Thời gian</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($output['services'] as $index => $service)
-                    <tr>
-                        <td class="py-2 border-b border-gray-300 text-center" style="width: 10%">{{ $index + 1 }}</td>
-                        <td class="py-2 border-b border-gray-300 text-center" style="width: 40%">{{ $service['name']}}</td>
-                        <td class="py-2 border-b border-gray-300 text-center">{{ $service['price']}}VND</td>
-                        <td class="py-2 border-b border-gray-300 text-center">{{ $service['time']}}p</td>
-                    </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-            <table class="w-full border border-none">
-                <tbody>
-                    <tr>
-                        <td class="py-2 text-center" style="width: 10%"></td>
-                        <td class="py-2 text-center font-bold" style="width: 40%">Tổng:</td>
-                        <td class="py-2 text-center">{{ $output['total_price']}}VND</td>
-                        <td class="py-2 text-center">{{$output['total_time']}}p</td>
-                    </tr>
-                </tbody>
-
-            </table>
-
-        </div>
-        <hr class="border-t border-gray-300 my-4" />
-        <div class="closing-note text-gray-700 text-lg font-medium text-center">
-            Xin chân thành cảm ơn quý khách đã sử dụng dịch vụ của IMTATECH!
-        </div>
-        <div class="contact-info text-center mt-8">
-            <div class="text-sm font-bold mb-2">Mọi thắc mắc xin liên hệ:</div>
-            <div class="text-sm mb-1">
-                Phone: <a href="tel:0926755061" class="text-blue-500 hover:underline">0926755061</a>
-            </div>
-            <div class="text-sm">
-                Email: <a href="mailto:manhpkph30134@gmail.com" class="text-blue-500 hover:underline">manhpkph30134@gmail.com</a>
-            </div>
+            </tfoot>
+        </table>
+        <hr />
+        <div style="text-align: center; margin-top: 20px" class="contact">
+            <p>Xin chân thành cảm ơn quý khách đã sử dụng dịch vụ của IMTATECH!</p>
+            <h3 style="margin-top: 50px">Mọi thắc mắc xin liên hệ:</h3>
+            <p><a href="tel:0926755061" style="text-decoration: none;">0926755061</a></p>
+            <p><a href="mailto:manhpkph30134@gmail.com" style="text-decoration: none;">manhpkph30134@gmail.com</a></p>
         </div>
     </div>
-
 </body>
 
 </html>
