@@ -58,7 +58,6 @@ class StaffController extends Controller
     {
 
         $profile = $this->staffService->staffService();
-
         return $this->responseSuccess(__('user.show'), [
             'id' => $profile->id,
             'email' => $profile->email,
