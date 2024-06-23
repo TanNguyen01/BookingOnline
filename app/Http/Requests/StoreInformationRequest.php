@@ -31,6 +31,8 @@ class StoreInformationRequest extends FormRequest
             'image' => 'required|image|mimes:jpg,png,jpeg',
             'address' => 'required|string',
             'phone' => 'required|string',
+            'latitude' => 'nullable|string',
+            'longitude' => 'nullable|string',
         ];
 
     }
@@ -49,6 +51,9 @@ class StoreInformationRequest extends FormRequest
 
             'image.mimes' => __('store.image_mimes'),
             'image.required' => __('store.image_required'),
+            'latitude.string' => 'Vĩ độ phải là chuỗi ký tự.',
+            'longitude.string' => 'Kinh độ phải là chuỗi ký tự.',
+
 
         ];
 

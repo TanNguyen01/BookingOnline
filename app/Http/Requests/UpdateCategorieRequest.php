@@ -29,14 +29,11 @@ class UpdateCategorieRequest extends FormRequest
             'name' => 'required|string|unique:categories',
         ];
     }
-
     public function messages(): array
     {
-
         return [
             'name.required' => 'Vui lòng nhâp name',
             'name.unique' => 'Tên đã tồn tại',
-
         ];
     }
 

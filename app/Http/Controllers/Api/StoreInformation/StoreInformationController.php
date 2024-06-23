@@ -43,17 +43,23 @@ class StoreInformationController extends Controller
         DB::beginTransaction();
 
         try {
-            $store = $this->storeService->createStore($request->all());
-
+            $store = $this->storeService->createStore($request->validated());
+            $store->location = [
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ];
+            $store->save();
             DB::commit();
-
             return $this->responseCreated(__('store.created'), ['data' => $store]);
         } catch (\Exception $e) {
+            // Rollback transaction nếu có lỗi xảy ra
             DB::rollBack();
 
+            // Trả về phản hồi lỗi
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -74,13 +80,18 @@ class StoreInformationController extends Controller
     public function update(UpdateStroreInformationRequest $request, string $id)
     {
         DB::beginTransaction();
-
         try {
-            $store = $this->storeService->updateStore($id, $request->all());
+            $store = $this->storeService->updateStore($id, $request->validated());
             if (!$store) {
                 DB::rollBack();
-
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+            }
+            if ($request->has('latitude') && $request->has('longitude')) {
+                $store->location = [
+                    'latitude' => $request->latitude,
+                    'longitude' => $request->longitude,
+                ];
+                $store->save();
             }
 
             DB::commit();
@@ -88,10 +99,10 @@ class StoreInformationController extends Controller
             return $this->responseSuccess(__('store.updated'), ['data' => $store]);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -117,30 +128,4 @@ class StoreInformationController extends Controller
             return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
         }
     }
-
-    // locaiton
-    public function storeLocation(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
-        ]);
-
-        try {
-            $store = StoreInformation::findOrFail($id);
-            $store->location = [
-                'latitude' => $validated['latitude'],
-                'longitude' => $validated['longitude'],
-            ];
-            $store->save();
-            return $this->responseSuccess(
-                'Thêm thành công vị trí cửa hàng',
-                ['data' => $store]);
-        } catch (\Exception $e) {
-            return $this->responseServerError([__('store.error'), 'error' => $e->getMessage()]);
-        }
-    }
-
 }
-
-

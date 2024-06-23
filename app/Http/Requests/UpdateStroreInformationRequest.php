@@ -36,6 +36,8 @@ class UpdateStroreInformationRequest extends FormRequest
             'address' => 'required|string|nullable',
             'phone' => 'required|string|nullable',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
         ];
     }
 
@@ -48,8 +50,10 @@ class UpdateStroreInformationRequest extends FormRequest
             'phone.required' => 'Vui lòng nhập số điện thoại.',
             'name.required' => 'Vui lòng nhập tên.',
             'name.string' => 'Tên phải là kiểu chuỗi.',
-            'name.unique' => 'Tên đã tồn tại trong hệ thống.', // Custom message for unique rule
+            'name.unique' => 'Tên đã tồn tại trong hệ thống.',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg, png, jpeg.',
+            'latitude.string' => 'Vĩ độ phải là chuỗi ký tự.',
+            'longitude.string' => 'Kinh độ phải là chuỗi ký tự.',
         ];
     }
 
