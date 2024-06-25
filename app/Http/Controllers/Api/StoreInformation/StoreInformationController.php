@@ -44,10 +44,6 @@ class StoreInformationController extends Controller
 
         try {
             $store = $this->storeService->createStore($request->validated());
-            $store->location = [
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-            ];
             $store->save();
             DB::commit();
             return $this->responseCreated(__('store.created'), ['data' => $store]);
@@ -86,14 +82,7 @@ class StoreInformationController extends Controller
                 DB::rollBack();
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
             }
-            if ($request->has('latitude') && $request->has('longitude')) {
-                $store->location = [
-                    'latitude' => $request->latitude,
-                    'longitude' => $request->longitude,
-                ];
                 $store->save();
-            }
-
             DB::commit();
 
             return $this->responseSuccess(__('store.updated'), ['data' => $store]);

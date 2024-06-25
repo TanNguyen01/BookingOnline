@@ -36,8 +36,7 @@ class UpdateStroreInformationRequest extends FormRequest
             'address' => 'required|string|nullable',
             'phone' => 'required|string|nullable',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
+            'location' => 'nullable|string',
         ];
     }
 
@@ -52,8 +51,7 @@ class UpdateStroreInformationRequest extends FormRequest
             'name.string' => 'Tên phải là kiểu chuỗi.',
             'name.unique' => 'Tên đã tồn tại trong hệ thống.',
             'image.mimes' => 'Hình ảnh phải có đuôi là jpg, png, jpeg.',
-            'latitude.string' => 'Vĩ độ phải là chuỗi ký tự.',
-            'longitude.string' => 'Kinh độ phải là chuỗi ký tự.',
+            'location.string' => 'Vị trí phải là chuỗi ký tự.',
         ];
     }
 
