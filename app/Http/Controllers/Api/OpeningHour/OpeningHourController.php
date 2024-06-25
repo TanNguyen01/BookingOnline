@@ -106,7 +106,7 @@ class OpeningHourController extends Controller
         if (! $store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
-        $openingHours = $store->openingHours()->get(['day', 'opening_time', 'closing_time']);
+        $openingHours = $store->openingHours()->get(['id','day', 'opening_time', 'closing_time']);
         if ($openingHours->isEmpty()) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
@@ -232,7 +232,7 @@ class OpeningHourController extends Controller
             if ($deletedRows > 0) {
                 return $this->responseDeleted(null, Response::HTTP_NO_CONTENT);
             } else {
-                return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'không có ngày nào để xóa']);
+                return $this->responseNotFound([Response::HTTP_NOT_FOUND]);
             }
         }
     }
@@ -244,6 +244,8 @@ class OpeningHourController extends Controller
         try {
             $openingTime = $request->opening_time;
             $closingTime = $request->closing_time;
+            $startDate = $request->start_date;
+
 
             if (! $storeId) {
                 DB::rollBack();
@@ -260,7 +262,7 @@ class OpeningHourController extends Controller
             }
 
             $existingDays = [];
-            $currentDate = date('Y-m-d');
+            $currentDate = $startDate;
 
             // Thêm 5 ngày liên tiếp bắt đầu từ ngày hôm sau
             for ($i = 1; $i <= 5; $i++) {
