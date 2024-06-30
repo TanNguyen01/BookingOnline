@@ -72,7 +72,7 @@ class OpeningHourController extends Controller
             if (! empty($existingDays)) {
                 DB::rollBack();
 
-                return $this->responseBadRequest([__('openingHours.exist'), $existingDays]);
+                return $this->responseBadRequest([__('openingHours.exists')]);
             }
 
             foreach ($openingHoursData as $data) {

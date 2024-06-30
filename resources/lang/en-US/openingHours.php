@@ -9,6 +9,9 @@ return [
     'update' => 'Opening hours is updated successfully',
     'error' => 'An error occurred. Please try again later.',
     'not_found' => 'No opening hours available, please wait.',
+    'creation_failed' => 'Creation failed',
+    'update_failed' => 'Update failed',
+
 
     /**validate */
 

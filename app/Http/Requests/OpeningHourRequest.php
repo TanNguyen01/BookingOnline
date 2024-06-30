@@ -25,7 +25,6 @@ class OpeningHourRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'store_id' => 'exists:store_information,id',
             'opening_hours' => 'required|array',
@@ -46,33 +45,63 @@ class OpeningHourRequest extends FormRequest
 
     public function messages(): array
     {
-
         return [
-
-            // 'store_information_id.required' => __('openingHours.store_information_id_required'),
             'store_id.exists' => __('openingHours.exists'),
             'opening_hours.*.day.required' => __('openingHours.opening_hours_day_required'),
             'opening_hours.*.day.after_or_equal' => __('openingHours.opening_hours_day_after_or_equal'),
             'opening_hours.*.opening_time.required' => __('openingHours.opening_hours_opening_time_required'),
             'opening_hours.*.opening_time.date_format' => __('openingHours.opening_hours_opening_time_date_format'),
-
+            'opening_hours.*.opening_time.regex' => __('openingHours.opening_hours_opening_time_regex'),
             'opening_hours.*.closing_time.required' => __('openingHours.closing_time_required'),
-
-            'opening_hours.*.opening_time.after' => __('openingHours.opening_hours_opening_time_after'),
-
+            'opening_hours.*.closing_time.date_format' => __('openingHours.closing_time_date_format'),
+            'opening_hours.*.closing_time.regex' => __('openingHours.closing_time_regex'),
+            'opening_hours.*.closing_time.after' => __('openingHours.opening_hours_closing_time_after'),
         ];
+    }
 
+    public function attributes(): array
+    {
+        return [
+            'opening_hours.*.day' => 'day',
+            'opening_hours.*.opening_time' => 'start_time',
+            'opening_hours.*.closing_time' => 'closing_time',
+        ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         $errors = (new ValidationException($validator))->errors();
+        $formattedErrors = $this->formatErrors($errors);
         throw new HttpResponseException(response()->json(
             [
-                'error' => $errors,
+                'error' => $formattedErrors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ],
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY
         ));
+    }
+
+    protected function formatErrors(array $errors)
+    {
+        $formattedErrors = [];
+        foreach ($errors as $key => $messages) {
+            $simpleKey = $this->simplifyAttribute($key);
+            foreach ($messages as $message) {
+                $formattedErrors[$simpleKey][] = $message;
+            }
+        }
+
+        return $formattedErrors;
+    }
+
+    protected function simplifyAttribute($attribute)
+    {
+        $attributeMap = [
+            'opening_hours.*.day' => 'day',
+            'opening_hours.*.opening_time' => 'start_time',
+            'opening_hours.*.closing_time' => 'closing_time',
+        ];
+        $attributeWithoutIndex = preg_replace('/\.\d+\./', '.*.', $attribute);
+        return $attributeMap[$attributeWithoutIndex] ?? $attribute;
     }
 }

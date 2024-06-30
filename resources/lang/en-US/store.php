@@ -7,6 +7,9 @@ return [
     'updated' => 'Store updated successfully.',
     'deleted' => 'Store deleted successfully.',
     'not_found' => 'Store not found.',
+    'creation_failed' => 'Creation failed',
+    'update_failed' => 'Update failed',
+
 
     /** Validate */
     'name_unique' => 'Store name already exists.',

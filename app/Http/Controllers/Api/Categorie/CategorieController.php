@@ -55,8 +55,13 @@ class CategorieController extends Controller
             DB::rollback();
             Log::error('Lỗi khi thêm danh mục: '.$e->getMessage());
 
-            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
-        }
+            return $this->responseError(
+                __('category.creation_failed'),
+                [
+                    'error' => $e->getMessage(),
+                ]
+            );
+           }
     }
 
     /**
@@ -104,7 +109,12 @@ class CategorieController extends Controller
             DB::rollback();
             Log::error('Lỗi khi cập nhật danh mục: '.$e->getMessage());
 
-            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            return $this->responseError(
+                __('category.update_failed'),
+                [
+                    'error' => $e->getMessage(),
+                ]
+            );
         }
     }
 

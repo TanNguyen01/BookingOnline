@@ -48,7 +48,12 @@ class ServiceController extends Controller
             DB::rollback();
             Log::error('Lỗi khi thêm dịch vụ: '.$e->getMessage());
 
-            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            return $this->responseError(
+                __('service.creation_failed'),
+                [
+                    'error' => $e->getMessage(),
+                ]
+            );
         }
     }
 
@@ -85,8 +90,12 @@ class ServiceController extends Controller
             DB::rollback();
             Log::error('Lỗi khi cập nhật dịch vụ: '.$e->getMessage());
 
-            return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Đã xảy ra lỗi. Vui lòng thử lại sau.');
-        }
+            return $this->responseError(
+                __('service.update_failed'),
+                [
+                    'error' => $e->getMessage(),
+                ]
+            );        }
     }
 
     /**

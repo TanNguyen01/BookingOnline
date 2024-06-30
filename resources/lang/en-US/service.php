@@ -9,6 +9,10 @@ return [
     'not_found' => 'Service not found.',
 
     'accept' => 'Service accept',
+    'creation_failed' => 'Creation failed',
+    'update_failed' => 'Update failed',
+
+
 
     /** Validate */
     'name_required' => 'Service name is required.',
