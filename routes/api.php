@@ -30,7 +30,7 @@ Route::post('/set-locale/{locale}', function ($locale) {
     return response()->json(['message' => 'Locale set to '.$locale]);
 });
 
-// Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
     // Services
     Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
     Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
@@ -61,7 +61,7 @@ Route::post('/set-locale/{locale}', function ($locale) {
     // Booking Management
     Route::apiResource('bookings', BookingController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
     Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
-// });
+});
 
 Route::prefix('client')->middleware(['throttle', 'language'])->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
