@@ -77,6 +77,7 @@ class Kernel extends HttpKernel
         'language' => Localization::class,
         'rate.limit' => \App\Http\Middleware\RateLimitMiddleware::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+
     ];
     protected $commands = [
         \App\Console\Commands\SendBookingReminders::class,
