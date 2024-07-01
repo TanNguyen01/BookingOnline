@@ -77,10 +77,6 @@ class Kernel extends HttpKernel
         'language' => Localization::class,
         'rate.limit' => \App\Http\Middleware\RateLimitMiddleware::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-<<<<<<< HEAD
-=======
-
->>>>>>> 6ecd18bcffda7f2489fa06add96dbf7cf12fc4fc
 
     ];
     protected $commands = [
