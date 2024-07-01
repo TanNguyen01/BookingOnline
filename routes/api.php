@@ -25,15 +25,13 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-Route::put('/update2/{id}', [StoreInformationController::class, 'update2']);
-
 Route::post('/set-locale/{locale}', function ($locale) {
     Session::put('locale', $locale);
 
     return response()->json(['message' => 'Locale set to ' . $locale]);
 });
 
-Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin', 'language','throttle'])->group(function () {
     // Services
     Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
     Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
@@ -86,7 +84,7 @@ Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function ()
     });
 });
 
-Route::prefix('client')->middleware(['throttle', 'language'])->group(function () {
+Route::prefix('client')->middleware(['language'])->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
     Route::get('/get-date-working-of-user', [ClientController::class, 'GetDateWorkingOfUser']);
     Route::get('/list-schedule', [ClientController::class, 'getWorkingHoursByUserAndStore']);
