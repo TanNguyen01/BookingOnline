@@ -172,7 +172,7 @@ class StaffController extends Controller
             ->with(['user.storeInformation:id,name,address'])
             ->get()
             ->map(function ($schedule) {
-                $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi vui lòng đăng ký lại' : null;
+                $error = $schedule->is_valid == 0 ? __('staff.error_check') : null;
 
                 return [
                     'id' => $schedule->id,

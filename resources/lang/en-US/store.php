@@ -19,6 +19,7 @@ return [
     'address_string' => 'Store address must be a string.',
     'phone_required' => 'Store phone is required.',
     'phone_string' => 'Store phone must be a string.',
+    "location_string" => "The location must be a string.",
     'image_required' => 'Store image is required.',
     'image_mimes' => 'Store image must be a file of type: jpeg, jpg, png.',
 ];

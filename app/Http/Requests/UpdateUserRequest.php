@@ -41,17 +41,19 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required' => 'Nhập password!',
-            'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' Name là kiểu chuỗi',
-            'role.required' => 'Chọn tư cách cho user',
-            'role.in' => 'Chọn tư cách cho user chỉ  0:Admin , 1:staff',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'phone.string' => 'Phone là kiểu chuỗi',
-            'address.string' => 'Phone là kiểu chuỗi',
-            'password.min' => 'Mật khẩu phải nhiều hơn 6 kí tự',
-            'password.max' => 'Mật khẩu phải ít hơn 15 ký tự!',
-            'store_id.exists' => 'Không có cửa hàng nào',
+            'email.unique' => __('user.email_unique'),
+            'email.required' => __('user.email_required'),
+            'email.email' => __('user.email_email'),
+            'password.required' => __('user.password_required'),
+            'password.confirmed' => __('user.password_confirmed'),
+            'password.min' => __('auth.password_min'),
+            'password.max' => __('auth.password_max'),
+            'name.required' => __('user.name_required'),
+            'name.string' => __('user.name_string'),
+            'image.mimes' => __('user.image_mimes'),
+            'phone.string' => __('user.phone_string'),
+            'address.string' => __('user.address_string'),
+            'store_id.exists' => __('store.not_found'),
 
         ];
     }

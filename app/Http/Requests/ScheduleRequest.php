@@ -49,13 +49,13 @@ class ScheduleRequest extends FormRequest
     {
 
         return [
-            'schedules.*.day.after_or_equal' => ' ngày chọn phải >= ngày hôm nay',
-            'schedules.*.day' => 'Vui lòng chọn ngày đăng ký làm',
-            'schedules.*.day.*.start_time.required' => 'giờ bắt đầu mở cửa',
-            'schedules.*.day.*.start_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-            'schedules.*.end_time' => 'giờ đóng cửa',
-            'schedules.*.end_time.date_format' => 'Chọn đúng định dạng giờ: phút: giây',
-            'schedules.*.end_time.after' => 'Giờ bắt đầu phải < giờ kết thúc',
+            'schedules.*.day.after_or_equal' => __('schedule.schedules_day_after_or_equal'),
+            'schedules.*.day' => __('schedule.schedules_day'),
+            'schedules.*.day.*.start_time.required' => __('schedule.schedules_day_start_time_required'),
+            'schedules.*.day.*.start_time.date_format' => __('schedule.schedules_day_start_time_date_format'),
+            'schedules.*.end_time' => __('schedule.schedules_end_time'),
+            'schedules.*.end_time.date_format' => __('schedule.schedules_end_time_date_format'),
+            'schedules.*.end_time.after' => __('schedule.schedules_end_time_after'),
 
         ];
     }

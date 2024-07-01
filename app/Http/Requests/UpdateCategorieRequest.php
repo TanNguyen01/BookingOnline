@@ -32,8 +32,8 @@ class UpdateCategorieRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Vui lòng nhâp name',
-            'name.unique' => 'Tên đã tồn tại',
+            'name.required' => __('category.name_required'),
+            'name.unique' => __('category.name_unique'),
         ];
     }
 

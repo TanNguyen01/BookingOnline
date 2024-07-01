@@ -43,15 +43,16 @@ class UpdateStroreInformationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'address.string' => 'Address phải là kiểu chuỗi.',
-            'address.required' => 'Vui lòng nhập địa chỉ.',
-            'phone.string' => 'Phone phải là kiểu chuỗi.',
-            'phone.required' => 'Vui lòng nhập số điện thoại.',
-            'name.required' => 'Vui lòng nhập tên.',
-            'name.string' => 'Tên phải là kiểu chuỗi.',
-            'name.unique' => 'Tên đã tồn tại trong hệ thống.',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg, png, jpeg.',
-            'location.string' => 'Vị trí phải là chuỗi ký tự.',
+            'name.unique' => __('store.name_unique'),
+            'name.required' => __('store.name_required'),
+            'name.string' => __('store.name_string'),
+            'address.string' => __('store.address_string'),
+            'address.required' => __('store.address_required'),
+            'phone.string' => __('store.phone_string'),
+            'phone.required' => __('store.phone_required'),
+            'image.mimes' => __('store.image_mimes'),
+            'image.required' => __('store.image_required'),
+            'location.string' => __('store_location_string'),
         ];
     }
 
@@ -60,7 +61,7 @@ class UpdateStroreInformationRequest extends FormRequest
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(response()->json(
             [
-                'errors' => $errors,
+                'error' => $errors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ],
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY

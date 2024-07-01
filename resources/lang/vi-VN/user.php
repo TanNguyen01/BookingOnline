@@ -8,6 +8,9 @@ return [
     'deleted' => 'Nguoi dung đã được xóa thành công.',
     'not_found' => 'Không tìm thấy nguoi dung hoac nhan vien nay.',
 
+    'update_failed'=> 'Loi cap nhat nguoi dung hoac nhan vien nay.',
+    'creation_failed'=> 'Loi them nguoi dung hoac nhan vien nay.',
+
     'invalid_accept' => 'Người dùng không hợp lệ hoặc không phải là nhân viên.',
     'accept' => 'nhan vien hop le',
 

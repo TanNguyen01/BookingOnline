@@ -16,7 +16,7 @@ return [
     'address_required' => 'Vui lòng nhâp dia chi',
     'phone_string' => 'sdt là kiểu chuỗi',
     'phone_required' => 'Vui lòng nhâp sdt',
-
+    'location_string' => 'Vị trí phải là chuỗi ký tự.',
     'image_mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
     'image_required' => 'chon Hình ảnh',
 ];

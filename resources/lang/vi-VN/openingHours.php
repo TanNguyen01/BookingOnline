@@ -9,6 +9,9 @@ return [
     'update' => 'Cap nhat gio mo cua thanh cong',
     'error' => 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
     'not_found' => 'Khong co gio mo cua,vui long doi',
+    'error_check'=> 'Kiểm tra lại có ngày chưa cập nhật giờ mở cửa',
+    'creation_failed' => 'Thêm giờ mở cửa thất bại',
+    'update_failed' => 'Cập nhật gio mo cua that bai',
 
     /** validate */
     'store_information_id_required' => 'Vui lòng nhâp id store',
