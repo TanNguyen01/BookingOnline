@@ -8,14 +8,10 @@ return [
     'create' => 'Giờ mở cửa thêm thành công',
     'update' => 'Cập nhật thành công',
     'error' => 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
-<<<<<<< HEAD
-    'not_found' => 'Không có giờ mở cửa vui long đợi',
-=======
-    'not_found' => 'Khong co gio mo cua,vui long doi',
+    'not_found' => 'Không có giờ mở cửa ,Vui long đợi',
     'error_check'=> 'Kiểm tra lại có ngày chưa cập nhật giờ mở cửa',
     'creation_failed' => 'Thêm giờ mở cửa thất bại',
     'update_failed' => 'Cập nhật gio mo cua that bai',
->>>>>>> 6ecd18bcffda7f2489fa06add96dbf7cf12fc4f
 
     /** validate */
     'store_information_id_required' => 'Vui lòng nhâp chọn store',

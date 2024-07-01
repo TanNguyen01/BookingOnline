@@ -284,16 +284,16 @@ class BookingController extends Controller
                 'customer_email' => $customerEmail,
                 'applied_discounts' => $applied_discounts,
             ];
-            // Mail::send('emails.employee_notification', ['output' => $output], function ($email) use ($employeeData) {
-            //     $email->subject('Thông báo đặt chỗ mới');
-            //     $email->to($employeeData->email, $employeeData->name);
-            // });
+            Mail::send('emails.employee_notification', ['output' => $output], function ($email) use ($employeeData) {
+                $email->subject('Thông báo đặt chỗ mới');
+                $email->to($employeeData->email, $employeeData->name);
+            });
 
 
-            // Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
-            //     $email->subject('Thông tin đặt chỗ');
-            //     $email->to($customerEmail, $customerName);
-            // });
+            Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
+                $email->subject('Thông tin đặt chỗ');
+                $email->to($customerEmail, $customerName);
+            });
             return $this->responseCreated(__('booking.created'), ['data' => $output]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
