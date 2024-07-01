@@ -5,8 +5,10 @@ use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Categorie\CategorieController;
 use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\OpeningHour\OpeningHourController;
+use App\Http\Controllers\Api\Promotion\PromotionController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\Staff\StaffController;
+use App\Http\Controllers\Api\Statistic\StatisticsController;
 use App\Http\Controllers\Api\StoreInformation\StoreInformationController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -22,47 +24,71 @@ use Illuminate\Support\Facades\Session;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::put('/update2/{id}', [StoreInformationController::class, 'update2']);
 
 Route::post('/set-locale/{locale}', function ($locale) {
     Session::put('locale', $locale);
 
-    return response()->json(['message' => 'Locale set to '.$locale]);
+    return response()->json(['message' => 'Locale set to ' . $locale]);
 });
 
-Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
-    // Services
-    Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('rate.limit');
-    Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
+// Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+// Services
+Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
 
-    // Categories
-    Route::apiResource('categories', CategorieController::class)->only(['update', 'destroy'])->middleware('rate.limit');
-    Route::apiResource('categories', CategorieController::class)->except(['update', 'destroy']);
+// Categories
+Route::apiResource('categories', CategorieController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+Route::apiResource('categories', CategorieController::class)->except(['update', 'destroy']);
 
-    // User Admin
-    Route::apiResource('admin_users', UserController::class)->only(['update', 'destroy'])->middleware('rate.limit');
-    Route::apiResource('admin_users', UserController::class)->except(['update', 'destroy']);
+// User Admin
+Route::apiResource('admin_users', UserController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+Route::apiResource('admin_users', UserController::class)->except(['update', 'destroy']);
 
-    // Store Informations
-    Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('rate.limit');
-    Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
-    // Opening Hours
-    Route::prefix('opening-hours')->group(function () {
-        Route::get('/list', [OpeningHourController::class, 'index']);
-        Route::get('/{storeId}', [OpeningHourController::class, 'show']);
-        Route::post('/post/{storeId}', [OpeningHourController::class, 'store']);
-        Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->middleware('rate.limit');
-        Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->middleware('rate.limit');
-        //xóa nhanh những ngày đã qua
-        Route::delete('quick_delete/{storeId}', [OpeningHourController::class, 'quickDestroy']);
-        // thêm 5 ngày mở cửa liên tiếp
-        Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
-    });
-    // Booking Management
-    Route::apiResource('bookings', BookingController::class)->only(['update', 'destroy'])->middleware('rate.limit');
-    Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
+// Store Informations
+Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
+// Opening Hours
+Route::prefix('opening-hours')->group(function () {
+    Route::get('/list', [OpeningHourController::class, 'index']);
+    Route::get('/{storeId}', [OpeningHourController::class, 'show']);
+    Route::post('/post/{storeId}', [OpeningHourController::class, 'store']);
+    Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->middleware('throttle:60,1');
+    Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->middleware('throttle:60,1');
+    //xóa nhanh những ngày đã qua
+    Route::delete('quick_delete/{storeId}', [OpeningHourController::class, 'quickDestroy']);
+    // thêm 5 ngày mở cửa liên tiếp
+    Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
+});
+// Booking Management
+Route::apiResource('bookings', BookingController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
+
+// khuyến mãi
+Route::apiResource('discount', PromotionController::class);
+// thống kê
+//tổng số booking
+Route::prefix('statistics')->group(function () {
+    Route::get('/total-bookings', [StatisticsController::class, 'getTotalBookings']);
+    // tỷ lệ lấp đầy thời gian
+    Route::get('/occupancy-rate', [StatisticsController::class, 'getOccupancyRate']);
+    // Số lần đặt chỗ của các user
+    Route::get('/user-bookings', [StatisticsController::class, 'getUserBookings']);
+    // Giá trị trung bình đơn hàng
+    Route::get('/average-booking-value', [StatisticsController::class, 'getAverageBookingValue']);
+    // Tỷ lệ từ bỏ đặt chỗ
+    Route::get('/abandonment-rate', [StatisticsController::class, 'getAbandonmentRate']);
+    //Tổng doanh thu từ các lượt đặt chỗ.
+    Route::get('/gettotal-revenue', [StatisticsController::class, 'getTotalRevenue']);
+    // doanh thu theo dịch vụ
+    Route::get('/gettotal-service', [StatisticsController::class, 'getServiceRevenueByStore']);
+
+
 });
 
+
+// });
 Route::prefix('client')->middleware(['throttle', 'language'])->group(function () {
     Route::get('/list_time', [ClientController::class, 'chooseTime']);
     Route::get('/get-date-working-of-user', [ClientController::class, 'GetDateWorkingOfUser']);
@@ -73,7 +99,7 @@ Route::prefix('client')->middleware(['throttle', 'language'])->group(function ()
     Route::post('/store_booking', [BookingController::class, 'store']);
 });
 //nhân viên
-Route::middleware([ 'auth:sanctum','language'])->group(function () {
+Route::middleware(['auth:sanctum', 'language'])->group(function () {
     Route::get('/showprofile', [StaffController::class, 'showProfile']);
     Route::post('/profile/update', [StaffController::class, 'updateProfile']);
 });
@@ -94,5 +120,4 @@ Route::middleware('language')->prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test']);
-
-
+// Route::get('test2', [StaffController::class, 'getMail']);

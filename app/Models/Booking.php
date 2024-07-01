@@ -10,7 +10,7 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'day', 'time', 'status',
+        'user_id', 'day', 'time', 'status','total_time'
     ];
 
     public function user()
@@ -20,7 +20,7 @@ class Booking extends Model
 
     public function services()
     {
-        return $this->belongsToMany(Service::class, 'booking_service');
+        return $this->belongsToMany(Service::class, 'service_bookings');
     }
 
     public function bases()

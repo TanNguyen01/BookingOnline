@@ -109,7 +109,28 @@
                 @endforeach
             </tbody>
             <tfoot>
+            <tr class="a">
+
+               <td colspan="2" style="
+                           padding: 10px;
+                           text-align: right;
+                           font-weight: bold;
+                           border-left: none !important;
+                           border-right: none !important;
+                           border-bottom: none !important;">
+                   Giảm giá:
+               </td>
+               <td style="
+                           padding: 10px;
+                           text-align: center;
+                           border-left: none !important;
+                           border-right: none !important;
+                           border-bottom: none !important;">
+                   {{ $output['discount_amount'] }}.00VND
+               </td>
+            </tr>
                 <tr class="a">
+
                     <td colspan="2" style="
                                 padding: 10px;
                                 text-align: right;
@@ -117,7 +138,7 @@
                                 border-left: none !important;
                                 border-right: none !important;
                                 border-bottom: none !important;">
-                        Tổng:
+                        Tổng Tiền:
                     </td>
                     <td style="
                                 padding: 10px;

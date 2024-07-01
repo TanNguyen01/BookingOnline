@@ -15,6 +15,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\AppointmentReminder;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class StaffController extends Controller
 {
@@ -34,7 +37,7 @@ class StaffController extends Controller
         try {
             $validatedData = $request->all();
             $user = $this->staffService->staffService();
-            if (! Hash::check($validatedData['current_password'], $user->password)) {
+            if (!Hash::check($validatedData['current_password'], $user->password)) {
                 return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('auth.failed')]);
             }
             unset($validatedData['current_password']);
@@ -88,7 +91,7 @@ class StaffController extends Controller
                     ->where('day', $day)
                     ->first();
 
-                if (! $openingHours) {
+                if (!$openingHours) {
                     DB::rollBack();
 
                     return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.not_found'), $day]);
@@ -206,7 +209,7 @@ class StaffController extends Controller
 
         // Lấy thông tin cửa hàng
         $store = StoreInformation::find($user->store_id);
-        if (! $store) {
+        if (!$store) {
             return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
         }
 
@@ -232,4 +235,25 @@ class StaffController extends Controller
             'data' => $formattedHours,
         ]);
     }
+
+    // gửi mail
+    // public function getMail()
+    // {
+    //     $bookings = Booking::where('status', 'confirmed')
+    //         ->whereDate('day', now())
+    //         // ->whereTime('time', '=', now()->addMinutes(15)->format('H:i:s'))
+    //         ->with(['user.storeInformation', 'bases'])
+    //         ->get();
+    //     Log::info('Found ' . $bookings->count() . ' bookings for sending email.');
+
+    //     foreach ($bookings as $booking) {
+    //         if ($booking->user && $booking->bases) {
+    //             foreach ($booking->bases as $base) {
+    //                 Mail::to($booking->user->email)->send(new AppointmentReminder($booking));
+    //             }
+    //         }
+    //     }
+
+    //     return $this->responseSuccess(__('booking.show'), ['data' => $bookings]);
+    // }
 }

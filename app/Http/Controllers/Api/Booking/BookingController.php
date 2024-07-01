@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
 use App\Models\Base;
 use App\Models\Booking;
+use App\Models\Promotion;
 use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\ServiceBooking;
@@ -13,6 +14,8 @@ use App\Models\StoreInformation;
 use App\Models\User;
 use App\Services\BookingService;
 use App\Traits\APIResponse;
+use App\Traits\PromotionTrait;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +32,7 @@ class BookingController extends Controller
     }
 
     use APIResponse;
+    use PromotionTrait;
 
     public function chooseStore(Request $request)
     {
@@ -179,27 +183,55 @@ class BookingController extends Controller
     public function store(BookingRequest $request)
     {
         $user_id = $request->user_id;
-        // Kiểm tra cửa hàng
         $storeData = $this->chooseStore($request);
-        // Kiểm tra nhân viên
         $employeeData = $this->chooseEmployee($request);
-        // Kiểm tra ngày và giờ
         $dateResponse = $this->chooseDate($request);
         if ($dateResponse->getStatusCode() !== 200) {
             return $dateResponse;
         }
-        // Kiểm tra dịch vụ
         $services = $this->chooseService($request);
         $total_price = $services['total_price'];
         $total_time = $services['total_time'];
-
-
-        // Lấy thông tin khách hàng từ $request
         $customerName = $request->customer_name;
         $customerDate = $request->customer_date;
         $customerPhone = $request->customer_phone;
         $customerNote = $request->customer_note;
         $customerEmail = $request->customer_email;
+
+
+
+        $original_price = $total_price;
+        $discount_amount = 0;
+        $promotions_discount = 0;
+        $applied_discounts = [];
+
+        // Lấy danh sách các khuyến mãi có thể áp dụng
+        $promotions = Promotion::where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->with('conditions', 'services')
+            ->get();
+
+        foreach ($promotions as $promotion) {
+            $can_apply_promotion = true;
+
+            foreach ($promotion->conditions as $condition) {
+                if (!$this->checkCondition($condition, $request, $services['services']) ) {
+                    $can_apply_promotion = false;
+                    break;
+                }
+            }
+            if ($can_apply_promotion) {
+                $discount = $this->calculateDiscount($promotion, $total_price);
+                $promotions_discount += ($discount / $total_price) * 100; // Cộng dồn phần trăm giảm giá từ khuyến mãi
+                $applied_discounts[] = [
+                    'promotion_name' => $promotion->name,
+                    'discount_amount' => $discount,
+                ];
+            }
+        }
+
+        $total_price *= (1 - ($promotions_discount / 100));
+        $discount_amount = $original_price - $total_price;
 
         DB::beginTransaction();
         try {
@@ -208,7 +240,7 @@ class BookingController extends Controller
                 'day' => $request->day,
                 'time' => $request->time,
                 'status' => 'pending',
-
+                'total_time' =>  $total_time,
             ]);
             foreach ($services['services'] as $service) {
                 ServiceBooking::create([
@@ -239,8 +271,10 @@ class BookingController extends Controller
                 'staff_email' => $employeeData->email,
                 'staff_address' => $employeeData->address,
                 'services' => $services['services']->toArray(),
-                'total_time' => $total_time,
+                'original_price' => $original_price,
+                'discount_amount' => $discount_amount,
                 'total_price' => $base->total_price,
+                'total_time' => $booking->total_time,
                 'time_order' => $booking->time,
                 'date_order' => $booking->day,
                 'customer_name' => $base->name,
@@ -248,12 +282,18 @@ class BookingController extends Controller
                 'customer_date' => $base->date,
                 'customer_note' => $base->note,
                 'customer_email' => $customerEmail,
+                'applied_discounts' => $applied_discounts,
             ];
+            // Mail::send('emails.employee_notification', ['output' => $output], function ($email) use ($employeeData) {
+            //     $email->subject('Thông báo đặt chỗ mới');
+            //     $email->to($employeeData->email, $employeeData->name);
+            // });
 
-            Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
-                $email->subject('Thông tin đặt chỗ');
-                $email->to($customerEmail, $customerName);
-            });
+
+            // Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
+            //     $email->subject('Thông tin đặt chỗ');
+            //     $email->to($customerEmail, $customerName);
+            // });
             return $this->responseCreated(__('booking.created'), ['data' => $output]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
@@ -263,6 +303,10 @@ class BookingController extends Controller
             return $this->responseBadRequest(__('booking.error'));
         }
     }
+
+
+
+
 
     public function update(Request $request, $id)
     {
