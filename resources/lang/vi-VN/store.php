@@ -14,8 +14,14 @@ return [
     'name_string' => ' Tên cửa hàng là kiểu chuỗi',
     'address_string' => 'sdt là kiểu chuỗi',
     'address_required' => 'Vui lòng nhâp dia chi',
+<<<<<<< HEAD
     'phone_string' => 'Số điện thoại là kiểu chuỗi',
     'phone_required' => 'Vui lòng nhâp Số điện thoại',
+=======
+    'phone_string' => 'sdt là kiểu chuỗi',
+    'phone_required' => 'Vui lòng nhâp sdt',
+    'location_string' => 'Vị trí phải là chuỗi ký tự.',
+>>>>>>> 6ecd18bcffda7f2489fa06add96dbf7cf12fc4fc
     'image_mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
     'image_required' => 'Chọn Hình ảnh',
 ];

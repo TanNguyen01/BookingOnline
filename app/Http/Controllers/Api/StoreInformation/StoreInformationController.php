@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\StoreInformation;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInformationRequest;
-use App\Http\Requests\UpdateStroreInformationRequest;
+use App\Http\Requests\UpdateStoreInformationRequest;
 use App\Models\StoreInformation;
 use App\Models\User;
 use App\Services\StoreService;
@@ -73,7 +73,7 @@ class StoreInformationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStroreInformationRequest $request, string $id)
+    public function update(UpdateStoreInformationRequest $request, string $id)
     {
         DB::beginTransaction();
         try {

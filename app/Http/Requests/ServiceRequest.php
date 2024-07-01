@@ -8,7 +8,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class ServiceRequest extends FormRequest
+class
+ServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,12 +41,12 @@ class ServiceRequest extends FormRequest
     {
 
         return [
-            'time.required'=>'Nhập thời gian của dịch vụ',
+            'time.required'=>__('service.time_required'),
             'name.unique' => __('service.name_unique'),
             'name.required' => __('service.name_required'),
-            'categorie_id.required' => __('service.category_id_required'),
-            'categorie_id.integer' => 'nhập id category là kiểu số nguyên',
-            'categorie_id.exists' => 'không có danh mục nào',
+            'categorie_id.required' => __('service.categorie_id_required'),
+            'categorie_id.integer' => __('service.categorie_id_integer'),
+            'categorie_id.exists' => __('service.categorie_id_exists'),
             'describe.required' => __('service.describe_required'),
             'describe.max' => __('service.describe_max'),
             'price.required' => __('service.price_required'),

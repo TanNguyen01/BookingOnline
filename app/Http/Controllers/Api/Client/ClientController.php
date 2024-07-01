@@ -178,10 +178,10 @@ class ClientController extends Controller
 
         // Kiểm tra xem có giờ hẹn khả dụng hay không
         if (empty($available_time_slots)) {
-            return $this->responseBadRequest('Không có giờ hẹn khả dụng trong khoảng thời gian làm việc.');
+            return $this->responseBadRequest(__('staff.schedule_not_available'));
         }
 
-        return $this->responseSuccess('Lấy thành công thông tin làm việc trong ngày của user.', [
+        return $this->responseSuccess(__('staff.list_schedule'), [
             'data' => [
                 'working_time_slots' => $working_time_slots,
                 'booked_time_slots' => $booked_time_slots,

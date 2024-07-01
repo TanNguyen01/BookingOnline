@@ -52,7 +52,9 @@ class OpeningHourController extends Controller
         try {
             $store = $this->openingService->createOpeningHours($storeId);
             if (! $store) {
-                return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
+                return $this->responseNotFound(
+
+                    Response::HTTP_NOT_FOUND, __('store.not_found'));
             }
 
             $openingHoursData = $request->input('opening_hours');
@@ -72,7 +74,7 @@ class OpeningHourController extends Controller
             if (! empty($existingDays)) {
                 DB::rollBack();
 
-                return $this->responseBadRequest([__('openingHours.exist'), $existingDays]);
+                return $this->responseBadRequest([__('openingHours.exists')]);
             }
 
             foreach ($openingHoursData as $data) {
@@ -144,7 +146,7 @@ class OpeningHourController extends Controller
                         'closing_time' => $data['closing_time'],
                     ]);
                 } else {
-                    return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, 'Kiểm tra lại có ngày chưa cập nhật giờ mở cửa']);
+                    return $this->responseBadRequest([Response::HTTP_BAD_REQUEST, __('openingHours.error_check')]);
                 }
                 $schedules = Schedule::whereHas('user', function ($query) use ($storeId) {
                     $query->where('store_id', $storeId);

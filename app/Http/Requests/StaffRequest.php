@@ -40,14 +40,14 @@ class StaffRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'current_password.required' => 'Nhập current_password cũ',
-            'new_password.min' => 'Mật khẩu mới phải nhiều hơn 6 kí tự!',
-            'new_password.max' => 'Mật khẩu mới phải ít hơn 15 ký tự!',
-            'name.required' => 'Vui lòng nhâp name',
-            'name.string' => ' Name là kiểu chuỗi',
-            'image.mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-            'phone.string' => 'Phone là kiểu chuỗi',
-            'address.string' => 'Phone là kiểu chuỗi',
+            'current_password.required' => __('staff.current_password_required'),
+            'new_password.min' => __('staff_new_password_min'),
+            'new_password.max' => __('staff_new_password_max'),
+            'name.required' => __('staff_name_required'),
+            'name.string' => __('staff.name_string'),
+            'image.mimes' => __('staff.image_mimes'),
+            'phone.string' => __('staff.phone_string'),
+            'address.string' => __('staff.address_string'),
         ];
 
     }

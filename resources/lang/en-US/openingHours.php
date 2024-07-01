@@ -8,7 +8,11 @@ return [
     'create' => 'Opening hours is added successfully',
     'update' => 'Opening hours is updated successfully',
     'error' => 'An error occurred. Please try again later.',
+    'error_check'=> 'Please check again if the opening hours have not been updated yet.',
     'not_found' => 'No opening hours available, please wait.',
+    'creation_failed' => 'Creation failed',
+    'update_failed' => 'Update failed',
+
 
     /**validate */
 

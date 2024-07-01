@@ -53,7 +53,7 @@ class userRequest extends FormRequest
             'image.mimes' => __('user.image_mimes'),
             'phone.string' => __('user.phone_string'),
             'address.string' => __('user.address_string'),
-            'store_id.exists' => 'Không có cửa hàng nào',
+            'store_id.exists' => __('store.not_found'),
 
         ];
 

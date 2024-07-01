@@ -9,7 +9,8 @@ return [
     'not_found' => 'User not found.',
     'invalid_accept' => 'Invalid user or not an employee.',
     'accept' => 'User accept',
-
+    'creation_failed' => 'User creation failed',
+    'update_failed' => 'update failed',
     /** validate */
     'email_unique' => 'User email is already exists',
     'email_required' => 'User email is required',

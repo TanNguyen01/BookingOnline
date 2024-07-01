@@ -94,7 +94,7 @@ class StaffController extends Controller
                 if (!$openingHours) {
                     DB::rollBack();
 
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.not_found'), $day]);
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.not_found'),]);
                 }
 
                 $storeOpeningTime = Carbon::createFromFormat('H:i:s', $openingHours->opening_time);
@@ -103,7 +103,7 @@ class StaffController extends Controller
                 if ($startTime->lt($storeOpeningTime) || $endTime->gt($storeClosingTime)) {
                     DB::rollBack();
 
-                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.opening_hours_start_in_time'), $day]);
+                    return $this->responseNotFound([Response::HTTP_NOT_FOUND, __('openingHours.opening_hours_start_in_time')]);
                 }
 
                 // Kiểm tra xem đã tồn tại lịch làm việc cho ngày này chưa
@@ -175,7 +175,7 @@ class StaffController extends Controller
             ->with(['user.storeInformation:id,name,address'])
             ->get()
             ->map(function ($schedule) {
-                $error = $schedule->is_valid == 0 ? 'Vui lòng kiểm tra lại giờ mở cửa của cửa hàng đã được thay đổi vui lòng đăng ký lại' : null;
+                $error = $schedule->is_valid == 0 ? __('staff.error_check') : null;
 
                 return [
                     'id' => $schedule->id,

@@ -33,6 +33,7 @@ Route::post('/set-locale/{locale}', function ($locale) {
     return response()->json(['message' => 'Locale set to ' . $locale]);
 });
 
+<<<<<<< HEAD
 // Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
 // Services
 Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
@@ -85,6 +86,39 @@ Route::prefix('statistics')->group(function () {
     Route::get('/gettotal-service', [StatisticsController::class, 'getServiceRevenueByStore']);
 
 
+=======
+Route::middleware(['auth:sanctum', 'checkadmin', 'language'])->group(function () {
+    // Services
+    Route::apiResource('services', ServiceController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+    Route::apiResource('services', ServiceController::class)->except(['update', 'destroy']);
+
+    // Categories
+    Route::apiResource('categories', CategorieController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+    Route::apiResource('categories', CategorieController::class)->except(['update', 'destroy']);
+
+    // User Admin
+    Route::apiResource('admin_users', UserController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+    Route::apiResource('admin_users', UserController::class)->except(['update', 'destroy']);
+
+    // Store Informations
+    Route::apiResource('stores', StoreInformationController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+    Route::apiResource('stores', StoreInformationController::class)->except(['update', 'destroy']);
+    // Opening Hours
+    Route::prefix('opening-hours')->group(function () {
+        Route::get('/list', [OpeningHourController::class, 'index']);
+        Route::get('/{storeId}', [OpeningHourController::class, 'show']);
+        Route::post('/post/{storeId}', [OpeningHourController::class, 'store']);
+        Route::post('/update/{storeId}', [OpeningHourController::class, 'update'])->middleware('throttle:60,1');
+        Route::delete('delete/{id}', [OpeningHourController::class, 'destroy'])->middleware('throttle:60,1');
+        //xóa nhanh những ngày đã qua
+        Route::delete('quick_delete/{storeId}', [OpeningHourController::class, 'quickDestroy']);
+        // thêm 5 ngày mở cửa liên tiếp
+        Route::post('/post_5day/{storeId}', [OpeningHourController::class, 'store5']);
+    });
+    // Booking Management
+    Route::apiResource('bookings', BookingController::class)->only(['update', 'destroy'])->middleware('throttle:60,1');
+    Route::apiResource('bookings', BookingController::class)->except(['update', 'destroy']);
+>>>>>>> 6ecd18bcffda7f2489fa06add96dbf7cf12fc4fc
 });
 
 
