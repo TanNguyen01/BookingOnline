@@ -60,7 +60,7 @@ class UpdateStroreInformationRequest extends FormRequest
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(response()->json(
             [
-                'errors' => $errors,
+                'error' => $errors,
                 'status_code' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
             ],
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY
