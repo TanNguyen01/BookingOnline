@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-class UpdateStroreInformationRequest extends FormRequest
+class UpdateStoreInformationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -52,7 +52,7 @@ class UpdateStroreInformationRequest extends FormRequest
             'phone.required' => __('store.phone_required'),
             'image.mimes' => __('store.image_mimes'),
             'image.required' => __('store.image_required'),
-            'location.string' => __('store_location_string'),
+            'location.string' => __('store.location_string'),
         ];
     }
 

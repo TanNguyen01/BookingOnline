@@ -50,7 +50,7 @@ class StoreInformationRequest extends FormRequest
 
             'image.mimes' => __('store.image_mimes'),
             'image.required' => __('store.image_required'),
-            'location.string' => __('store_location_string'),
+            'location.string' => __('store.location_string'),
 
         ];
 
