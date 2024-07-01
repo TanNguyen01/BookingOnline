@@ -15,7 +15,7 @@ return [
     'error_check'=> 'Kiểm tra lại có ngày chưa cập nhật giờ mở cửa',
     'creation_failed' => 'Thêm giờ mở cửa thất bại',
     'update_failed' => 'Cập nhật gio mo cua that bai',
->>>>>>> 6ecd18bcffda7f2489fa06add96dbf7cf12fc4fc
+>>>>>>> 6ecd18bcffda7f2489fa06add96dbf7cf12fc4f
 
     /** validate */
     'store_information_id_required' => 'Vui lòng nhâp chọn store',
