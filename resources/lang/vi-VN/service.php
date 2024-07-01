@@ -1,21 +1,21 @@
 <?php
 
 return [
-    'list' => 'Xem thành công tat ca dich vu。',
+    'list' => 'Xem thành công tất cả dich vu。',
     'show' => 'Xem dich vu thanh cong',
-    'created' => 'Dich vu đã được tạo thành công.',
-    'updated' => 'Dich vu đã được cập nhật thành công.',
-    'deleted' => 'Dich vu đã được xóa thành công.',
+    'created' => 'Dich vụ đã được tạo thành công.',
+    'updated' => 'Dich vụ đã được cập nhật thành công.',
+    'deleted' => 'Dich vụ đã được xóa thành công.',
     'not_found' => 'Không tìm thấy dich vu.',
 
-    'accept' => 'dich vu hop le',
+    'accept' => 'Dịch vụ ợp lệ',
 
     /** Validate */
-    'name_unique' => 'tên  da ton tai',
+    'name_unique' => 'Tên đã tồn tại',
     'name_required' => 'Vui lòng nhâp name',
-    'categorie_id_required' => 'nhập id category',
+    'categorie_id_required' => 'Chọn Danh mục',
     'describe_required' => 'Nhâp mô tả của dịch vụ',
-    'describe_max' => 'tối đa 360 ký tự',
+    'describe_max' => 'Tối đa 360 ký tự',
     'price_required' => 'Nhập giá tiền',
     'price_regex' => 'Nhập đúng giá tiền định dạng việt nam',
 ];

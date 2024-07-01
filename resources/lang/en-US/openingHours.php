@@ -19,6 +19,5 @@ return [
     'opening_hours_opening_time_date_format' => 'Opening hours must be type hour: minute : second: ',
     'closing_time_required' => 'closing_time is required',
     'opening_hours_opening_time_after' => 'closing time must be after opening time',
-
     'opening_hours_start_in_time' => 'The start time must be within the opening and closing hours.',
 ];

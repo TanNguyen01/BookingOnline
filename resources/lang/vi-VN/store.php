@@ -9,14 +9,13 @@ return [
     'not_found' => 'Không tìm thấy cua hang.',
 
     /** Validate */
-    'name_unique' => 'ten cua hang da ton tai',
-    'name_required' => 'Vui lòng nhâp ten cua hang',
-    'name_string' => ' ten cua hang là kiểu chuỗi',
+    'name_unique' => 'Tên cửa hàng đã tồn tại',
+    'name_required' => 'Vui lòng nhập tên cửa hàng',
+    'name_string' => ' Tên cửa hàng là kiểu chuỗi',
     'address_string' => 'sdt là kiểu chuỗi',
     'address_required' => 'Vui lòng nhâp dia chi',
-    'phone_string' => 'sdt là kiểu chuỗi',
-    'phone_required' => 'Vui lòng nhâp sdt',
-
+    'phone_string' => 'Số điện thoại là kiểu chuỗi',
+    'phone_required' => 'Vui lòng nhâp Số điện thoại',
     'image_mimes' => 'Hình ảnh phải có đuôi là jpg,png, jpeg',
-    'image_required' => 'chon Hình ảnh',
+    'image_required' => 'Chọn Hình ảnh',
 ];

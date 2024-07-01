@@ -20,6 +20,8 @@ return [
     'password_confirmed' => 'confirm user password',
     'phone_string' => 'phone must be string',
     'address_string' => 'address must be string',
-
     'image_mimes' => 'User image must be a file of type: jpeg, jpg, png.',
+    'password_min' => 'Password must be at least 6 characters.',
+    'password_max' => 'Password must not exceed 15 characters.',
+
 ];

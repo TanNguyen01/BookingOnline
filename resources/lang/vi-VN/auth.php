@@ -3,11 +3,12 @@
 return [
     /** Login */
     'failed' => 'Sai email hoặc mật khẩu .',
-    'success' => ' Dang nhap thanh cong.',
+    'success' => 'Đăng nhập thành công.',
 
     /** Logout */
-    'logout_success' => 'Dang xuat thanh cong.',
-
+    'logout_success' => 'Đăng xuất thành công.',
+    'password_min' =>'Mật khẩu có tối thiểu 6 ký tự',
+    'password_min' =>'Mật khẩu tối đa 15 kí tự',
     /** Validate */
     'email_required' => 'Vui lòng nhâp email',
     'email_email' => 'Nhập đúng định dạng email!',
