@@ -16,7 +16,7 @@ return [
 
 
     /** Validate */
-    'time.required'=>'Time of service is  required',
+    'time_required'=>'Time of service is  required',
     'name_required' => 'Service name is required.',
     'name_unique' => 'Service name already exists.',
     'categorie_id_required' => ' category ID required',

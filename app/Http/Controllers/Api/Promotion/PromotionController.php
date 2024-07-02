@@ -3,31 +3,36 @@
 namespace App\Http\Controllers\Api\Promotion;
 
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\StorePromotionRequest;
 use Illuminate\Http\Request;
 use App\Models\Promotion;
 use App\Models\PromotionService;
 use App\Models\PromotionCondition;
+use Illuminate\Http\Response;
+use App\Traits\APIResponse;
+
 
 class PromotionController extends Controller
 {
+    use APIResponse;
+
     // Lấy danh sách tất cả các chương trình khuyến mãi
     public function index()
     {
         $promotions = Promotion::all();
-        return response()->json($promotions);
+        return $this->responseSuccess('xem thành công', ['data' => $promotions]);
     }
 
     // Lấy thông tin chi tiết của một chương trình khuyến mãi
     public function show($id)
     {
         $promotion = Promotion::findOrFail($id);
-        return response()->json($promotion);
+        return $this->responseSuccess('xem thành công', ['data' => $promotion]);
     }
 
 
     // Tạo mới một chương trình khuyến mãi
-    public function store(Request $request)
+    public function store(StorePromotionRequest $request)
     {
         $promotionData = $request->only([
             'name', 'description', 'discount_type', 'discount_value', 'start_date', 'end_date'
@@ -51,7 +56,7 @@ class PromotionController extends Controller
                 PromotionCondition::create([
                     'promotion_id' => $promotion->id,
                     'condition_type' => $condition['condition_type'],
-                    'condition_value' =>json_encode($condition['condition_value']),
+                    'condition_value' => json_encode($condition['condition_value']),
                 ]);
             }
         }
@@ -59,12 +64,17 @@ class PromotionController extends Controller
         // Load lại promotion với conditions sau khi lưu thành công
         $promotion->load('conditions');
 
-        return response()->json($promotion, 201);
+        $promotionConditions = PromotionCondition::where('promotion_id', $promotion->id)->get();
+
+        return $this->responseCreated('Thêm thành công', [
+            'data' => $promotion,
+            'promotion_conditions' => $promotionConditions
+        ]);
     }
 
 
     // Cập nhật thông tin của một chương trình khuyến mãi
-    public function update(Request $request, $id)
+    public function update(StorePromotionRequest $request, $id)
     {
         $promotion = Promotion::findOrFail($id);
 
@@ -94,12 +104,15 @@ class PromotionController extends Controller
                 PromotionCondition::create([
                     'promotion_id' => $promotion->id,
                     'condition_type' => $condition['condition_type'],
-                    'condition_value' => $condition['condition_value'],
+                    'condition_value' => json_encode($condition['condition_value']),
                 ]);
             }
         }
-
-        return response()->json($promotion, 200);
+        $promotionConditions = PromotionCondition::where('promotion_id', $promotion->id)->get();
+        return $this->responseSuccess('Cập nhật thành công', [
+            'data' => $promotion,
+            'promotion_conditions' => $promotionConditions
+        ]);
     }
 
     // Xóa một chương trình khuyến mãi
@@ -112,6 +125,6 @@ class PromotionController extends Controller
         PromotionService::where('promotion_id', $id)->delete();
         PromotionCondition::where('promotion_id', $id)->delete();
 
-        return response()->json(null, 204);
+        return $this->responseServerError(Response::HTTP_INTERNAL_SERVER_ERROR,);
     }
 }

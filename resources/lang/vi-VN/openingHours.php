@@ -21,6 +21,7 @@ return [
     'opening_hours_opening_time_date_format' => 'Chọn đúng định dạng giờ: phút: giây',
     'closing_time_required' => 'Vui lòng chọn giờ đóng cửa',
     'opening_hours_opening_time_after' => 'Giờ đóng của phải sau giờ mở cửa',
+    'opening_hours_closing_time_after' =>'Giờ đóng của phải sau giờ mở cửa',
     'opening_hours_start_in_time' => 'Giờ bắt đầu phải nằm trong giờ mở cửa và đóng cửa',
 
 ];

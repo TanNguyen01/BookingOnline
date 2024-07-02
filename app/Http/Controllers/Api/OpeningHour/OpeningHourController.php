@@ -248,57 +248,63 @@ class OpeningHourController extends Controller
             $closingTime = $request->closing_time;
             $startDate = $request->start_date;
 
-
             if (! $storeId) {
                 DB::rollBack();
-
                 return $this->responseNotFound(Response::HTTP_NOT_FOUND, __('store.not_found'));
             }
+             // Validate giờ mở cửa phải < giờ đóng cửa
+            if (strtotime($openingTime) >= strtotime($closingTime)) {
+            DB::rollBack();
+            return $this->responseBadRequest(__('openingHours.opening_hours_closing_time_after'));
+            }
+            if (strtotime($startDate) <= strtotime(date('Y-m-d'))) {
+                DB::rollBack();
+                return $this->responseBadRequest(__('openingHours.opening_hours_day_after_or_equal'));
+            }
+
 
             $opening = $this->openingService->createOpeningHours($storeId);
             if (! $opening) {
                 DB::rollBack();
-
-                return $this->responseBadRequest(Response::HTTP_NOT_FOUND, __('store.not_found'), $opening);
-
+                return $this->responseBadRequest(Response::HTTP_NOT_FOUND, __('store.not_found'));
             }
 
             $existingDays = [];
             $currentDate = $startDate;
 
-            // Thêm 5 ngày liên tiếp bắt đầu từ ngày hôm sau
+            // Kiểm tra nếu bất kỳ ngày nào trong 5 ngày đã tồn tại
             for ($i = 1; $i <= 5; $i++) {
                 $nextDay = date('Y-m-d', strtotime($currentDate.' + '.$i.' days'));
                 $existingNextDayEntry = OpeningHour::where('store_id', $storeId)
                     ->where('day', $nextDay)
                     ->first();
 
-                if (! $existingNextDayEntry) {
-                    // Tạo giờ mở cửa cho ngày kế tiếp
-                    OpeningHour::create([
-                        'store_id' => $storeId,
-                        'day' => $nextDay,
-                        'opening_time' => $openingTime,
-                        'closing_time' => $closingTime,
-                    ]);
-                } else {
+                if ($existingNextDayEntry) {
                     $existingDays[] = $nextDay;
                 }
             }
-
             if (! empty($existingDays)) {
                 DB::rollBack();
+                return $this->responseBadRequest(__('openingHours.exists'));
+            }
 
-                return $this->responseBadRequest(Response::HTTP_BAD_REQUEST, __('openingHours.exists'), $existingDays);
+            // Nếu không có ngày nào tồn tại, tạo giờ mở cửa cho 5 ngày kế tiếp
+            for ($i = 1; $i <= 5; $i++) {
+                $nextDay = date('Y-m-d', strtotime($currentDate.' + '.$i.' days'));
+                OpeningHour::create([
+                    'store_id' => $storeId,
+                    'day' => $nextDay,
+                    'opening_time' => $openingTime,
+                    'closing_time' => $closingTime,
+                ]);
             }
 
             DB::commit();
-
             return $this->responseCreated(__('openingHours.create'), ['data' => $request->all()]);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return $this->responseServerError([__('openingHours.error'), 'error' => $e->getMessage()]);
         }
     }
+
 }
