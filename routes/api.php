@@ -19,7 +19,7 @@ Route::post('/set-locale/{locale}', function ($locale) {
     return response()->json(['message' => 'Locale set to ' . $locale]);
 });
 
-// Route::middleware(['auth:sanctum', 'checkadmin', 'language','throttle'])->group(function () {
+Route::middleware(['auth:sanctum', 'checkadmin', 'language','throttle'])->group(function () {
 require_once __DIR__ . '/admin_user.php';
 require_once __DIR__ . '/booking.php';
 require_once __DIR__ . '/categorie.php';
@@ -28,7 +28,7 @@ require_once __DIR__ . '/opening_hour.php';
 require_once __DIR__ . '/service.php';
 require_once __DIR__ . '/statistic.php';
 require_once __DIR__ . '/store.php';
-// });
+});
 
 Route::middleware(['language'])->group(function () {
     require_once __DIR__ . '/client.php';

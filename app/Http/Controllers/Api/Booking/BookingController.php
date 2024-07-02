@@ -284,17 +284,15 @@ class BookingController extends Controller
                 'customer_email' => $customerEmail,
                 'applied_discounts' => $applied_discounts,
             ];
-            // Mail::send('emails.employee_notification', ['output' => $output], function ($email) use ($employeeData) {
-            //     $email->subject('Thông báo đặt chỗ mới');
-            //     $email->to($employeeData->email, $employeeData->name);
-            // });
-
-
-            // Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
-            //     $email->subject('Thông tin đặt chỗ');
-            //     $email->to($customerEmail, $customerName);
-            // });
-            return $this->responseCreated(__('booking.created'), ['data' => $output]);
+            Mail::send('emails.employee_notification', ['output' => $output], function ($email) use ($employeeData) {
+                $email->subject('Thông báo đặt chỗ mới');
+                $email->to($employeeData->email, $employeeData->name);
+            });
+            Mail::send('emails.test', ['output' => $output], function ($email) use ($customerEmail, $customerName) {
+                $email->subject('Thông tin đặt chỗ');
+                $email->to($customerEmail, $customerName);
+            });
+            return $this->responseCreated(__('booking.create'), ['data' => $output]);
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             DB::rollBack();
@@ -317,7 +315,7 @@ class BookingController extends Controller
             if (($status === 'pending' || $status === 'confirmed' || $status === 'canceled') &&
                 ($base->status === 'doing' || $base->status === 'done')
             ) {
-                return $this->responseBadRequest(__(__('booking.error')));
+                return $this->responseBadRequest(__('booking.error'));
             }
             $base->status = $status;
             $base->save();

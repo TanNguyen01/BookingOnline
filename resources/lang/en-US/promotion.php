@@ -2,9 +2,10 @@
 return [
     'list' => 'See list of successful opening hours ',
     'show' => 'Store opening hours.',
-    'exists' => 'Opening hours is already exists',
-    'create' => 'Opening hours is added successfully',
-    'update' => 'Opening hours is updated successfully',
+    'exists' => 'Promotion is already exists',
+    'create' => 'Promotion is added successfully',
+    'update' => 'Promotion  is updated successfully',
+    'not_found' => 'Promotion is not found',
 
     // validate
     'name.required' => 'Promotion name is required.',

@@ -2,9 +2,10 @@
 return [
     'list' => 'Xem danh sách giờ mở cửa thành công ',
     'show' => 'Chi tiết ',
-    'exists' => 'Giờ mở cửa đã tồn tại',
-    'create' => 'Giờ mở cửa thêm thành công',
+    'exists' => 'Chương trình đã tồn tại',
+    'create' => 'Thêm thành công Chương trình khuyến mãi',
     'update' => 'Cập nhật thành công',
+    'not_found' => ' Không có chương trình ',
 
     // validate
     'name.required' => 'Tên chương trình khuyến mãi là bắt buộc.',

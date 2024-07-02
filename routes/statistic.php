@@ -15,6 +15,4 @@ Route::get('/average-booking-value', [StatisticsController::class, 'getAverageBo
 Route::get('/abandonment-rate', [StatisticsController::class, 'getAbandonmentRate']);
 //Tổng doanh thu từ các lượt đặt chỗ.
 Route::get('/gettotal-revenue', [StatisticsController::class, 'getTotalRevenue']);
-// doanh thu theo dịch vụ
-Route::get('/gettotal-service', [StatisticsController::class, 'getServiceRevenueByStore']);
 });
