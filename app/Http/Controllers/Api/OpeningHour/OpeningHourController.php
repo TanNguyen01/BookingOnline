@@ -257,7 +257,7 @@ class OpeningHourController extends Controller
             DB::rollBack();
             return $this->responseBadRequest(__('openingHours.opening_hours_closing_time_after'));
             }
-            if (strtotime($startDate) <= strtotime(date('Y-m-d'))) {
+            if (strtotime($startDate) < strtotime(date('Y-m-d'))) {
                 DB::rollBack();
                 return $this->responseBadRequest(__('openingHours.opening_hours_day_after_or_equal'));
             }
@@ -273,12 +273,11 @@ class OpeningHourController extends Controller
             $currentDate = $startDate;
 
             // Kiểm tra nếu bất kỳ ngày nào trong 5 ngày đã tồn tại
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 0; $i <= 4; $i++) {
                 $nextDay = date('Y-m-d', strtotime($currentDate.' + '.$i.' days'));
                 $existingNextDayEntry = OpeningHour::where('store_id', $storeId)
                     ->where('day', $nextDay)
                     ->first();
-
                 if ($existingNextDayEntry) {
                     $existingDays[] = $nextDay;
                 }
@@ -289,7 +288,7 @@ class OpeningHourController extends Controller
             }
 
             // Nếu không có ngày nào tồn tại, tạo giờ mở cửa cho 5 ngày kế tiếp
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 0; $i <= 4; $i++) {
                 $nextDay = date('Y-m-d', strtotime($currentDate.' + '.$i.' days'));
                 OpeningHour::create([
                     'store_id' => $storeId,
